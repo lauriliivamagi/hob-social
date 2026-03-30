@@ -1642,7 +1642,9 @@ function renderFocusArea(ctx) {
 function buildFocusCard(op, stepIdx, totalSteps, ctx, scaleFactor) {
   var desc = op.id ? buildOpDescription(op, scaleFactor) : esc(op.details || '');
   var time = op.time ? scaleTime(op, scaleFactor) : null;
-  var hasTimer = time && time > 0;
+  // Show timer only for steps with passive waiting time (activeTime < time),
+  // or steps without activeTime (e.g. finish steps like "rest")
+  var hasTimer = time && time > 0 && (op.activeTime == null || op.activeTime < op.time);
 
   var card = document.createElement('div');
   card.className = 'focus-card fade-in';
@@ -1704,7 +1706,7 @@ function buildFocusCard(op, stepIdx, totalSteps, ctx, scaleFactor) {
     var timerDiv = document.createElement('div');
     timerDiv.style.marginTop = '12px';
 
-    var opId = op.id || ('step-' + stepIdx);
+    var opId = op.id || op.action || ('step-' + stepIdx);
     var timerState = ctx.timerStates[opId];
 
     var btn = document.createElement('button');
@@ -1831,7 +1833,7 @@ function renderAwareness(ctx) {
   timerIds.forEach(function(opId) {
     var t = ctx.timerStates[opId];
     var op = getOperation(opId);
-    var label = op ? capitalize(op.action) : opId;
+    var label = op ? capitalize(op.action) : capitalize(opId);
 
     var pill = document.createElement('span');
     pill.className = 'awareness-pill' + (t.done ? ' done' : '');
