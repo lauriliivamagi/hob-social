@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/task-18-recipe/config/recipe-schema.json",
+  "$id": "https://github.com/lauriliivamagi/recipes/blob/master/config/recipe-schema.json",
   "title": "Recipe",
   "description": "Structured recipe data model for the Recipe Visualization App",
   "type": "object",
