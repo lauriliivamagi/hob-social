@@ -56,6 +56,17 @@ body {
   padding: var(--space-lg) var(--space-md) var(--space-sm);
   text-align: center;
 }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color var(--transition);
+}
+.back-link:hover { color: var(--accent-teal); }
 .recipe-header h1 {
   font-size: var(--text-2xl);
   font-weight: 700;
@@ -382,6 +393,18 @@ body {
   color: var(--accent-teal);
   margin-bottom: 8px;
 }
+.sub-product-label {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(244, 162, 97, 0.15);
+  color: var(--accent-orange);
+  margin-bottom: 8px;
+}
 .focus-action {
   font-size: var(--text-xl);
   font-weight: 700;
@@ -412,6 +435,15 @@ body {
   color: var(--text-dim);
 }
 .focus-tag .icon { font-size: 0.9rem; }
+.focus-tag.occupied {
+  background: rgba(124, 92, 252, 0.2);
+  color: var(--accent-purple);
+  border: 1px solid rgba(124, 92, 252, 0.3);
+}
+.focus-tag.released {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--success);
+}
 .timer-btn {
   display: inline-flex;
   align-items: center;
@@ -432,6 +464,45 @@ body {
   background: var(--accent-purple);
   color: #fff;
 }
+
+/* Context banner (passive op like simmer running in background) */
+.context-banner {
+  margin: 0 var(--space-md) var(--space-sm);
+  padding: 12px 16px;
+  background: var(--accent-purple);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.context-banner-text {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: #fff;
+}
+.context-banner-sub {
+  font-size: var(--text-xs);
+  color: rgba(255,255,255,0.7);
+}
+.context-timer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 36px;
+  transition: background var(--transition);
+}
+.context-timer-btn:active { background: rgba(255,255,255,0.3); }
+.context-timer-btn.running { background: rgba(255,255,255,0.35); }
 
 /* Secondary parallel task */
 .secondary-task {
@@ -542,7 +613,7 @@ body {
 
 /* Tablet */
 @media (min-width: 600px) {
-  .phase-list, .focus-card, .secondary-task, .next-preview, .awareness-bar,
+  .phase-list, .focus-card, .secondary-task, .next-preview, .awareness-bar, .context-banner,
   .equipment-summary, .mode-toggle, .view-tabs, .servings-adjuster {
     max-width: 640px;
     margin-left: auto;
@@ -555,7 +626,7 @@ body {
 
 /* Desktop */
 @media (min-width: 1024px) {
-  .phase-list, .focus-card, .secondary-task, .next-preview, .awareness-bar,
+  .phase-list, .focus-card, .secondary-task, .next-preview, .awareness-bar, .context-banner,
   .equipment-summary, .mode-toggle, .view-tabs, .servings-adjuster {
     max-width: 860px;
   }
@@ -732,6 +803,113 @@ function playTimerAlarm() {
 }
 
 /* ===================================================================
+   SUB-PRODUCT MAP: operation ID → sub-product name
+   =================================================================== */
+var OP_SUB_PRODUCT = (function() {
+  var map = {};
+  if (!RECIPE.subProducts) return map;
+
+  // Sort sub-products: leaf products first (those whose finalOp is NOT
+  // an input to another sub-product's chain). This ensures "Meat Sauce"
+  // and "Béchamel" claim their ops before "Baked Lasagne" walks through them.
+  var spFinalOps = {};
+  RECIPE.subProducts.forEach(function(sp) { spFinalOps[sp.finalOp] = sp.id; });
+
+  // A sub-product is a "leaf" if no other sub-product's finalOp depends on it
+  // (transitively via operations). Simple heuristic: sort by chain depth (shorter first).
+  function chainDepth(opId, visited) {
+    if (!visited) visited = {};
+    if (visited[opId]) return 0;
+    visited[opId] = true;
+    var op = getOperation(opId);
+    if (!op) return 0;
+    var maxD = 0;
+    (op.inputs || []).forEach(function(ref) {
+      if (getOperation(ref)) maxD = Math.max(maxD, chainDepth(ref, visited));
+    });
+    return maxD + 1;
+  }
+
+  var sorted = RECIPE.subProducts.slice().sort(function(a, b) {
+    return chainDepth(a.finalOp) - chainDepth(b.finalOp);
+  });
+
+  sorted.forEach(function(sp) {
+    var visited = {};
+    function walkBack(opId) {
+      if (visited[opId]) return;
+      visited[opId] = true;
+      if (map[opId]) return; // already claimed by a more specific sub-product
+      map[opId] = sp.name;
+      var op = getOperation(opId);
+      if (!op) return;
+      (op.inputs || []).forEach(function(ref) {
+        if (getOperation(ref)) walkBack(ref);
+      });
+    }
+    walkBack(sp.finalOp);
+  });
+
+  // Label ops that feed into finishSteps but aren't claimed by any sub-product
+  if (RECIPE.finishSteps) {
+    RECIPE.finishSteps.forEach(function(fs) {
+      var label = capitalize(fs.action || '');
+      (fs.inputs || []).forEach(function(ref) {
+        var visited = {};
+        function walkBack(opId) {
+          if (visited[opId]) return;
+          visited[opId] = true;
+          if (map[opId]) return;
+          map[opId] = label;
+          var op = getOperation(opId);
+          if (!op) return;
+          (op.inputs || []).forEach(function(r) {
+            if (getOperation(r)) walkBack(r);
+          });
+        }
+        if (getOperation(ref)) walkBack(ref);
+      });
+    });
+  }
+
+  return map;
+})();
+
+/* ===================================================================
+   TOPO SORT (for parallel ops with dependencies)
+   =================================================================== */
+function topoSortOps(ops) {
+  if (ops.length <= 1) return ops.slice();
+  var opIds = {};
+  ops.forEach(function(op) { opIds[op.id] = true; });
+  var inDeg = {};
+  var adj = {};
+  ops.forEach(function(op) { inDeg[op.id] = 0; adj[op.id] = []; });
+  ops.forEach(function(op) {
+    (op.inputs || []).forEach(function(ref) {
+      if (opIds[ref]) {
+        adj[ref].push(op.id);
+        inDeg[op.id]++;
+      }
+    });
+  });
+  var queue = [];
+  ops.forEach(function(op) { if (inDeg[op.id] === 0) queue.push(op.id); });
+  var sorted = [];
+  var opMap = {};
+  ops.forEach(function(op) { opMap[op.id] = op; });
+  while (queue.length) {
+    var n = queue.shift();
+    sorted.push(opMap[n]);
+    adj[n].forEach(function(nb) {
+      inDeg[nb]--;
+      if (inDeg[nb] === 0) queue.push(nb);
+    });
+  }
+  return sorted;
+}
+
+/* ===================================================================
    COOKING STEPS BUILDER
    =================================================================== */
 function buildCookingSteps(mode) {
@@ -741,14 +919,95 @@ function buildCookingSteps(mode) {
 
   var steps = [];
   phases.forEach(function(phase, phaseIdx) {
-    if (phase.parallelOps && phase.parallelOps.length >= 2) {
-      var ops = phase.parallelOps.map(function(ref) {
+    // Resolve main ops
+    var mainOps = [];
+    if ((phase.ops || phase.operations)) {
+      (phase.ops || phase.operations).forEach(function(ref) {
+        var id = typeof ref === 'string' ? ref : (ref.opId || ref.id);
+        var op = getOperation(id);
+        if (op) mainOps.push(op);
+        else if (typeof ref === 'object' && ref.action) mainOps.push(ref);
+      });
+    }
+
+    // Resolve parallel ops
+    var parallelOps = [];
+    if (phase.parallelOps && phase.parallelOps.length > 0) {
+      parallelOps = phase.parallelOps.map(function(ref) {
         var id = typeof ref === 'string' ? ref : (ref.opId || ref.id);
         return getOperation(id) || ref;
       }).filter(Boolean);
+    }
 
-      if (ops.length >= 2) {
-        var sorted = ops.slice().sort(function(a, b) { return (b.activeTime || 0) - (a.activeTime || 0); });
+    // Check if main op is passive (idle window creator like simmer)
+    var mainIsPassive = mainOps.length === 1 && mainOps[0].activeTime != null
+      && mainOps[0].time > 0 && mainOps[0].activeTime < mainOps[0].time * 0.25;
+
+    if (mainIsPassive && parallelOps.length > 0) {
+      // Separate chain ops (have dependencies on other parallelOps) from independent ones
+      var chainOps = [];
+      var indepOps = [];
+      var parallelIds = {};
+      parallelOps.forEach(function(op) { parallelIds[op.id] = true; });
+
+      parallelOps.forEach(function(op) {
+        var isInChain = false;
+        // Check if this op depends on another parallel op, or another parallel op depends on it
+        for (var j = 0; j < parallelOps.length; j++) {
+          if (parallelOps[j].id === op.id) continue;
+          if ((parallelOps[j].inputs || []).indexOf(op.id) !== -1 ||
+              (op.inputs || []).some(function(ref) { return !!parallelIds[ref]; })) {
+            isInChain = true;
+            break;
+          }
+        }
+        if (isInChain) chainOps.push(op);
+        else indepOps.push(op);
+      });
+
+      // Topological sort chain ops
+      var sortedChain = topoSortOps(chainOps);
+
+      // Emit chain ops as sequential single steps with context
+      sortedChain.forEach(function(op) {
+        steps.push({
+          type: 'single',
+          phaseType: phase.type,
+          phaseIdx: phaseIdx,
+          op: op,
+          context: mainOps[0],
+        });
+      });
+
+      // Group independent ops as parallel (or single)
+      if (indepOps.length >= 2) {
+        var sorted = indepOps.slice().sort(function(a, b) { return (b.time || 0) - (a.time || 0); });
+        steps.push({
+          type: 'parallel',
+          phaseType: phase.type,
+          phaseIdx: phaseIdx,
+          primary: sorted[0],
+          secondary: sorted.slice(1),
+          context: mainOps[0],
+        });
+      } else if (indepOps.length === 1) {
+        steps.push({
+          type: 'single',
+          phaseType: phase.type,
+          phaseIdx: phaseIdx,
+          op: indepOps[0],
+          context: mainOps[0],
+        });
+      }
+    } else {
+      // Emit main ops as individual steps
+      mainOps.forEach(function(op) {
+        steps.push({ type: 'single', phaseType: phase.type, phaseIdx: phaseIdx, op: op });
+      });
+
+      // Then any parallel ops
+      if (parallelOps.length >= 2) {
+        var sorted = parallelOps.slice().sort(function(a, b) { return (b.time || 0) - (a.time || 0); });
         steps.push({
           type: 'parallel',
           phaseType: phase.type,
@@ -756,29 +1015,11 @@ function buildCookingSteps(mode) {
           primary: sorted[0],
           secondary: sorted.slice(1),
         });
-      } else if (ops.length === 1) {
-        steps.push({ type: 'single', phaseType: phase.type, phaseIdx: phaseIdx, op: ops[0] });
+      } else if (parallelOps.length === 1) {
+        steps.push({ type: 'single', phaseType: phase.type, phaseIdx: phaseIdx, op: parallelOps[0] });
       }
     }
-
-    if ((phase.ops || phase.operations)) {
-      (phase.ops || phase.operations).forEach(function(ref) {
-        var id = typeof ref === 'string' ? ref : (ref.opId || ref.id);
-        var op = getOperation(id);
-        if (op) {
-          steps.push({ type: 'single', phaseType: phase.type, phaseIdx: phaseIdx, op: op });
-        } else if (typeof ref === 'object' && ref.action) {
-          steps.push({ type: 'single', phaseType: phase.type, phaseIdx: phaseIdx, op: ref });
-        }
-      });
-    }
   });
-
-  if (RECIPE.finishSteps) {
-    RECIPE.finishSteps.forEach(function(fs) {
-      steps.push({ type: 'single', phaseType: 'finish', phaseIdx: -1, op: fs });
-    });
-  }
 
   return steps;
 }
@@ -1014,43 +1255,52 @@ const recipeMachine = setup({
 /* ===================================================================
    RENDER: HEADER
    =================================================================== */
-function renderHeader(ctx) {
+function renderHeader(ctx, compact) {
   var m = RECIPE.meta;
   var diffClass = 'difficulty-' + (m.difficulty || 'easy');
   var totalTime = m.totalTime ? m.totalTime[ctx.mode] : null;
 
   var h = document.createElement('div');
 
+  var backLink = document.createElement('a');
+  backLink.className = 'back-link';
+  backLink.href = '../index.html';
+  backLink.textContent = '\u2190 ' + (I18N.labels.allRecipes || 'All Recipes');
+  h.appendChild(backLink);
+
   var h1 = document.createElement('h1');
   h1.textContent = m.title;
   h.appendChild(h1);
 
-  var metaDiv = document.createElement('div');
-  metaDiv.className = 'recipe-meta';
+  if (!compact) {
+    var metaDiv = document.createElement('div');
+    metaDiv.className = 'recipe-meta';
 
-  if (m.difficulty) {
-    var span = document.createElement('span');
-    span.className = 'recipe-meta-item';
-    var badge = document.createElement('span');
-    badge.className = 'difficulty-badge ' + diffClass;
-    badge.textContent = m.difficulty;
-    span.appendChild(badge);
-    metaDiv.appendChild(span);
-  }
-  if (totalTime) {
-    var timeSpan = document.createElement('span');
-    timeSpan.className = 'recipe-meta-item';
-    timeSpan.textContent = I18N.labels.totalTime + ': ' + formatMinutes(totalTime);
-    metaDiv.appendChild(timeSpan);
-  }
-  if (m.tags && m.tags.length) {
-    var tagSpan = document.createElement('span');
-    tagSpan.className = 'recipe-meta-item';
-    tagSpan.textContent = m.tags.map(function(t) { return '#' + t; }).join(' ');
-    metaDiv.appendChild(tagSpan);
+    if (m.difficulty) {
+      var span = document.createElement('span');
+      span.className = 'recipe-meta-item';
+      var badge = document.createElement('span');
+      badge.className = 'difficulty-badge ' + diffClass;
+      badge.textContent = m.difficulty;
+      span.appendChild(badge);
+      metaDiv.appendChild(span);
+    }
+    if (totalTime) {
+      var timeSpan = document.createElement('span');
+      timeSpan.className = 'recipe-meta-item';
+      timeSpan.textContent = I18N.labels.totalTime + ': ' + formatMinutes(totalTime);
+      metaDiv.appendChild(timeSpan);
+    }
+    if (m.tags && m.tags.length) {
+      var tagSpan = document.createElement('span');
+      tagSpan.className = 'recipe-meta-item';
+      tagSpan.textContent = m.tags.map(function(t) { return '#' + t; }).join(' ');
+      metaDiv.appendChild(tagSpan);
+    }
+
+    h.appendChild(metaDiv);
   }
 
-  h.appendChild(metaDiv);
   var header = $('#recipeHeader');
   header.textContent = '';
   while (h.firstChild) header.appendChild(h.firstChild);
@@ -1352,6 +1602,11 @@ function renderFocusArea(ctx) {
 
   var step = ctx.cookingSteps[ctx.currentStep];
 
+  // Context banner: passive op running in background (e.g. simmer)
+  if (step.context) {
+    focusArea.appendChild(buildContextBanner(step.context, ctx, scaleFactor));
+  }
+
   if (step.type === 'parallel') {
     focusArea.appendChild(buildFocusCard(step.primary, ctx.currentStep, totalSteps, ctx, scaleFactor));
     step.secondary.forEach(function(sec) {
@@ -1397,6 +1652,15 @@ function buildFocusCard(op, stepIdx, totalSteps, ctx, scaleFactor) {
   counter.textContent = I18N.labels.step + ' ' + (stepIdx + 1) + ' ' + I18N.labels.of + ' ' + totalSteps;
   card.appendChild(counter);
 
+  // Show which sub-product this step contributes to
+  var spName = op.id ? OP_SUB_PRODUCT[op.id] : null;
+  if (spName) {
+    var spLabel = document.createElement('div');
+    spLabel.className = 'sub-product-label';
+    spLabel.textContent = spName;
+    card.appendChild(spLabel);
+  }
+
   var action = document.createElement('div');
   action.className = 'focus-action';
   action.textContent = capitalize(op.action || '');
@@ -1427,9 +1691,10 @@ function buildFocusCard(op, stepIdx, totalSteps, ctx, scaleFactor) {
     var eqName = typeof op.equipment === 'string' ? op.equipment : (op.equipment.use || '');
     if (eqName) {
       var eq = RECIPE.equipment && RECIPE.equipment.find(function(e) { return e.id === eqName; });
+      var eqRelease = typeof op.equipment === 'object' ? op.equipment.release : true;
       var eqTag = document.createElement('span');
-      eqTag.className = 'focus-tag';
-      eqTag.textContent = '\uD83C\uDF73 ' + (eq ? eq.name : eqName);
+      eqTag.className = 'focus-tag' + (eqRelease ? ' released' : ' occupied');
+      eqTag.textContent = '\uD83C\uDF73 ' + (eq ? eq.name : eqName) + (eqRelease ? '' : ' \u2192');
       tags.appendChild(eqTag);
     }
   }
@@ -1469,7 +1734,8 @@ function buildSecondaryTask(op, scaleFactor) {
 
   var label = document.createElement('div');
   label.className = 'secondary-task-label';
-  label.textContent = I18N.labels.whileWaiting;
+  var secSpName = op.id ? OP_SUB_PRODUCT[op.id] : null;
+  label.textContent = I18N.labels.whileWaiting + (secSpName ? ' \u2014 ' + secSpName : '');
   container.appendChild(label);
 
   var summary = document.createElement('div');
@@ -1489,6 +1755,50 @@ function buildSecondaryTask(op, scaleFactor) {
   container.appendChild(hint);
 
   return container;
+}
+
+function buildContextBanner(op, ctx, scaleFactor) {
+  var time = op.time ? scaleTime(op, scaleFactor) : null;
+  var opId = op.id || 'context';
+  var timerState = ctx.timerStates[opId];
+
+  var banner = document.createElement('div');
+  banner.className = 'context-banner fade-in';
+
+  var textDiv = document.createElement('div');
+  var main = document.createElement('div');
+  main.className = 'context-banner-text';
+  var ctxSpName = op.id ? OP_SUB_PRODUCT[op.id] : null;
+  main.textContent = (ctxSpName ? ctxSpName + ': ' : '') + capitalize(op.action || '') + (time ? ' \u2014 ' + formatMinutes(time) : '');
+  textDiv.appendChild(main);
+
+  if (op.details) {
+    var sub = document.createElement('div');
+    sub.className = 'context-banner-sub';
+    sub.textContent = op.details;
+    textDiv.appendChild(sub);
+  }
+  banner.appendChild(textDiv);
+
+  if (time && time > 0) {
+    var btn = document.createElement('button');
+    btn.dataset.opId = opId;
+    if (timerState && !timerState.done) {
+      btn.className = 'context-timer-btn running';
+      btn.textContent = '\u23F2 ' + formatTimerDisplay(timerState.remaining);
+      btn.addEventListener('click', function() { actor.send({ type: 'CANCEL_TIMER', opId: opId }); });
+    } else if (timerState && timerState.done) {
+      btn.className = 'context-timer-btn';
+      btn.textContent = '\u2705 ' + (I18N.labels.timerDone || 'Done');
+    } else {
+      btn.className = 'context-timer-btn';
+      btn.textContent = '\u23F2 ' + (I18N.labels.startTimer || 'Start timer');
+      btn.addEventListener('click', function() { actor.send({ type: 'START_TIMER', opId: opId, minutes: time }); });
+    }
+    banner.appendChild(btn);
+  }
+
+  return banner;
 }
 
 function renderNavButtons(ctx) {
@@ -1538,20 +1848,30 @@ function renderAwareness(ctx) {
 
 function renderTimerInFocusCard(ctx) {
   // Surgically update timer button text without re-rendering the whole card
-  var btn = document.querySelector('.timer-btn');
-  if (!btn) return;
-  var opId = btn.dataset.opId;
-  if (!opId) return;
-  var timerState = ctx.timerStates[opId];
-  if (timerState && !timerState.done) {
-    btn.className = 'timer-btn running';
-    btn.textContent = '\u23F2 ' + formatTimerDisplay(timerState.remaining) + ' \u2014 tap to cancel';
-  } else if (timerState && timerState.done) {
-    btn.className = 'timer-btn running';
-    btn.textContent = '\u2705 ' + I18N.labels.timerDone;
-  }
-  // If timer was just started (button was "Start" and now needs to show running),
-  // or timer was cancelled, a full re-render already happened via other subscription paths
+  var buttons = document.querySelectorAll('.timer-btn, .context-timer-btn');
+  buttons.forEach(function(btn) {
+    var opId = btn.dataset.opId;
+    if (!opId) return;
+    var timerState = ctx.timerStates[opId];
+    if (!timerState) return;
+    if (btn.classList.contains('context-timer-btn')) {
+      if (timerState && !timerState.done) {
+        btn.className = 'context-timer-btn running';
+        btn.textContent = '\u23F2 ' + formatTimerDisplay(timerState.remaining);
+      } else if (timerState.done) {
+        btn.className = 'context-timer-btn';
+        btn.textContent = '\u2705 ' + (I18N.labels.timerDone || 'Done');
+      }
+    } else {
+      if (timerState && !timerState.done) {
+        btn.className = 'timer-btn running';
+        btn.textContent = '\u23F2 ' + formatTimerDisplay(timerState.remaining) + ' \u2014 tap to cancel';
+      } else if (timerState.done) {
+        btn.className = 'timer-btn running';
+        btn.textContent = '\u2705 ' + I18N.labels.timerDone;
+      }
+    }
+  });
 }
 
 /* ===================================================================
@@ -1613,7 +1933,7 @@ actor.subscribe((snapshot) => {
 
   // Always update header if mode changes
   if (prevCtx.mode !== ctx.mode) {
-    renderHeader(ctx);
+    renderHeader(ctx, currView === 'cooking');
     renderModeToggle(ctx);
   }
 
@@ -1628,6 +1948,8 @@ actor.subscribe((snapshot) => {
   if (prevView !== currView) {
     renderViewTabs(currView);
     toggleViewVisibility(currView);
+    renderHeader(ctx, currView === 'cooking');
+    $('#servingsAdjuster').style.display = currView === 'cooking' ? 'none' : 'flex';
     if (currView === 'overview') {
       renderModeToggle(ctx);
       renderEquipment();
@@ -1764,11 +2086,13 @@ if (saved) {
 
 // Initial full render
 const initial = actor.getSnapshot();
-renderHeader(initial.context);
+var initialView = initial.value.view;
+renderHeader(initial.context, initialView === 'cooking');
 renderServings(initial.context);
-renderViewTabs(initial.value.view);
-toggleViewVisibility(initial.value.view);
-if (initial.value.view === 'overview') {
+$('#servingsAdjuster').style.display = initialView === 'cooking' ? 'none' : 'flex';
+renderViewTabs(initialView);
+toggleViewVisibility(initialView);
+if (initialView === 'overview') {
   renderModeToggle(initial.context);
   renderEquipment();
   renderPhases(initial.context);
