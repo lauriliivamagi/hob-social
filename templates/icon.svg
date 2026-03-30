@@ -1,14 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="76" fill="#1a1a2e"/>
-  <!-- Pot body -->
-  <ellipse cx="256" cy="320" rx="140" ry="100" fill="#f4a261"/>
-  <!-- Pot rim -->
-  <rect x="116" y="260" width="280" height="24" rx="12" fill="#4ecdc4"/>
-  <!-- Pot handles -->
-  <rect x="80" y="260" width="44" height="24" rx="12" fill="#4ecdc4"/>
-  <rect x="388" y="260" width="44" height="24" rx="12" fill="#4ecdc4"/>
-  <!-- Steam lines -->
-  <path d="M200 220 Q195 190 205 160" stroke="#e0e0e0" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.7"/>
-  <path d="M256 210 Q251 175 261 140" stroke="#e0e0e0" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.7"/>
-  <path d="M312 220 Q307 190 317 160" stroke="#e0e0e0" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.7"/>
+<svg width="512" height="512" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="8" y="8" width="240" height="240" rx="48" fill="url(#bgGradient)"/>
+  <rect x="40" y="40" width="176" height="176" rx="28" fill="url(#innerGradient)"/>
+  <g transform="translate(0,11)">
+    <!-- Chef hat -->
+    <path d="M88 190 L88 145 C68 140 54 122 56 102 C58 80 76 66 96 70 C102 54 114 44 128 44 C142 44 154 54 160 70 C180 66 198 80 200 102 C202 122 188 140 168 145 L168 190 Z" fill="none" stroke="white" stroke-width="9" stroke-linejoin="round"/>
+    <!-- Fork -->
+    <g transform="translate(118,116) rotate(-45)">
+      <line x1="0" y1="8" x2="0" y2="40" stroke="white" stroke-width="6" stroke-linecap="round"/>
+      <line x1="-8" y1="-30" x2="-8" y2="4" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <line x1="0" y1="-32" x2="0" y2="4" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <line x1="8" y1="-30" x2="8" y2="4" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <line x1="-8" y1="4" x2="8" y2="4" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <!-- Spoon -->
+    <g transform="translate(138,116) rotate(45)">
+      <line x1="0" y1="4" x2="0" y2="40" stroke="white" stroke-width="6" stroke-linecap="round"/>
+      <ellipse cx="0" cy="-14" rx="10" ry="18" fill="white"/>
+    </g>
+    <!-- Steam from hat -->
+    <path d="M122 88 Q120 82 122 76 Q124 70 122 64" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M128 84 Q126 78 128 72 Q130 66 128 60" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M134 88 Q132 82 134 76 Q136 70 134 64" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <!-- Bowl -->
+    <ellipse cx="128" cy="168" rx="28" ry="5" fill="white"/>
+    <path d="M100 168 C102 188 114 190 128 190 C142 190 154 188 156 168" fill="white"/>
+    <!-- Steam from bowl -->
+    <path d="M120 161 Q118 155 120 151 Q122 147 120 143" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M128 159 Q126 153 128 149 Q130 145 128 141" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M136 161 Q134 155 136 151 Q138 147 136 143" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  </g>
+  <defs>
+    <linearGradient id="bgGradient" x1="128" y1="8" x2="128" y2="248" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F6C06A"/>
+      <stop offset="1" stop-color="#E8923A"/>
+    </linearGradient>
+    <linearGradient id="innerGradient" x1="128" y1="40" x2="128" y2="216" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E8923A"/>
+      <stop offset="1" stop-color="#D4702A"/>
+    </linearGradient>
+  </defs>
 </svg>

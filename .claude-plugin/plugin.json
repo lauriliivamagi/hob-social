@@ -1,0 +1,49 @@
+{
+  "name": "recipe-viz",
+  "description": "Recipe visualization — import, optimize, and generate interactive cooking guides",
+  "version": "0.1.0",
+  "commands": [
+    {
+      "name": "recipe-import",
+      "description": "Import a recipe from URL, file, or pasted text and generate structured JSON + HTML",
+      "source": "commands/recipe-import.md"
+    },
+    {
+      "name": "recipe-build",
+      "description": "Generate HTML from recipe JSON (one recipe or all)",
+      "source": "commands/recipe-build.md"
+    },
+    {
+      "name": "recipe-index",
+      "description": "Regenerate the recipe index page",
+      "source": "commands/recipe-index.md"
+    },
+    {
+      "name": "recipe-inbox",
+      "description": "Process all files in inbox/ — import each, move originals to inbox/processed/",
+      "source": "commands/recipe-inbox.md"
+    },
+    {
+      "name": "recipe-review",
+      "description": "Review a recipe side-by-side: original text vs structured Phase Map",
+      "source": "commands/recipe-review.md"
+    }
+  ],
+  "skills": [
+    {
+      "name": "recipe-parse",
+      "description": "LLM prompt for decomposing recipe text into structured JSON — ingredients, operations, DAG edges, timings, equipment, sub-products. Handles any language. Extracts raw quantities for separate unit conversion.",
+      "source": "skills/recipe-parse/SKILL.md"
+    },
+    {
+      "name": "recipe-optimize",
+      "description": "Guidance for computing relaxed and optimized phase maps from the operation DAG using lib/recipe-optimize.js",
+      "source": "skills/recipe-optimize/SKILL.md"
+    },
+    {
+      "name": "recipe-generate",
+      "description": "Guidance for generating self-contained HTML recipe pages from JSON using lib/recipe-build.js",
+      "source": "skills/recipe-generate/SKILL.md"
+    }
+  ]
+}

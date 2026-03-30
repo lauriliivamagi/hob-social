@@ -27,5 +27,12 @@ Thumbs.db
 # Temporary files
 *.tmp
 
+# Local tooling config (not part of this project)
+.task-ref.json
+.npmrc
+.prettierrc
+.dockerignore
+
+# MCP tool state
 .firecrawl
 .playwright-mcp
