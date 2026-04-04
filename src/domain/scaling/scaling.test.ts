@@ -76,6 +76,24 @@ describe('convertUnit', () => {
     expect(result.quantity).toBe(18);
   });
 
+  it('converts tsp of vanilla extract to ml via ml_per_tsp density', () => {
+    const result = convertUnit(2, 'tsp', 'vanilla extract');
+    expect(result.unit).toBe('ml');
+    expect(result.quantity).toBe(10);
+  });
+
+  it('matches ingredient by substring (whole wheat flour matches flour)', () => {
+    const result = convertUnit(1, 'cup', 'whole wheat flour');
+    expect(result.unit).toBe('g');
+    // exact match for "whole wheat flour" key: 128 g_per_cup
+    expect(result.quantity).toBe(128);
+  });
+
+  it('converts metric volume unit with unknown ingredient without flagging', () => {
+    const result = convertUnit(100, 'ml', 'dragon fruit puree');
+    expect(result).toEqual({ quantity: 100, unit: 'ml' });
+  });
+
   it('returns unknown units as-is', () => {
     const result = convertUnit(3, 'cloves');
     expect(result).toEqual({ quantity: 3, unit: 'cloves' });

@@ -69,6 +69,12 @@ describe('timer', () => {
     expect(isTimerDone({ opId: 'op-1', totalSeconds: 60, remainingSeconds: 30, running: true })).toBe(false);
   });
 
+  it('tickTimer on already-stopped timer returns unchanged', () => {
+    const stopped = { opId: 'op-1', totalSeconds: 60, remainingSeconds: 30, running: false };
+    const result = tickTimer(stopped);
+    expect(result).toBe(stopped);
+  });
+
   it('formatTime formats correctly', () => {
     expect(formatTime(300)).toBe('5:00');
     expect(formatTime(30)).toBe('0:30');

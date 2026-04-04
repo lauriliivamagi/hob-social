@@ -172,4 +172,19 @@ describe('resolveIngredients', () => {
     const ids = result.map((i) => i.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
+
+  it('ignores references that match neither ingredient nor operation', () => {
+    const op: Recipe['operations'][0] = {
+      id: 'test-op',
+      type: 'cook',
+      action: 'test',
+      inputs: ['nonexistent-ref', 'spaghetti'],
+      time: 1,
+      activeTime: 1,
+    };
+    const result = resolveIngredients(op, validRecipe);
+    // Only spaghetti resolves; nonexistent-ref is silently skipped
+    expect(result).toHaveLength(1);
+    expect(result[0]!.id).toBe('spaghetti');
+  });
 });

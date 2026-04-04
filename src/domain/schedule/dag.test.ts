@@ -114,6 +114,25 @@ describe('validateDag', () => {
     expect(result.valid).toBe(true);
   });
 
+  it('detects unresolved reference in finish steps', () => {
+    const result = validateDag(
+      makeRecipe({
+        ingredients: [{ id: 'a', name: 'A', quantity: 1, unit: 'g', group: 'x' }],
+        operations: [
+          { id: 'op1', type: 'prep', action: 'chop', inputs: ['a'], time: 1, activeTime: 1 },
+        ],
+        finishSteps: [
+          { action: 'plate', inputs: ['op1', 'nonexistent-ref'], details: '' },
+        ],
+      }),
+    );
+    expect(result.valid).toBe(false);
+    if (!result.valid) {
+      expect(result.errors.some((e) => e.includes('nonexistent-ref'))).toBe(true);
+      expect(result.errors.some((e) => e.includes('Finish step'))).toBe(true);
+    }
+  });
+
   it('detects self-referencing op', () => {
     const result = validateDag(
       makeRecipe({
