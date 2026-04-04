@@ -274,7 +274,7 @@ export function recipesPlugin(): Plugin {
       const indexHtml = renderIndex()
         .replace(
           '<script type="module" src="/src/entries/catalog.ts"></script>',
-          `<script type="module" src="/${catalogJs}"></script>`,
+          `<script type="module" src="./${catalogJs}"></script>`,
         );
       this.emitFile({
         type: 'asset',

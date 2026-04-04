@@ -5,6 +5,7 @@ import { recipesPlugin } from './src/build/vite-plugin-recipes.js';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  base: './',
   resolve: {
     alias: {
       '@domain': resolve(__dirname, 'src/domain'),
