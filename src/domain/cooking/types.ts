@@ -5,7 +5,3 @@ export interface TimerState {
   running: boolean;
 }
 
-export interface StepPosition {
-  current: number;
-  total: number;
-}

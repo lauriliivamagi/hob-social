@@ -1,6 +1,6 @@
 {
   "name": "recipes",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
+    "knip": "knip",
     "build:legacy": "node lib/recipe-build.js"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "@playwright/test": "^1.59.1",
     "@types/node": "^25.5.2",
     "@vitest/coverage-v8": "^4.1.2",
+    "knip": "^6.3.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
     "vitest": "^4.1.2"

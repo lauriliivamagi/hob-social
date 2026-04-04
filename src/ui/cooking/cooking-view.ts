@@ -115,7 +115,7 @@ export class CookingView extends LitElement {
   @property({ type: Object }) accessor i18n: any = {};
   @property({ type: Object }) accessor recipe: Recipe | null = null;
 
-  @state() accessor _activeTimers: ActiveTimer[] = [];
+  @property({ type: Array }) accessor activeTimers: ActiveTimer[] = [];
 
   private _steps: CookingStep[] = [];
 
@@ -156,11 +156,11 @@ export class CookingView extends LitElement {
     const ingredients = this._getIngredients(op);
 
     const timerForOp = isOp
-      ? this._activeTimers.find(t => t.opId === op.id)
+      ? this.activeTimers.find(t => t.opId === op.id)
       : undefined;
 
     return html`
-      <awareness-bar .timers=${this._activeTimers}></awareness-bar>
+      <awareness-bar .timers=${this.activeTimers}></awareness-bar>
 
       ${step.contextOp ? html`
         <context-banner .operation=${step.contextOp}></context-banner>

@@ -6,10 +6,14 @@ import type { RecipeContext } from '../state/recipe-machine.js';
 import type { Recipe } from '../../domain/recipe/types.js';
 import type { Phase, ScheduleMode } from '../../domain/schedule/types.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
+import { playTimerAlarm } from '../state/audio.js';
+import { requestWakeLock, releaseWakeLock } from '../state/wake-lock.js';
+import { loadState, saveState } from '../state/persistence.js';
 import './recipe-header.js';
 import './servings-adjuster.js';
 import './view-tabs.js';
 import '../overview/overview-view.js';
+import '../cooking/cooking-view.js';
 
 interface WindowGlobals {
   RECIPE: Recipe;
@@ -31,7 +35,7 @@ export class RecipePage extends LitElement {
         min-height: 100dvh;
       }
 
-      .cooking-placeholder {
+      .loading-placeholder {
         margin: 16px;
         padding: 24px;
         background: var(--card);
@@ -44,6 +48,7 @@ export class RecipePage extends LitElement {
   ];
 
   private _actor!: Actor<typeof recipeMachine>;
+  private _timerIntervals = new Map<string, ReturnType<typeof setInterval>>();
 
   @state() private _snapshot: { context: RecipeContext; value: string } | null = null;
 
@@ -69,6 +74,10 @@ export class RecipePage extends LitElement {
     const recipe = this._recipe;
     if (!recipe) return;
 
+    const persisted = loadState();
+    const slug = recipe.meta.title.toLowerCase().replace(/\s+/g, '-');
+    const savedServings = persisted.servings?.[slug];
+
     const totalSteps = this._scheduleRelaxed.reduce(
       (sum, phase) => sum + phase.operations.length,
       0,
@@ -81,8 +90,8 @@ export class RecipePage extends LitElement {
           relaxed: this._scheduleRelaxed,
           optimized: this._scheduleOptimized,
         },
-        mode: 'relaxed' as ScheduleMode,
-        servings: recipe.meta.servings,
+        mode: persisted.mode ?? 'relaxed' as ScheduleMode,
+        servings: savedServings ?? recipe.meta.servings,
         originalServings: recipe.meta.servings,
         totalSteps,
       },
@@ -100,24 +109,105 @@ export class RecipePage extends LitElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
+    for (const interval of this._timerIntervals.values()) {
+      clearInterval(interval);
+    }
+    this._timerIntervals.clear();
+    releaseWakeLock();
     this._actor?.stop();
   }
 
   private _onAdjustServings(e: CustomEvent<{ delta: number }>) {
     this._actor.send({ type: 'ADJUST_SERVINGS', delta: e.detail.delta });
+    this._persistState();
   }
 
   private _onSwitchView(e: CustomEvent<{ view: 'overview' | 'cooking' }>) {
+    const prev = this._snapshot?.value;
     this._actor.send({ type: 'SWITCH_VIEW', view: e.detail.view });
+
+    if (e.detail.view === 'cooking' && prev !== 'cooking') {
+      requestWakeLock();
+    } else if (e.detail.view === 'overview' && prev === 'cooking') {
+      releaseWakeLock();
+    }
   }
 
   private _onSetMode(e: CustomEvent<{ mode: ScheduleMode }>) {
     this._actor.send({ type: 'SET_MODE', mode: e.detail.mode });
+    this._persistState();
+  }
+
+  private _persistState() {
+    const snap = this._actor.getSnapshot();
+    const ctx = snap.context;
+    const slug = ctx.recipe.meta.title.toLowerCase().replace(/\s+/g, '-');
+    const persisted = loadState();
+    saveState({
+      ...persisted,
+      lastRecipeSlug: slug,
+      mode: ctx.mode,
+      servings: { ...persisted.servings, [slug]: ctx.servings },
+    });
+  }
+
+  private _buildTimerPills(ctx: RecipeContext) {
+    const pills: { opId: string; remaining: number; action: string }[] = [];
+    for (const [opId, timer] of ctx.timers) {
+      let action = '';
+      for (const phase of ctx.scheduleModes[ctx.mode]) {
+        for (const op of phase.operations) {
+          if ('id' in op && op.id === opId) {
+            action = op.action;
+          }
+        }
+      }
+      pills.push({ opId, remaining: timer.remaining, action });
+    }
+    return pills;
+  }
+
+  private _onNextStep() {
+    this._actor.send({ type: 'NEXT_STEP' });
+  }
+
+  private _onPrevStep() {
+    this._actor.send({ type: 'PREV_STEP' });
+  }
+
+  private _onStartTimer(e: CustomEvent<{ opId: string; seconds: number }>) {
+    const { opId, seconds } = e.detail;
+    this._actor.send({ type: 'START_TIMER', opId, seconds });
+
+    const interval = setInterval(() => {
+      const snap = this._actor.getSnapshot();
+      const timer = snap.context.timers.get(opId);
+      if (!timer || timer.remaining <= 0) {
+        clearInterval(interval);
+        this._timerIntervals.delete(opId);
+        this._actor.send({ type: 'TIMER_DONE', opId });
+        playTimerAlarm();
+        return;
+      }
+      this._actor.send({ type: 'TIMER_TICK', opId });
+    }, 1000);
+
+    this._timerIntervals.set(opId, interval);
+  }
+
+  private _onCancelTimer(e: CustomEvent<{ opId: string }>) {
+    const { opId } = e.detail;
+    const interval = this._timerIntervals.get(opId);
+    if (interval) {
+      clearInterval(interval);
+      this._timerIntervals.delete(opId);
+    }
+    this._actor.send({ type: 'CANCEL_TIMER', opId });
   }
 
   override render() {
     if (!this._snapshot || !this._recipe) {
-      return html`<div class="cooking-placeholder">Loading recipe...</div>`;
+      return html`<div class="loading-placeholder">Loading recipe...</div>`;
     }
 
     const ctx = this._snapshot.context;
@@ -159,7 +249,20 @@ export class RecipePage extends LitElement {
               @set-mode=${this._onSetMode}
             ></overview-view>
           `
-        : html`<div class="cooking-placeholder">Cooking view placeholder</div>`}
+        : html`
+            <cooking-view
+              .phases=${phases}
+              .scaleFactor=${scaleFactor}
+              .currentStep=${ctx.currentStep}
+              .recipe=${ctx.recipe}
+              .i18n=${this._i18n}
+              .activeTimers=${this._buildTimerPills(ctx)}
+              @next-step=${this._onNextStep}
+              @prev-step=${this._onPrevStep}
+              @start-timer=${this._onStartTimer}
+              @cancel-timer=${this._onCancelTimer}
+            ></cooking-view>
+          `}
     `;
   }
 }
