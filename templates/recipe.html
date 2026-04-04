@@ -72,6 +72,21 @@ body {
   transition: color var(--transition);
 }
 .back-link:hover { color: var(--accent-teal); }
+.back-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.app-version {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  padding: 1px 6px;
+  border: 1px solid var(--text-muted);
+  border-radius: 4px;
+  opacity: 0.6;
+}
 .recipe-header h1 {
   font-size: var(--text-2xl);
   font-weight: 700;
@@ -1366,11 +1381,18 @@ function renderHeader(ctx, compact) {
 
   var h = document.createElement('div');
 
+  var backRow = document.createElement('div');
+  backRow.className = 'back-row';
   var backLink = document.createElement('a');
   backLink.className = 'back-link';
   backLink.href = '../index.html';
   backLink.textContent = '\u2190 ' + (I18N.labels.allRecipes || 'All Recipes');
-  h.appendChild(backLink);
+  backRow.appendChild(backLink);
+  var versionEl = document.createElement('span');
+  versionEl.className = 'app-version';
+  versionEl.textContent = 'v{{VERSION}}';
+  backRow.appendChild(versionEl);
+  h.appendChild(backRow);
 
   var h1 = document.createElement('h1');
   h1.textContent = m.title;

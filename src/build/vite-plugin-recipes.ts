@@ -47,6 +47,7 @@ export function recipesPlugin(): Plugin {
   let recipesDir: string;
   let templatesDir: string;
   let i18nDir: string;
+  let appVersion: string;
   let recipeMetas: RecipeMeta[] = [];
   let recipeDataMap: Map<string, RecipeData> = new Map();
 
@@ -99,6 +100,7 @@ export function recipesPlugin(): Plugin {
     return template
       .replace('{{RECIPES_JSON}}', JSON.stringify(recipeMetas))
       .replace('{{I18N_JSON}}', JSON.stringify(i18n))
+      .replace(/\{\{VERSION\}\}/g, appVersion)
       .replace(/\{\{MANIFEST_PATH\}\}/g, 'app.webmanifest')
       .replace(/\{\{SW_PATH\}\}/g, 'sw.js')
       .replace(/\{\{ICON_PATH\}\}/g, 'icon-512.png')
@@ -112,6 +114,7 @@ export function recipesPlugin(): Plugin {
       .replace('{{I18N_JSON}}', JSON.stringify(data.i18n))
       .replace('{{SCHEDULE_RELAXED_JSON}}', JSON.stringify(data.relaxed))
       .replace('{{SCHEDULE_OPTIMIZED_JSON}}', JSON.stringify(data.optimized))
+      .replace(/\{\{VERSION\}\}/g, appVersion)
       .replace(/\{\{MANIFEST_PATH\}\}/g, '../app.webmanifest')
       .replace(/\{\{SW_PATH\}\}/g, '../sw.js')
       .replace(/\{\{ICON_PATH\}\}/g, '../icon-512.png')
@@ -139,6 +142,8 @@ export function recipesPlugin(): Plugin {
       recipesDir = resolve(root, 'recipes');
       templatesDir = resolve(root, 'templates');
       i18nDir = resolve(templatesDir, 'i18n');
+      const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
+      appVersion = pkg.version ?? '0.0.0';
     },
 
     buildStart() {
