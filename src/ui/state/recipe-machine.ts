@@ -43,7 +43,7 @@ export const recipeMachine = setup({
         Math.max(1, context.servings + (event as { type: 'ADJUST_SERVINGS'; delta: number }).delta),
     }),
     nextStep: assign({
-      currentStep: ({ context }) => Math.min(context.currentStep + 1, context.totalSteps - 1),
+      currentStep: ({ context }) => Math.min(context.currentStep + 1, context.totalSteps),
     }),
     prevStep: assign({
       currentStep: ({ context }) => Math.max(context.currentStep - 1, 0),

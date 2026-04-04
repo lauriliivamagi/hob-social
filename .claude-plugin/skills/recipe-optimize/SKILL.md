@@ -5,20 +5,15 @@ description: "Guidance for computing relaxed and optimized phase maps from the o
 
 # Recipe Optimize Skill
 
-Compute relaxed and optimized phase maps from a recipe's operation DAG. This skill guides the use of `lib/recipe-optimize.js` or provides the logic for inline optimization.
+Compute relaxed and optimized phase maps from a recipe's operation DAG. Schedule computation is implemented in TypeScript at `src/domain/schedule/schedule.ts`, DAG validation in `src/domain/schedule/dag.ts`. These are called by the Vite build plugin (`src/build/vite-plugin-recipes.ts`) automatically during `npm run build`.
 
-## Running the Optimizer
+## Running the Build
 
 ```bash
-node ${CLAUDE_PROJECT_DIR}/lib/recipe-optimize.js --recipe <path-to-json>
+cd ${CLAUDE_PROJECT_DIR} && npm run build
 ```
 
-### Flags
-
-- `--validate` — Check the DAG for cycles, unresolved references, and equipment conflicts. Exit with error if invalid.
-- `--recipe <path>` — Path to the recipe JSON file.
-- `--mode relaxed|optimized|both` — Which phase map to compute. Default: `both`.
-- `--output <path>` — Write computed phase maps to a file. Default: stdout as JSON.
+The Vite plugin processes all recipe JSON files, validates DAGs, and computes both relaxed and optimized schedules automatically.
 
 ## Two Modes
 
@@ -77,12 +72,12 @@ When running with `--validate`, check:
 5. **Sub-products valid** — all `subProducts[].finalOp` must reference operation IDs
 6. **No orphan operations** — every operation must be reachable from at least one finish step (warn, don't error)
 
-## Inline Optimization (Fallback)
+## Implementation Details
 
-If `lib/recipe-optimize.js` does not exist yet, compute the phase maps inline:
+The schedule computation is in `src/domain/schedule/schedule.ts`:
 
-1. Build an adjacency list from operations and their inputs
+1. Builds an adjacency list from operations and their inputs
 2. Topological sort to get execution order
 3. For relaxed: group by type (prep first, then cook, then finish)
 4. For optimized: compute critical path, identify idle windows, redistribute prep
-5. Store results in the recipe JSON under `meta.totalTime.relaxed` and `meta.totalTime.optimized`
+5. Results are embedded in the generated HTML as `SCHEDULE_RELAXED` and `SCHEDULE_OPTIMIZED` globals

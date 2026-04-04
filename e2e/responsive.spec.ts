@@ -12,14 +12,14 @@ test.describe('Responsive Layout', () => {
   test('tablet viewport shows recipe grid', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto('/');
-    const cards = page.locator('.recipe-card');
+    const cards = page.locator('recipe-card');
     await expect(cards).toHaveCount(2);
   });
 
   test('desktop viewport shows recipe grid', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/');
-    const cards = page.locator('.recipe-card');
+    const cards = page.locator('recipe-card');
     await expect(cards).toHaveCount(2);
   });
 });

@@ -46,11 +46,7 @@ Key points:
 
 Run unit conversion to normalize all US/UK measurements to SI:
 
-```bash
-node ${CLAUDE_PROJECT_DIR}/lib/unit-convert.js --recipe /tmp/recipe-draft.json
-```
-
-If the script is not yet available, perform conversions inline using these rules:
+Unit conversion is implemented in `src/domain/scaling/unit-convert.ts`. Perform conversions inline using these rules:
 - Volume: cup = 240 ml, tbsp = 15 ml, tsp = 5 ml, fl oz = 30 ml
 - Weight: oz = 28.35 g, lb = 453.6 g
 - Temperature: (F - 32) x 5/9 = C
@@ -63,11 +59,7 @@ The JSON must store only metric units. The `originalText` preserves original uni
 
 Run DAG validation:
 
-```bash
-node ${CLAUDE_PROJECT_DIR}/lib/recipe-optimize.js --validate --recipe <path-to-json>
-```
-
-If the script is not yet available, validate inline:
+DAG validation is implemented in `src/domain/schedule/dag.ts`. Validate inline:
 - Check for cycles in the operation graph
 - Verify all `inputs` references point to valid ingredient IDs or operation IDs
 - Check for equipment conflicts (two operations using the same equipment simultaneously)

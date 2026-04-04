@@ -51,34 +51,7 @@ export function validateDag(recipe: Recipe): ValidationResult {
   }
 
   // 2. Cycle detection via Kahn's algorithm
-  const inDegree = new Map<string, number>();
-  const adj = new Map<string, string[]>();
-  for (const op of operations) {
-    inDegree.set(op.id, 0);
-    adj.set(op.id, []);
-  }
-  for (const op of operations) {
-    for (const ref of op.inputs || []) {
-      if (operationMap.has(ref)) {
-        adj.get(ref)!.push(op.id);
-        inDegree.set(op.id, inDegree.get(op.id)! + 1);
-      }
-    }
-  }
-  const queue: string[] = [];
-  for (const [id, deg] of inDegree) {
-    if (deg === 0) queue.push(id);
-  }
-  const sorted: string[] = [];
-  while (queue.length > 0) {
-    const node = queue.shift()!;
-    sorted.push(node);
-    for (const neighbour of adj.get(node)!) {
-      const newDeg = inDegree.get(neighbour)! - 1;
-      inDegree.set(neighbour, newDeg);
-      if (newDeg === 0) queue.push(neighbour);
-    }
-  }
+  const sorted = topoSort(operations);
   if (sorted.length !== operations.length) {
     const inCycle = operations
       .filter((op) => !sorted.includes(op.id))
@@ -114,7 +87,6 @@ export function validateDag(recipe: Recipe): ValidationResult {
 
 export function topoSort(
   operations: Operation[],
-  ingredientMap: Map<string, unknown>,
 ): string[] {
   const operationMap = indexById(operations);
   const inDegree = new Map<string, number>();

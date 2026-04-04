@@ -12,13 +12,15 @@ test.describe('PWA', () => {
 
   test('service worker registers', async ({ page }) => {
     await page.goto('/');
-    // Give SW time to register
-    await page.waitForTimeout(1000);
-    const swRegistered = await page.evaluate(() =>
-      navigator.serviceWorker?.controller !== null ||
-      navigator.serviceWorker?.ready !== undefined
-    );
-    expect(swRegistered).toBe(true);
+    
+    // Wait until service worker is registered and ready
+    const swRegistered = await page.evaluate(async () => {
+      if (!('serviceWorker' in navigator)) return false;
+      const reg = await navigator.serviceWorker.ready;
+      return !!reg;
+    });
+
+    expect(swRegistered).toBeTruthy();
   });
 
   test('offline mode serves cached page', async ({ page }) => {
@@ -45,7 +47,7 @@ test.describe('PWA', () => {
     }
 
     // Second load so the SW caches the navigation response via stale-while-revalidate
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'load' });
 
     // Use CDP to emulate offline at network level (affects SW fetch too)
     const cdp = await page.context().newCDPSession(page);

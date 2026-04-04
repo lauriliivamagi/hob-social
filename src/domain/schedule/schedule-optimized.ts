@@ -120,7 +120,7 @@ export function buildOptimizedSchedule(
   const phases: Phase[] = [];
 
   const criticalPathIds = findCriticalPath(cookOps, operationMap);
-  const sorted = topoSort(allOperations, indexById(allOperations));
+  const sorted = topoSort(allOperations);
   const mainCookOps = sorted
     .filter((id) => criticalPathIds.has(id))
     .map((id) => operationMap.get(id)!);

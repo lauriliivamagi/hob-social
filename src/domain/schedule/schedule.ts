@@ -6,9 +6,8 @@ import { buildOptimizedSchedule } from './schedule-optimized.js';
 
 export function computeSchedule(recipe: Recipe, mode: ScheduleMode): Phase[] {
   const operations = recipe.operations || [];
-  const ingredientMap = indexById(recipe.ingredients || []);
   const operationMap = indexById(operations);
-  const sorted = topoSort(operations, ingredientMap);
+  const sorted = topoSort(operations);
 
   const prepOps = sorted
     .filter((id) => operationMap.get(id)!.type === 'prep')

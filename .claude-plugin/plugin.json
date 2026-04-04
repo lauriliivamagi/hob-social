@@ -37,12 +37,12 @@
     },
     {
       "name": "recipe-optimize",
-      "description": "Guidance for computing relaxed and optimized phase maps from the operation DAG using lib/recipe-optimize.js",
+      "description": "Guidance for computing relaxed and optimized phase maps from the operation DAG using src/domain/schedule/",
       "source": "skills/recipe-optimize/SKILL.md"
     },
     {
       "name": "recipe-generate",
-      "description": "Guidance for generating self-contained HTML recipe pages from JSON using lib/recipe-build.js",
+      "description": "Guidance for generating HTML recipe pages from JSON using the Vite build plugin",
       "source": "skills/recipe-generate/SKILL.md"
     }
   ]

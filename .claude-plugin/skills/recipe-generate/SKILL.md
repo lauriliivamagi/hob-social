@@ -5,20 +5,15 @@ description: "Guidance for generating self-contained HTML recipe pages from JSON
 
 # Recipe Generate Skill
 
-Generate self-contained interactive HTML recipe pages from structured JSON. This skill guides the use of `lib/recipe-build.js` or provides the logic for inline generation.
+Generate interactive HTML recipe pages from structured JSON. The build is handled by the Vite plugin at `src/build/vite-plugin-recipes.ts` which processes templates, computes schedules, and emits HTML files.
 
-## Running the Builder
+## Running the Build
 
 ```bash
-# Build a single recipe
-node ${CLAUDE_PROJECT_DIR}/lib/recipe-build.js --slug <category/slug>
-
-# Build all recipes
-node ${CLAUDE_PROJECT_DIR}/lib/recipe-build.js
-
-# Rebuild index only
-node ${CLAUDE_PROJECT_DIR}/lib/recipe-build.js --index-only
+cd ${CLAUDE_PROJECT_DIR} && npm run build
 ```
+
+This processes all recipe JSON files and generates HTML pages in `site/`.
 
 ## Build Process
 
@@ -33,12 +28,11 @@ node ${CLAUDE_PROJECT_DIR}/lib/recipe-build.js --index-only
 
 A single self-contained HTML file at `site/<category>/<slug>.html`.
 
-Self-contained means:
-- All CSS is inlined (no external stylesheets)
-- All JavaScript is inlined (no external scripts)
-- No network requests after initial page load
-- No framework dependencies — vanilla HTML/CSS/JS
-- Works when opened directly as a file in any modern browser
+The generated pages use Lit web components with bundled JavaScript:
+- CSS is encapsulated in Lit Shadow DOM components
+- JavaScript is bundled by Vite (Lit + xstate)
+- PWA service worker enables offline use
+- Pages are served via GitHub Pages or any static host
 
 ## HTML Structure: Two Views
 
@@ -101,14 +95,16 @@ When building the index (`--index-only` or full build):
    - Difficulty and time badges
    - Links to each recipe's HTML page
 
-## Inline Generation (Fallback)
+## Architecture
 
-If `lib/recipe-build.js` does not exist yet, generate the HTML inline:
+The Lit web components are in `src/ui/`:
+- `src/ui/catalog/catalog-page.ts` — index page component
+- `src/ui/recipe/recipe-page.ts` — recipe page component (uses xstate for state management)
+- Entry points: `src/entries/catalog.ts` and `src/entries/recipe.ts`
 
-1. Read the recipe JSON
-2. Read the template (or generate from scratch if template does not exist)
-3. Read i18n strings (or use hardcoded English defaults)
-4. Compute phase maps using the recipe-optimize skill
-5. Build the HTML string with all CSS and JS inlined
-6. Write to `site/<category>/<slug>.html`, creating directories as needed
-7. Verify the file was written and report its size
+The Vite plugin (`src/build/vite-plugin-recipes.ts`):
+1. Reads recipe JSON files from `recipes/`
+2. Validates DAGs and computes schedules
+3. Renders HTML from `templates/` with data injected as globals
+4. Bundles Lit components and injects script tags
+5. Emits HTML files to `site/`

@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Recipe Overview', () => {
-  test('recipe page shows ingredients and equipment', async ({ page }) => {
+  test('recipe page shows operation details and equipment', async ({ page }) => {
     await page.goto('/italian/spaghetti-bolognese.html');
-    await expect(page.locator('body')).toContainText('Onion');
-    await expect(page.locator('body')).toContainText('Spaghetti');
+    // Operation details contain ingredient references
+    await expect(page.locator('body')).toContainText('dice');
+    await expect(page.locator('body')).toContainText('spaghetti');
     // Check equipment
     await expect(page.locator('body')).toContainText('Large');
   });

@@ -5,6 +5,7 @@ import {
   readdirSync,
   existsSync,
 } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import { join, dirname, relative, resolve } from 'node:path';
 import { computeSchedule, computeTotalTime } from '../domain/schedule/schedule.js';
 import { validateDag } from '../domain/schedule/dag.js';
@@ -51,46 +52,68 @@ export function recipesPlugin(): Plugin {
   let recipeMetas: RecipeMeta[] = [];
   let recipeDataMap: Map<string, RecipeData> = new Map();
 
-  function processRecipes(): void {
+  function processRecipe(file: string): void {
+    const raw = readFileSync(file, 'utf8');
+    if (!raw.trim()) return;
+
+    let recipe: Recipe;
+    try {
+      recipe = JSON.parse(raw);
+    } catch (e) {
+      console.warn(`Skipping ${file}: invalid JSON — ${(e as Error).message}`);
+      return;
+    }
+
+    const validation = validateDag(recipe);
+    if (!validation.valid) {
+      console.error(
+        `DAG validation failed for ${recipe.meta.slug}:`,
+        validation.errors,
+      );
+      return;
+    }
+
+    const relaxed = computeSchedule(recipe, 'relaxed');
+    const optimized = computeSchedule(recipe, 'optimized');
+    const totalTime = {
+      relaxed: computeTotalTime(relaxed),
+      optimized: computeTotalTime(optimized),
+    };
+    recipe.meta.totalTime = totalTime;
+
+    const relPath = relative(recipesDir, file);
+    const i18n = loadI18n(recipe.meta.language || 'en', i18nDir);
+    const url = relPath.replace(/\.json$/, '.html');
+
+    recipeDataMap.set(url, { recipe, relaxed, optimized, i18n });
+    
+    const newMeta = {
+      title: recipe.meta.title,
+      slug: recipe.meta.slug,
+      category: dirname(relPath),
+      tags: recipe.meta.tags || [],
+      difficulty: recipe.meta.difficulty || 'medium',
+      totalTime,
+      servings: recipe.meta.servings,
+      language: recipe.meta.language || 'en',
+      url,
+    };
+    
+    const metaIndex = recipeMetas.findIndex(m => m.url === url);
+    if (metaIndex >= 0) {
+      recipeMetas[metaIndex] = newMeta;
+    } else {
+      recipeMetas.push(newMeta);
+    }
+  }
+
+  function processAllRecipes(): void {
     recipeMetas = [];
     recipeDataMap = new Map();
     const files = findJsonFiles(recipesDir);
 
     for (const file of files) {
-      const recipe: Recipe = JSON.parse(readFileSync(file, 'utf8'));
-      const validation = validateDag(recipe);
-      if (!validation.valid) {
-        console.error(
-          `DAG validation failed for ${recipe.meta.slug}:`,
-          validation.errors,
-        );
-        continue;
-      }
-
-      const relaxed = computeSchedule(recipe, 'relaxed');
-      const optimized = computeSchedule(recipe, 'optimized');
-      const totalTime = {
-        relaxed: computeTotalTime(relaxed),
-        optimized: computeTotalTime(optimized),
-      };
-      recipe.meta.totalTime = totalTime;
-
-      const relPath = relative(recipesDir, file);
-      const i18n = loadI18n(recipe.meta.language || 'en', i18nDir);
-      const url = relPath.replace(/\.json$/, '.html');
-
-      recipeDataMap.set(url, { recipe, relaxed, optimized, i18n });
-      recipeMetas.push({
-        title: recipe.meta.title,
-        slug: recipe.meta.slug,
-        category: dirname(relPath),
-        tags: recipe.meta.tags || [],
-        difficulty: recipe.meta.difficulty || 'medium',
-        totalTime,
-        servings: recipe.meta.servings,
-        language: recipe.meta.language || 'en',
-        url,
-      });
+      processRecipe(file);
     }
   }
 
@@ -148,17 +171,33 @@ export function recipesPlugin(): Plugin {
     },
 
     buildStart() {
-      processRecipes();
+      processAllRecipes();
     },
 
     configureServer(server: ViteDevServer) {
-      processRecipes();
+      processAllRecipes();
 
       // Watch recipes directory for changes
       server.watcher.add(recipesDir);
+      server.watcher.on('add', (path: string) => {
+        if (path.startsWith(recipesDir) && path.endsWith('.json')) {
+          processRecipe(path);
+          server.ws.send({ type: 'full-reload' });
+        }
+      });
       server.watcher.on('change', (path: string) => {
         if (path.startsWith(recipesDir) && path.endsWith('.json')) {
-          processRecipes();
+          processRecipe(path);
+          server.ws.send({ type: 'full-reload' });
+        }
+      });
+      server.watcher.on('unlink', (path: string) => {
+        if (path.startsWith(recipesDir) && path.endsWith('.json')) {
+          const relPath = relative(recipesDir, path);
+          const url = relPath.replace(/\.json$/, '.html');
+          recipeDataMap.delete(url);
+          const metaIndex = recipeMetas.findIndex(m => m.url === url);
+          if (metaIndex >= 0) recipeMetas.splice(metaIndex, 1);
           server.ws.send({ type: 'full-reload' });
         }
       });
@@ -171,7 +210,7 @@ export function recipesPlugin(): Plugin {
         'icon-maskable.png': 'image/png',
       };
       server.middlewares.use(
-        (req: IncomingMessage, res: ServerResponse, next: () => void) => {
+        async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
           const reqUrl = req.url ?? '/';
           const stripped = reqUrl.replace(/^\//, '').split('?')[0]!;
 
@@ -180,7 +219,7 @@ export function recipesPlugin(): Plugin {
           if (basename in staticMimeTypes) {
             const filePath = join(templatesDir, basename);
             try {
-              const content = readFileSync(filePath);
+              const content = await readFile(filePath);
               res.setHeader('Content-Type', staticMimeTypes[basename]!);
               res.end(content);
               return;
@@ -231,21 +270,27 @@ export function recipesPlugin(): Plugin {
         }
       }
 
-      // Generate index HTML with Lit component script
+      // Generate index HTML — replace dev entry path with production bundle
       const indexHtml = renderIndex()
-        .replace('</body>', `<script type="module" src="/${catalogJs}"></script>\n</body>`);
+        .replace(
+          '<script type="module" src="/src/entries/catalog.ts"></script>',
+          `<script type="module" src="/${catalogJs}"></script>`,
+        );
       this.emitFile({
         type: 'asset',
         fileName: 'index.html',
         source: indexHtml,
       });
 
-      // Generate recipe HTML files with Lit component script
+      // Generate recipe HTML files — replace dev entry path with production bundle
       for (const [url, data] of recipeDataMap) {
         const depth = url.split('/').length - 1;
         const prefix = depth === 0 ? './' : '../'.repeat(depth);
         const html = renderRecipe(data, depth)
-          .replace('</body>', `<script type="module" src="${prefix}${recipeJs}"></script>\n</body>`);
+          .replace(
+            '<script type="module" src="/src/entries/recipe.ts"></script>',
+            `<script type="module" src="${prefix}${recipeJs}"></script>`,
+          );
         this.emitFile({
           type: 'asset',
           fileName: url,
