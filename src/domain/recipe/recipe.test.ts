@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { recipeSchema } from './schema.js';
+import { z } from 'zod';
+import { recipeSchema, createRecipeSchema } from './schema.js';
 import { parseRecipe } from './parse.js';
 import { resolveIngredients } from './resolve.js';
 import type { Recipe } from './types.js';
@@ -149,6 +150,149 @@ describe('recipeSchema', () => {
     const result = recipeSchema.safeParse(bad);
     expect(result.success).toBe(false);
   });
+
+  it('rejects empty string for title', () => {
+    const bad = {
+      ...validRecipeInput,
+      meta: { ...validRecipeInput.meta, title: '' },
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects empty string for ingredient name', () => {
+    const bad = {
+      ...validRecipeInput,
+      ingredients: [
+        { ...validRecipeInput.ingredients[0]!, name: '' },
+      ],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects invalid URL pattern (missing ://)', () => {
+    const bad = {
+      ...validRecipeInput,
+      meta: { ...validRecipeInput.meta, source: 'httpfoo' },
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts valid https URL', () => {
+    const good = {
+      ...validRecipeInput,
+      meta: { ...validRecipeInput.meta, source: 'https://example.com/recipe' },
+    };
+    const result = recipeSchema.safeParse(good);
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects non-integer equipment count', () => {
+    const bad = {
+      ...validRecipeInput,
+      equipment: [{ id: 'large-pot', name: 'Large Pot', count: 1.5 }],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects zero equipment count', () => {
+    const bad = {
+      ...validRecipeInput,
+      equipment: [{ id: 'large-pot', name: 'Large Pot', count: 0 }],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects activeTime greater than time', () => {
+    const bad = {
+      ...validRecipeInput,
+      operations: [
+        { ...validRecipeInput.operations[0], time: 5, activeTime: 10 },
+      ],
+      finishSteps: [{ action: 'done', inputs: ['dice-onion'] }],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts activeTime equal to time', () => {
+    const result = recipeSchema.safeParse(validRecipeInput);
+    expect(result.success).toBe(true);
+    // dice-onion has time: 5, activeTime: 5 — should pass
+  });
+
+  it('rejects malformed input IDs (not slug pattern)', () => {
+    const bad = {
+      ...validRecipeInput,
+      operations: [
+        { ...validRecipeInput.operations[0], inputs: ['INVALID SLUG!'] },
+      ],
+      finishSteps: [{ action: 'done', inputs: ['dice-onion'] }],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects empty finishStep inputs', () => {
+    const bad = {
+      ...validRecipeInput,
+      finishSteps: [{ action: 'plate', inputs: [] }],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+  });
+
+  it('allows empty operation inputs (e.g., preheat oven)', () => {
+    const withPreheat = {
+      ...validRecipeInput,
+      operations: [
+        ...validRecipeInput.operations,
+        {
+          id: 'preheat-oven',
+          type: 'prep' as const,
+          action: 'preheat',
+          inputs: [],
+          equipment: { use: 'large-pot', release: false },
+          time: 15,
+          activeTime: 1,
+        },
+      ],
+    };
+    const result = recipeSchema.safeParse(withPreheat);
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects unknown tags', () => {
+    const bad = {
+      ...validRecipeInput,
+      meta: { ...validRecipeInput.meta, tags: ['pasta', 'italian', 'nonexistent-tag'] },
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const tagError = result.error.issues.find(i => i.path.join('.').includes('tags'));
+      expect(tagError?.message).toContain('Unknown tag');
+    }
+  });
+
+  it('accepts all valid tags from config', () => {
+    const result = recipeSchema.safeParse(validRecipeInput);
+    expect(result.success).toBe(true);
+  });
+
+  it('createRecipeSchema allows custom tag sets', () => {
+    const customSchema = createRecipeSchema({ validTags: new Set(['custom-tag']) });
+    const input = {
+      ...validRecipeInput,
+      meta: { ...validRecipeInput.meta, tags: ['custom-tag'] },
+    };
+    const result = customSchema.safeParse(input);
+    expect(result.success).toBe(true);
+  });
 });
 
 describe('parseRecipe', () => {
@@ -169,7 +313,8 @@ describe('parseRecipe', () => {
         { id: 'a', type: 'prep', action: 'x', inputs: ['b'], time: 1, activeTime: 1 },
         { id: 'b', type: 'prep', action: 'y', inputs: ['a'], time: 1, activeTime: 1 },
       ],
-      finishSteps: [{ action: 'done', inputs: [] }],
+      subProducts: [],
+      finishSteps: [{ action: 'done', inputs: ['a'] }],
     };
     expect(() => parseRecipe(cyclic)).toThrow('Invalid recipe DAG');
   });
@@ -222,5 +367,114 @@ describe('resolveIngredients', () => {
     const result = resolveIngredients(testOp, validRecipe);
     expect(result).toHaveLength(1);
     expect(result[0]!.id).toBe('spaghetti');
+  });
+});
+
+describe('z.toJSONSchema generation', () => {
+  it('generates valid JSON Schema from recipe schema (input shape)', () => {
+    const jsonSchema = z.toJSONSchema(recipeSchema, {
+      io: 'input',
+      target: 'draft-2020-12',
+    });
+    expect(jsonSchema).toBeDefined();
+    expect(jsonSchema.type).toBe('object');
+    expect(jsonSchema.additionalProperties).toBe(false);
+    expect(jsonSchema.properties).toHaveProperty('meta');
+    expect(jsonSchema.properties).toHaveProperty('ingredients');
+    expect(jsonSchema.properties).toHaveProperty('operations');
+    expect(jsonSchema.properties).toHaveProperty('finishSteps');
+    expect(jsonSchema.description).toBe('Structured recipe data model for the Recipe Visualization App');
+  });
+
+  it('preserves field descriptions in generated schema', () => {
+    const jsonSchema = z.toJSONSchema(recipeSchema, {
+      io: 'input',
+      target: 'draft-2020-12',
+    }) as any;
+    const metaProps = jsonSchema.properties.meta.properties;
+    expect(metaProps.title.description).toBe('Human-readable recipe title');
+    expect(metaProps.difficulty.description).toBe('Recipe difficulty level');
+  });
+
+  it('generates input shape (flat quantity+unit, not Quantity VO)', () => {
+    const jsonSchema = z.toJSONSchema(recipeSchema, {
+      io: 'input',
+      target: 'draft-2020-12',
+    }) as any;
+    const ingredientProps = jsonSchema.properties.ingredients.items.properties;
+    expect(ingredientProps).toHaveProperty('quantity');
+    expect(ingredientProps).toHaveProperty('unit');
+    expect(ingredientProps.quantity.type).toBe('number');
+    expect(ingredientProps.unit.type).toBe('string');
+  });
+});
+
+describe('cross-entity validation (superRefine)', () => {
+  it('rejects duplicate ingredient IDs', () => {
+    const bad = {
+      ...validRecipeInput,
+      ingredients: [
+        validRecipeInput.ingredients[0]!,
+        { ...validRecipeInput.ingredients[1]!, id: validRecipeInput.ingredients[0]!.id },
+      ],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some(i => i.message.includes('Duplicate ingredient ID'))).toBe(true);
+    }
+  });
+
+  it('rejects duplicate operation IDs', () => {
+    const bad = {
+      ...validRecipeInput,
+      operations: [
+        validRecipeInput.operations[0],
+        { ...validRecipeInput.operations[1]!, id: validRecipeInput.operations[0]!.id },
+      ],
+      subProducts: [],
+      finishSteps: [{ action: 'done', inputs: ['dice-onion'] }],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some(i => i.message.includes('Duplicate operation ID'))).toBe(true);
+    }
+  });
+
+  it('rejects subProduct referencing unknown operation', () => {
+    const bad = {
+      ...validRecipeInput,
+      subProducts: [{ id: 'some-product', name: 'Test', finalOp: 'nonexistent-op' }],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some(i => i.message.includes('unknown operation'))).toBe(true);
+    }
+  });
+
+  it('rejects operation referencing unknown equipment', () => {
+    const bad = {
+      ...validRecipeInput,
+      operations: [
+        {
+          ...validRecipeInput.operations[0],
+          equipment: { use: 'nonexistent-equipment', release: true },
+        },
+      ],
+      subProducts: [],
+      finishSteps: [{ action: 'done', inputs: ['dice-onion'] }],
+    };
+    const result = recipeSchema.safeParse(bad);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some(i => i.message.includes('unknown equipment'))).toBe(true);
+    }
+  });
+
+  it('passes cross-entity validation for valid recipe', () => {
+    const result = recipeSchema.safeParse(validRecipeInput);
+    expect(result.success).toBe(true);
   });
 });

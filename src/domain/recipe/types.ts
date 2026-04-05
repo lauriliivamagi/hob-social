@@ -68,13 +68,13 @@ export interface Operation {
   scalable?: boolean;
   heat?: string;
   details?: string;
-  output?: string;
+  output?: SubProductId;
 }
 
 export interface SubProduct {
   id: SubProductId;
   name: string;
-  finalOp: string;
+  finalOp: OperationId;
 }
 
 export interface FinishStep {

@@ -1,7 +1,7 @@
 {
   "cuisine": ["italian", "asian", "mexican", "french", "indian", "mediterranean", "american", "estonian", "nordic"],
   "meal": ["breakfast", "lunch", "dinner", "snack", "dessert"],
-  "type": ["pasta", "soup", "salad", "stew", "baking", "grilling", "stir-fry", "roast"],
+  "type": ["pasta", "soup", "salad", "stew", "baking", "grilling", "stir-fry", "roast", "comfort-food"],
   "effort": ["weeknight", "weekend", "quick", "meal-prep"],
   "dietary": ["vegetarian", "vegan", "gluten-free", "dairy-free", "low-carb"]
 }

@@ -62,6 +62,7 @@ export function op(fields: {
     equipment: fields.equipment
       ? { use: eqId(fields.equipment.use), release: fields.equipment.release }
       : undefined,
+    output: fields.output ? spId(fields.output) : undefined,
   };
 }
 
@@ -76,7 +77,7 @@ export function equip(id: string, name: string, count: number): Equipment {
 // Factory for sub-product
 // ---------------------------------------------------------------------------
 export function subProd(id: string, name: string, finalOp: string): SubProduct {
-  return { id: spId(id), name, finalOp };
+  return { id: spId(id), name, finalOp: opId(finalOp) };
 }
 
 // ---------------------------------------------------------------------------
