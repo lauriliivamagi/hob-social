@@ -21,7 +21,7 @@ export default defineConfig({
     recipesPlugin(),
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: null, // We manually register in our custom templates
+      injectRegister: null, // We import virtual:pwa-register in entry modules
       manifest: {
         name: "Recipe Visualizer",
         short_name: "Recipes",
@@ -33,13 +33,21 @@ export default defineConfig({
         theme_color: "#1a1a2e",
         icons: [
           { src: "icon.svg", sizes: "any", type: "image/svg+xml" },
+          { src: "icon-192.png", sizes: "192x192", type: "image/png" },
           { src: "icon-512.png", sizes: "512x512", type: "image/png" },
           { src: "icon-maskable.png", sizes: "512x512", type: "image/png", purpose: "maskable" }
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,webmanifest}']
-      }
+        globPatterns: ['**/*.{js,css,html,png,svg}'],
+        navigateFallback: 'offline.html',
+        // When the catalog grows beyond ~50 recipes, consider moving recipe HTML
+        // out of globPatterns precache and into runtimeCaching with
+        // StaleWhileRevalidate for navigation requests (#13 in review).
+      },
+      devOptions: {
+        enabled: true,
+      },
     })
   ],
 });

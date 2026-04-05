@@ -4,6 +4,7 @@ interface PersistedState {
   lastRecipeSlug?: string;
   mode?: 'relaxed' | 'optimized';
   servings?: Record<string, number>;
+  currentStep?: Record<string, number>;
 }
 
 export function saveState(state: PersistedState): void {

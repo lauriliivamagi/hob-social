@@ -85,8 +85,9 @@ export class RecipePage extends LitElement {
     if (!recipe) return;
 
     const persisted = loadState();
-    const slug = recipe.meta.title.toLowerCase().replace(/\s+/g, '-');
+    const slug = recipe.meta.slug;
     const savedServings = persisted.servings?.[slug];
+    const savedStep = persisted.currentStep?.[slug];
 
     const totalSteps = this._scheduleRelaxed.reduce(
       (sum, phase) => sum + phase.operations.length,
@@ -104,6 +105,7 @@ export class RecipePage extends LitElement {
         servings: savedServings ?? recipe.meta.servings,
         originalServings: recipe.meta.servings,
         totalSteps,
+        currentStep: savedStep !== undefined ? Math.min(savedStep, totalSteps) : undefined,
       },
     });
 
@@ -151,13 +153,14 @@ export class RecipePage extends LitElement {
   private _persistState() {
     const snap = this._actor.getSnapshot();
     const ctx = snap.context;
-    const slug = ctx.recipe.meta.title.toLowerCase().replace(/\s+/g, '-');
+    const slug = ctx.recipe.meta.slug;
     const persisted = loadState();
     saveState({
       ...persisted,
       lastRecipeSlug: slug,
       mode: ctx.mode,
       servings: { ...persisted.servings, [slug]: ctx.servings },
+      currentStep: { ...persisted.currentStep, [slug]: ctx.currentStep },
     });
   }
 
@@ -179,10 +182,12 @@ export class RecipePage extends LitElement {
 
   private _onNextStep() {
     this._actor.send({ type: 'NEXT_STEP' });
+    this._persistState();
   }
 
   private _onPrevStep() {
     this._actor.send({ type: 'PREV_STEP' });
+    this._persistState();
   }
 
   private _onStartTimer(e: CustomEvent<{ opId: string; seconds: number }>) {

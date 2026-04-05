@@ -26,7 +26,9 @@ export type RecipeEvent =
   | { type: 'TIMER_TICK'; opId: string }
   | { type: 'TIMER_DONE'; opId: string };
 
-export type RecipeInput = Omit<RecipeContext, 'currentStep' | 'timers' | 'wakeLockActive'>;
+export type RecipeInput = Omit<RecipeContext, 'currentStep' | 'timers' | 'wakeLockActive'> & {
+  currentStep?: number;
+};
 
 export const recipeMachine = setup({
   types: {
@@ -91,7 +93,7 @@ export const recipeMachine = setup({
   id: 'recipe',
   context: ({ input }) => ({
     ...input,
-    currentStep: 0,
+    currentStep: input.currentStep ?? 0,
     timers: new Map(),
     wakeLockActive: false,
   }),

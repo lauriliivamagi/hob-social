@@ -5,7 +5,6 @@ import {
   readdirSync,
   existsSync,
 } from 'node:fs';
-import { readFile } from 'node:fs/promises';
 import { join, dirname, relative, resolve } from 'node:path';
 import { computeSchedule, computeTotalTime } from '../domain/schedule/schedule.js';
 import { validateDag } from '../domain/schedule/dag.js';
@@ -41,6 +40,15 @@ function findJsonFiles(dir: string): string[] {
     else if (entry.name.endsWith('.json')) results.push(full);
   }
   return results;
+}
+
+/** Replace all {{VAR}} placeholders in a template string. */
+function applyTemplate(template: string, vars: Record<string, string>): string {
+  let result = template;
+  for (const [key, value] of Object.entries(vars)) {
+    result = result.replaceAll(`{{${key}}}`, value);
+  }
+  return result;
 }
 
 export function recipesPlugin(): Plugin {
@@ -86,7 +94,7 @@ export function recipesPlugin(): Plugin {
     const url = relPath.replace(/\.json$/, '.html');
 
     recipeDataMap.set(url, { recipe, relaxed, optimized, i18n });
-    
+
     const newMeta = {
       title: recipe.meta.title,
       slug: recipe.meta.slug,
@@ -98,7 +106,7 @@ export function recipesPlugin(): Plugin {
       language: recipe.meta.language || 'en',
       url,
     };
-    
+
     const metaIndex = recipeMetas.findIndex(m => m.url === url);
     if (metaIndex >= 0) {
       recipeMetas[metaIndex] = newMeta;
@@ -117,32 +125,40 @@ export function recipesPlugin(): Plugin {
     }
   }
 
-  function renderIndex(): string {
+  function renderIndex(entryScript: string): string {
     const template = readFileSync(join(templatesDir, 'index.html'), 'utf8');
     const i18n = loadI18n('en', i18nDir);
-    return template
-      .replace('{{RECIPES_JSON}}', JSON.stringify(recipeMetas))
-      .replace('{{I18N_JSON}}', JSON.stringify(i18n))
-      .replace(/\{\{VERSION\}\}/g, appVersion)
-      .replace(/\{\{MANIFEST_PATH\}\}/g, 'manifest.webmanifest')
-      .replace(/\{\{SW_PATH\}\}/g, 'sw.js')
-      .replace(/\{\{ICON_PATH\}\}/g, 'icon-512.png')
-      .replace(/\{\{FAVICON_PATH\}\}/g, 'icon.svg');
+    return applyTemplate(template, {
+      TITLE: 'All Recipes',
+      DESCRIPTION: 'Step-by-step cooking with timers and parallel task management',
+      RECIPES_JSON: JSON.stringify(recipeMetas),
+      I18N_JSON: JSON.stringify(i18n),
+      VERSION: appVersion,
+      MANIFEST_PATH: 'manifest.webmanifest',
+      SW_PATH: 'sw.js',
+      ICON_PATH: 'icon-512.png',
+      FAVICON_PATH: 'icon.svg',
+      ENTRY_SCRIPT: entryScript,
+    });
   }
 
-  function renderRecipe(data: RecipeData, depth: number): string {
+  function renderRecipe(data: RecipeData, depth: number, entryScript: string): string {
     const template = readFileSync(join(templatesDir, 'recipe.html'), 'utf8');
     const prefix = depth === 0 ? './' : '../'.repeat(depth);
-    return template
-      .replace('{{RECIPE_JSON}}', JSON.stringify(data.recipe))
-      .replace('{{I18N_JSON}}', JSON.stringify(data.i18n))
-      .replace('{{SCHEDULE_RELAXED_JSON}}', JSON.stringify(data.relaxed))
-      .replace('{{SCHEDULE_OPTIMIZED_JSON}}', JSON.stringify(data.optimized))
-      .replace(/\{\{VERSION\}\}/g, appVersion)
-      .replace(/\{\{MANIFEST_PATH\}\}/g, `${prefix}manifest.webmanifest`)
-      .replace(/\{\{SW_PATH\}\}/g, `${prefix}sw.js`)
-      .replace(/\{\{ICON_PATH\}\}/g, `${prefix}icon-512.png`)
-      .replace(/\{\{FAVICON_PATH\}\}/g, `${prefix}icon.svg`);
+    return applyTemplate(template, {
+      TITLE: data.recipe.meta.title,
+      DESCRIPTION: `${data.recipe.meta.title} — step-by-step recipe with timers`,
+      RECIPE_JSON: JSON.stringify(data.recipe),
+      I18N_JSON: JSON.stringify(data.i18n),
+      SCHEDULE_RELAXED_JSON: JSON.stringify(data.relaxed),
+      SCHEDULE_OPTIMIZED_JSON: JSON.stringify(data.optimized),
+      VERSION: appVersion,
+      MANIFEST_PATH: `${prefix}manifest.webmanifest`,
+      SW_PATH: `${prefix}sw.js`,
+      ICON_PATH: `${prefix}icon-512.png`,
+      FAVICON_PATH: `${prefix}icon.svg`,
+      ENTRY_SCRIPT: entryScript,
+    });
   }
 
   return {
@@ -202,35 +218,18 @@ export function recipesPlugin(): Plugin {
         }
       });
 
-      // Pre-hook: serve all generated pages and static assets before
-      // Vite's built-in SPA fallback can intercept them
-      const staticMimeTypes: Record<string, string> = {
-        'icon.svg': 'image/svg+xml',
-        'icon-512.png': 'image/png',
-        'icon-maskable.png': 'image/png',
-      };
+      // Pre-hook: serve all generated pages before Vite's built-in SPA
+      // fallback can intercept them. Static assets (icons) are served by
+      // Vite from public/ automatically.
       server.middlewares.use(
         async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
           const reqUrl = req.url ?? '/';
           const stripped = reqUrl.replace(/^\//, '').split('?')[0]!;
 
-          // Serve static PWA assets from templates/ at any path depth
-          const basename = stripped.split('/').pop() ?? '';
-          if (basename in staticMimeTypes) {
-            const filePath = join(templatesDir, basename);
-            try {
-              const content = await readFile(filePath);
-              res.setHeader('Content-Type', staticMimeTypes[basename]!);
-              res.end(content);
-              return;
-            } catch {
-              // File doesn't exist in templates, fall through
-            }
-          }
-
           // Serve index page
           if (stripped === '' || stripped === 'index.html') {
-            const html = renderIndex();
+            const entryScript = '<script type="module" src="/src/entries/catalog.ts"></script>';
+            const html = renderIndex(entryScript);
             server
               .transformIndexHtml(reqUrl, html)
               .then((transformed) => {
@@ -244,7 +243,8 @@ export function recipesPlugin(): Plugin {
           const recipeData = recipeDataMap.get(stripped);
           if (recipeData) {
             const depth = stripped.split('/').length - 1;
-            const html = renderRecipe(recipeData, depth);
+            const entryScript = '<script type="module" src="/src/entries/recipe.ts"></script>';
+            const html = renderRecipe(recipeData, depth, entryScript);
             server
               .transformIndexHtml(reqUrl, html)
               .then((transformed) => {
@@ -270,49 +270,26 @@ export function recipesPlugin(): Plugin {
         }
       }
 
-      // Generate index HTML — replace dev entry path with production bundle
-      const indexHtml = renderIndex()
-        .replace(
-          '<script type="module" src="/src/entries/catalog.ts"></script>',
-          `<script type="module" src="./${catalogJs}"></script>`,
-        );
+      // Generate index HTML with production bundle path
+      const catalogScript = `<script type="module" src="./${catalogJs}"></script>`;
+      const indexHtml = renderIndex(catalogScript);
       this.emitFile({
         type: 'asset',
         fileName: 'index.html',
         source: indexHtml,
       });
 
-      // Generate recipe HTML files — replace dev entry path with production bundle
+      // Generate recipe HTML files with production bundle path
       for (const [url, data] of recipeDataMap) {
         const depth = url.split('/').length - 1;
         const prefix = depth === 0 ? './' : '../'.repeat(depth);
-        const html = renderRecipe(data, depth)
-          .replace(
-            '<script type="module" src="/src/entries/recipe.ts"></script>',
-            `<script type="module" src="${prefix}${recipeJs}"></script>`,
-          );
+        const recipeScript = `<script type="module" src="${prefix}${recipeJs}"></script>`;
+        const html = renderRecipe(data, depth, recipeScript);
         this.emitFile({
           type: 'asset',
           fileName: url,
           source: html,
         });
-      }
-
-      // Copy static assets
-      const staticAssets = [
-        'icon.svg',
-        'icon-512.png',
-        'icon-maskable.png',
-      ];
-      for (const name of staticAssets) {
-        const filePath = join(templatesDir, name);
-        if (existsSync(filePath)) {
-          this.emitFile({
-            type: 'asset',
-            fileName: name,
-            source: readFileSync(filePath),
-          });
-        }
       }
     },
   };

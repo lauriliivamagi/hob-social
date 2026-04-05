@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#1a1a2e">
+<meta name="description" content="{{DESCRIPTION}}">
 <link rel="manifest" href="{{MANIFEST_PATH}}">
 <link rel="icon" href="{{FAVICON_PATH}}" type="image/svg+xml">
 <link rel="icon" href="{{ICON_PATH}}" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="{{ICON_PATH}}">
-<title>All Recipes</title>
+<title>{{TITLE}}</title>
 <style>
   body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -28,14 +29,7 @@
 
 <catalog-page></catalog-page>
 
-<script type="module" src="/src/entries/catalog.ts"></script>
-
-<script>
-  // Service Worker registration (skip Vite dev server to avoid caching HMR assets)
-  if ('serviceWorker' in navigator && location.port !== '5173') {
-    navigator.serviceWorker.register('{{SW_PATH}}');
-  }
-</script>
+{{ENTRY_SCRIPT}}
 
 </body>
 </html>
