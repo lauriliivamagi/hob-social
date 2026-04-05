@@ -2,6 +2,7 @@ import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 import type { Operation } from '../../domain/recipe/types.js';
+import { formatMinutes } from '../../domain/cooking/timer.js';
 
 @customElement('context-banner')
 export class ContextBanner extends LitElement {
@@ -47,18 +48,11 @@ export class ContextBanner extends LitElement {
 
   @property({ type: Object }) accessor operation: Operation | null = null;
 
-  private _formatTime(minutes: number): string {
-    if (minutes < 60) return `${minutes} min`;
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return m > 0 ? `${h}h ${m}m` : `${h}h`;
-  }
-
   override render() {
     if (!this.operation) return nothing;
 
     const op = this.operation;
-    const timeLabel = op.time > 0 ? ` \u2014 ${this._formatTime(op.time)}` : '';
+    const timeLabel = op.time > 0 ? ` \u2014 ${formatMinutes(op.time)}` : '';
 
     return html`
       <div class="context-banner">

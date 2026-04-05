@@ -65,8 +65,8 @@ export class ServingsAdjuster extends LitElement {
     `,
   ];
 
-  @property({ type: Number }) servings = 1;
-  @property() label = 'Servings';
+  @property({ type: Number }) accessor servings = 1;
+  @property() accessor label = 'Servings';
 
   private _adjust(delta: number) {
     this.dispatchEvent(

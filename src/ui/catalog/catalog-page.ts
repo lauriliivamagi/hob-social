@@ -1,5 +1,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { repeat } from 'lit/directives/repeat.js';
+import { when } from 'lit/directives/when.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 import { filterRecipes } from '../../domain/catalog/filter.js';
 import type { CatalogRecipe } from '../../domain/catalog/types.js';
@@ -155,13 +157,17 @@ export class CatalogPage extends LitElement {
         ></tag-filters>
 
         <div class="recipe-grid">
-          ${filtered.length === 0
-            ? html`<div class="empty-state">
+          ${when(
+            filtered.length === 0,
+            () => html`<div class="empty-state">
                 ${this._labels.noResults ?? 'No recipes found'}
-              </div>`
-            : filtered.map(
-                (r) => html`<recipe-card .recipe=${r}></recipe-card>`,
-              )}
+              </div>`,
+            () => repeat(
+              filtered,
+              (r) => r.title,
+              (r) => html`<recipe-card .recipe=${r}></recipe-card>`,
+            ),
+          )}
         </div>
       </div>
     `;

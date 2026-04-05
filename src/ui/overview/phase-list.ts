@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { repeat } from 'lit/directives/repeat.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 import type { Phase } from '../../domain/schedule/types.js';
 import './phase-card.js';
@@ -30,17 +31,17 @@ export class PhaseList extends LitElement {
     `,
   ];
 
-  @property({ type: Array }) phases: Phase[] = [];
-  @property({ type: Number }) scaleFactor = 1;
+  @property({ type: Array }) accessor phases: Phase[] = [];
 
   override render() {
     return html`
       <div class="phase-list">
-        ${this.phases.map(
+        ${repeat(
+          this.phases,
+          (phase) => phase.name,
           (phase, i) => html`
             <phase-card
               .phase=${phase}
-              .scaleFactor=${this.scaleFactor}
               .index=${i}
             ></phase-card>
           `,

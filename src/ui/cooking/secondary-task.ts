@@ -1,6 +1,8 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ContextConsumer } from '@lit/context';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
+import { scaleFactorContext } from '../contexts/recipe-contexts.js';
 import { scaleQuantity } from '../../domain/scaling/scale.js';
 import type { Operation } from '../../domain/recipe/types.js';
 
@@ -77,7 +79,15 @@ export class SecondaryTask extends LitElement {
   ];
 
   @property({ type: Array }) accessor operations: Operation[] = [];
-  @property({ type: Number }) accessor scaleFactor = 1;
+
+  private _scaleFactorConsumer = new ContextConsumer(this, {
+    context: scaleFactorContext,
+    subscribe: true,
+  });
+
+  get scaleFactor(): number {
+    return this._scaleFactorConsumer.value ?? 1;
+  }
 
   override render() {
     if (!this.operations || this.operations.length === 0) return nothing;

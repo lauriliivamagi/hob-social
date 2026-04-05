@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 import { formatTime } from '../../domain/cooking/timer.js';
 
@@ -66,7 +67,7 @@ export class TimerButton extends LitElement {
 
     return html`
       <button
-        class="timer-btn ${this.running ? 'running' : ''}"
+        class=${classMap({ 'timer-btn': true, running: this.running })}
         @click=${this._handleClick}
       >
         <span>&#9202;</span>

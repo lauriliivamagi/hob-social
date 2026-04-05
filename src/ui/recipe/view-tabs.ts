@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 
 @customElement('view-tabs')
@@ -52,9 +53,9 @@ export class ViewTabs extends LitElement {
     `,
   ];
 
-  @property() activeView: 'overview' | 'cooking' = 'overview';
-  @property() overviewLabel = 'Overview';
-  @property() cookingLabel = 'Cooking';
+  @property() accessor activeView: 'overview' | 'cooking' = 'overview';
+  @property() accessor overviewLabel = 'Overview';
+  @property() accessor cookingLabel = 'Cooking';
 
   private _switchView(view: 'overview' | 'cooking') {
     this.dispatchEvent(
@@ -70,13 +71,13 @@ export class ViewTabs extends LitElement {
     return html`
       <div class="view-tabs" role="tablist">
         <button
-          class="view-tab ${this.activeView === 'overview' ? 'active' : ''}"
+          class=${classMap({ 'view-tab': true, active: this.activeView === 'overview' })}
           role="tab"
           aria-selected=${this.activeView === 'overview'}
           @click=${() => this._switchView('overview')}
         >${this.overviewLabel}</button>
         <button
-          class="view-tab ${this.activeView === 'cooking' ? 'active' : ''}"
+          class=${classMap({ 'view-tab': true, active: this.activeView === 'cooking' })}
           role="tab"
           aria-selected=${this.activeView === 'cooking'}
           @click=${() => this._switchView('cooking')}

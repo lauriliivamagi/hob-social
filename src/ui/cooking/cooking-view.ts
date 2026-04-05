@@ -1,5 +1,6 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 import { resolveIngredients } from '../../domain/recipe/resolve.js';
 import type { Phase } from '../../domain/schedule/types.js';
@@ -162,7 +163,6 @@ export class CookingView extends LitElement {
   ];
 
   @property({ type: Array }) accessor phases: Phase[] = [];
-  @property({ type: Number }) accessor scaleFactor = 1;
   @property({ type: Number }) accessor currentStep = 0;
   @property({ type: Object }) accessor i18n: any = {};
   @property({ type: Object }) accessor recipe: Recipe | null = null;
@@ -211,7 +211,7 @@ export class CookingView extends LitElement {
             Step ${total} of ${total}
           </div>
           <div class="progress-track">
-            <div class="progress-fill" style="width: 100%"></div>
+            <div class="progress-fill" style=${styleMap({ width: '100%' })}></div>
           </div>
           <div class="completion-card">
             <div class="completion-icon">&#10003;</div>
@@ -255,12 +255,11 @@ export class CookingView extends LitElement {
           Step ${idx + 1} of ${total}
         </div>
         <div class="progress-track">
-          <div class="progress-fill" style="width: ${progressPct}%"></div>
+          <div class="progress-fill" style=${styleMap({ width: `${progressPct}%` })}></div>
         </div>
 
         <focus-card
           .operation=${op}
-          .scaleFactor=${this.scaleFactor}
           .ingredients=${ingredients}
           .isPassive=${isPassive}
           .contextAction=${contextAction}
@@ -281,7 +280,6 @@ export class CookingView extends LitElement {
       ${step.parallelOps && step.parallelOps.length > 0 ? html`
         <secondary-task
           .operations=${step.parallelOps}
-          .scaleFactor=${this.scaleFactor}
         ></secondary-task>
       ` : nothing}
 

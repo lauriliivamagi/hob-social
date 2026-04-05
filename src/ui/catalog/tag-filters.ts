@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 
 @customElement('tag-filters')
@@ -64,7 +65,7 @@ export class TagFilters extends LitElement {
       ${this.tags.map(
         (tag) => html`
           <span
-            class="tag-pill ${this.activeTags.includes(tag) ? 'active' : ''}"
+            class=${classMap({ 'tag-pill': true, active: this.activeTags.includes(tag) })}
             @click=${() => this._onTagClick(tag)}
           >
             ${tag}

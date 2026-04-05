@@ -27,11 +27,10 @@ export class OverviewView extends LitElement {
     `,
   ];
 
-  @property({ type: Array }) phases: Phase[] = [];
-  @property({ type: Array }) equipment: Equipment[] = [];
-  @property() mode: ScheduleMode = 'relaxed';
-  @property({ type: Number }) scaleFactor = 1;
-  @property({ type: Object }) i18n: Record<string, any> = {};
+  @property({ type: Array }) accessor phases: Phase[] = [];
+  @property({ type: Array }) accessor equipment: Equipment[] = [];
+  @property() accessor mode: ScheduleMode = 'relaxed';
+  @property({ type: Object }) accessor i18n: Record<string, any> = {};
 
   override render() {
     const modeLabels = {
@@ -52,7 +51,6 @@ export class OverviewView extends LitElement {
         ></equipment-summary>
         <phase-list
           .phases=${this.phases}
-          .scaleFactor=${this.scaleFactor}
         ></phase-list>
       </div>
     `;

@@ -1,6 +1,8 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ContextConsumer } from '@lit/context';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
+import { scaleFactorContext } from '../contexts/recipe-contexts.js';
 import { scaleQuantity } from '../../domain/scaling/scale.js';
 import type { Operation, FinishStep, Ingredient } from '../../domain/recipe/types.js';
 
@@ -100,7 +102,15 @@ export class FocusCard extends LitElement {
   ];
 
   @property({ type: Object }) accessor operation: Operation | FinishStep | null = null;
-  @property({ type: Number }) accessor scaleFactor = 1;
+
+  private _scaleFactorConsumer = new ContextConsumer(this, {
+    context: scaleFactorContext,
+    subscribe: true,
+  });
+
+  get scaleFactor(): number {
+    return this._scaleFactorConsumer.value ?? 1;
+  }
   @property({ type: Array }) accessor ingredients: Ingredient[] = [];
   @property({ type: Boolean }) accessor isPassive = false;
   @property({ type: String }) accessor contextAction = '';

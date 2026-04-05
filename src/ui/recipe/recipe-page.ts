@@ -1,11 +1,16 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { when } from 'lit/directives/when.js';
+import { cache } from 'lit/directives/cache.js';
 import { createActor, type Actor } from 'xstate';
 import { recipeMachine } from '../state/recipe-machine.js';
 import type { RecipeContext } from '../state/recipe-machine.js';
 import type { Recipe } from '../../domain/recipe/types.js';
 import type { Phase, ScheduleMode } from '../../domain/schedule/types.js';
+import { ContextProvider } from '@lit/context';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
+import { i18nContext, scaleFactorContext } from '../contexts/recipe-contexts.js';
+import { TimerController } from '../controllers/timer-controller.js';
 import { playTimerAlarm } from '../state/audio.js';
 import { requestWakeLock, releaseWakeLock } from '../state/wake-lock.js';
 import { loadState, saveState } from '../state/persistence.js';
@@ -48,9 +53,14 @@ export class RecipePage extends LitElement {
   ];
 
   private _actor!: Actor<typeof recipeMachine>;
-  private _timerIntervals = new Map<string, ReturnType<typeof setInterval>>();
+  private _timers = new TimerController(this, {
+    onTick: (opId) => this._handleTimerTick(opId),
+    onDone: (opId) => this._handleTimerDone(opId),
+  });
+  private _i18nProvider = new ContextProvider(this, { context: i18nContext, initialValue: {} });
+  private _scaleFactorProvider = new ContextProvider(this, { context: scaleFactorContext, initialValue: 1 });
 
-  @state() private _snapshot: { context: RecipeContext; value: string } | null = null;
+  @state() private accessor _snapshot: { context: RecipeContext; value: string } | null = null;
 
   private get _recipe(): Recipe | null {
     return (window as unknown as WindowGlobals).RECIPE ?? null;
@@ -97,11 +107,15 @@ export class RecipePage extends LitElement {
       },
     });
 
+    this._i18nProvider.setValue(this._i18n);
+
     this._actor.subscribe(snapshot => {
       this._snapshot = {
         context: snapshot.context,
         value: snapshot.value as string,
       };
+      const ctx = snapshot.context;
+      this._scaleFactorProvider.setValue(ctx.servings / ctx.originalServings);
     });
 
     this._actor.start();
@@ -109,10 +123,6 @@ export class RecipePage extends LitElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
-    for (const interval of this._timerIntervals.values()) {
-      clearInterval(interval);
-    }
-    this._timerIntervals.clear();
     releaseWakeLock();
     this._actor?.stop();
   }
@@ -178,31 +188,28 @@ export class RecipePage extends LitElement {
   private _onStartTimer(e: CustomEvent<{ opId: string; seconds: number }>) {
     const { opId, seconds } = e.detail;
     this._actor.send({ type: 'START_TIMER', opId, seconds });
-
-    const interval = setInterval(() => {
-      const snap = this._actor.getSnapshot();
-      const timer = snap.context.timers.get(opId);
-      if (!timer || timer.remaining <= 0) {
-        clearInterval(interval);
-        this._timerIntervals.delete(opId);
-        this._actor.send({ type: 'TIMER_DONE', opId });
-        playTimerAlarm();
-        return;
-      }
-      this._actor.send({ type: 'TIMER_TICK', opId });
-    }, 1000);
-
-    this._timerIntervals.set(opId, interval);
+    this._timers.start(opId, seconds);
   }
 
   private _onCancelTimer(e: CustomEvent<{ opId: string }>) {
     const { opId } = e.detail;
-    const interval = this._timerIntervals.get(opId);
-    if (interval) {
-      clearInterval(interval);
-      this._timerIntervals.delete(opId);
-    }
+    this._timers.cancel(opId);
     this._actor.send({ type: 'CANCEL_TIMER', opId });
+  }
+
+  private _handleTimerTick(opId: string) {
+    const snap = this._actor.getSnapshot();
+    const timer = snap.context.timers.get(opId);
+    if (!timer || timer.remaining <= 0) {
+      this._timers.done(opId);
+      return;
+    }
+    this._actor.send({ type: 'TIMER_TICK', opId });
+  }
+
+  private _handleTimerDone(opId: string) {
+    this._actor.send({ type: 'TIMER_DONE', opId });
+    playTimerAlarm();
   }
 
   override render() {
@@ -212,7 +219,6 @@ export class RecipePage extends LitElement {
 
     const ctx = this._snapshot.context;
     const activeView = this._snapshot.value as 'overview' | 'cooking';
-    const scaleFactor = ctx.servings / ctx.originalServings;
     const phases = ctx.scheduleModes[ctx.mode];
 
     return html`
@@ -238,21 +244,20 @@ export class RecipePage extends LitElement {
         @switch-view=${this._onSwitchView}
       ></view-tabs>
 
-      ${activeView === 'overview'
-        ? html`
+      ${cache(when(
+        activeView === 'overview',
+        () => html`
             <overview-view
               .phases=${phases}
               .equipment=${ctx.recipe.equipment}
               .mode=${ctx.mode}
-              .scaleFactor=${scaleFactor}
               .i18n=${this._i18n}
               @set-mode=${this._onSetMode}
             ></overview-view>
-          `
-        : html`
+          `,
+        () => html`
             <cooking-view
               .phases=${phases}
-              .scaleFactor=${scaleFactor}
               .currentStep=${ctx.currentStep}
               .recipe=${ctx.recipe}
               .i18n=${this._i18n}
@@ -262,7 +267,8 @@ export class RecipePage extends LitElement {
               @start-timer=${this._onStartTimer}
               @cancel-timer=${this._onCancelTimer}
             ></cooking-view>
-          `}
+          `,
+      ))}
     `;
   }
 }

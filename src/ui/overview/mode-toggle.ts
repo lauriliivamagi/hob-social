@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 import type { ScheduleMode } from '../../domain/schedule/types.js';
 
@@ -55,8 +56,8 @@ export class ModeToggle extends LitElement {
     `,
   ];
 
-  @property() mode: ScheduleMode = 'relaxed';
-  @property({ type: Object }) labels: { relaxed: string; optimized: string } = {
+  @property() accessor mode: ScheduleMode = 'relaxed';
+  @property({ type: Object }) accessor labels: { relaxed: string; optimized: string } = {
     relaxed: 'Relaxed',
     optimized: 'Optimized',
   };
@@ -75,13 +76,13 @@ export class ModeToggle extends LitElement {
     return html`
       <div class="mode-toggle" role="radiogroup" aria-label="Schedule mode">
         <button
-          class="mode-btn ${this.mode === 'relaxed' ? 'active' : ''}"
+          class=${classMap({ 'mode-btn': true, active: this.mode === 'relaxed' })}
           role="radio"
           aria-checked=${this.mode === 'relaxed'}
           @click=${() => this._setMode('relaxed')}
         >${this.labels.relaxed}</button>
         <button
-          class="mode-btn ${this.mode === 'optimized' ? 'active' : ''}"
+          class=${classMap({ 'mode-btn': true, active: this.mode === 'optimized' })}
           role="radio"
           aria-checked=${this.mode === 'optimized'}
           @click=${() => this._setMode('optimized')}

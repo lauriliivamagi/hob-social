@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 import type { ScheduleMode } from '../../domain/schedule/types.js';
+import { formatMinutes } from '../../domain/cooking/timer.js';
 
 @customElement('recipe-header')
 export class RecipeHeader extends LitElement {
@@ -87,19 +88,12 @@ export class RecipeHeader extends LitElement {
     `,
   ];
 
-  @property() title = '';
-  @property() difficulty: 'easy' | 'medium' | 'hard' = 'easy';
-  @property({ type: Object }) totalTime: { relaxed: number; optimized: number } = { relaxed: 0, optimized: 0 };
-  @property() mode: ScheduleMode = 'relaxed';
-  @property({ type: Array }) tags: string[] = [];
-  @property({ type: Number }) servings = 1;
-
-  private _formatTime(minutes: number): string {
-    if (minutes < 60) return `${minutes} min`;
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return m > 0 ? `${h}h ${m}m` : `${h}h`;
-  }
+  @property() accessor title = '';
+  @property() accessor difficulty: 'easy' | 'medium' | 'hard' = 'easy';
+  @property({ type: Object }) accessor totalTime: { relaxed: number; optimized: number } = { relaxed: 0, optimized: 0 };
+  @property() accessor mode: ScheduleMode = 'relaxed';
+  @property({ type: Array }) accessor tags: string[] = [];
+  @property({ type: Number }) accessor servings = 1;
 
   override render() {
     const time = this.mode === 'relaxed' ? this.totalTime.relaxed : this.totalTime.optimized;
@@ -112,7 +106,7 @@ export class RecipeHeader extends LitElement {
           <span class="recipe-meta-item">
             <span class="difficulty-badge difficulty-${this.difficulty}">${this.difficulty}</span>
           </span>
-          <span class="recipe-meta-item">&#9202; ${this._formatTime(time)}</span>
+          <span class="recipe-meta-item">&#9202; ${formatMinutes(time)}</span>
           <span class="recipe-meta-item">&#127860; ${this.servings} servings</span>
         </div>
         ${this.tags.length > 0

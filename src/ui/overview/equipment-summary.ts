@@ -51,8 +51,8 @@ export class EquipmentSummary extends LitElement {
     `,
   ];
 
-  @property({ type: Array }) equipment: Equipment[] = [];
-  @property() label = 'Equipment';
+  @property({ type: Array }) accessor equipment: Equipment[] = [];
+  @property() accessor label = 'Equipment';
 
   override render() {
     if (this.equipment.length === 0) return html``;

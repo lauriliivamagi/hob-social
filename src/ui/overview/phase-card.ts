@@ -1,9 +1,13 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { ContextConsumer } from '@lit/context';
+import { classMap } from 'lit/directives/class-map.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
+import { scaleFactorContext } from '../contexts/recipe-contexts.js';
 import type { Phase } from '../../domain/schedule/types.js';
 import type { Operation, FinishStep } from '../../domain/recipe/types.js';
 import { scaleQuantity } from '../../domain/scaling/scale.js';
+import { formatMinutes } from '../../domain/cooking/timer.js';
 
 @customElement('phase-card')
 export class PhaseCard extends LitElement {
@@ -153,15 +157,16 @@ export class PhaseCard extends LitElement {
     `,
   ];
 
-  @property({ type: Object }) phase!: Phase;
-  @property({ type: Number }) scaleFactor = 1;
-  @property({ type: Number }) index = 0;
+  @property({ type: Object }) accessor phase!: Phase;
+  @property({ type: Number }) accessor index = 0;
 
-  private _formatTime(minutes: number): string {
-    if (minutes < 60) return `${minutes} min`;
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return m > 0 ? `${h}h ${m}m` : `${h}h`;
+  private _scaleFactorConsumer = new ContextConsumer(this, {
+    context: scaleFactorContext,
+    subscribe: true,
+  });
+
+  get scaleFactor(): number {
+    return this._scaleFactorConsumer.value ?? 1;
   }
 
   private _isOperation(op: Operation | FinishStep): op is Operation {
@@ -193,7 +198,7 @@ export class PhaseCard extends LitElement {
           ${op.time > 0 || op.equipment
             ? html`
                 <div class="op-meta">
-                  ${op.time > 0 ? html`<span class="op-meta-tag">&#9202; ${this._formatTime(op.time)}</span>` : nothing}
+                  ${op.time > 0 ? html`<span class="op-meta-tag">&#9202; ${formatMinutes(op.time)}</span>` : nothing}
                   ${op.equipment ? html`<span class="op-meta-tag">&#127859; ${op.equipment.use}</span>` : nothing}
                   ${op.heat ? html`<span class="op-meta-tag">&#128293; ${op.heat}</span>` : nothing}
                 </div>
@@ -223,7 +228,7 @@ export class PhaseCard extends LitElement {
       <div class="phase-card" @click=${this._jumpToPhase}>
         <div class="phase-header ${phaseType}">
           <span class="phase-label ${phaseType}">${this.phase.name}</span>
-          <span class="phase-time">${this._formatTime(this.phase.time)}</span>
+          <span class="phase-time">${formatMinutes(this.phase.time)}</span>
         </div>
         <div class="phase-ops">
           ${this.phase.parallel && this.phase.parallelOps && this.phase.parallelOps.length > 1

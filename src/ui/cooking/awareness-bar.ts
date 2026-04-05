@@ -1,5 +1,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { repeat } from 'lit/directives/repeat.js';
 import { designTokens, resetStyles, baseStyles } from '../shared/styles.js';
 import { formatTime } from '../../domain/cooking/timer.js';
 
@@ -69,20 +71,35 @@ export class AwarenessBar extends LitElement {
 
   @property({ type: Array }) accessor timers: TimerPill[] = [];
 
+  private _lastTimerKey = '';
+
+  protected override shouldUpdate(): boolean {
+    const key = this.timers
+      .map(t => `${t.opId}:${t.remaining}`)
+      .join(',');
+    if (key === this._lastTimerKey) return false;
+    this._lastTimerKey = key;
+    return true;
+  }
+
   override render() {
     if (!this.timers || this.timers.length === 0) return nothing;
 
     return html`
       <div class="awareness-bar">
-        ${this.timers.map(t => {
-          const done = t.remaining <= 0;
-          const urgent = !done && t.remaining <= 60;
-          return html`
-            <span class="awareness-pill ${done ? 'done' : ''} ${urgent ? 'urgent' : ''}">
-              ${t.action} \u2014 ${done ? 'Done!' : formatTime(t.remaining)}
-            </span>
-          `;
-        })}
+        ${repeat(
+          this.timers,
+          (t) => t.opId,
+          (t) => {
+            const done = t.remaining <= 0;
+            const urgent = !done && t.remaining <= 60;
+            return html`
+              <span class=${classMap({ 'awareness-pill': true, done, urgent })}>
+                ${t.action} \u2014 ${done ? 'Done!' : formatTime(t.remaining)}
+              </span>
+            `;
+          },
+        )}
       </div>
     `;
   }
