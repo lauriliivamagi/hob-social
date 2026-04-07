@@ -177,7 +177,8 @@
         "min": 180
       },
       "scalable": true,
-      "details": "Finely dice the onion"
+      "details": "Finely dice the onion",
+      "subProduct": "sauce"
     },
     {
       "id": "dice-carrot",
@@ -200,7 +201,8 @@
         "min": 180
       },
       "scalable": true,
-      "details": "Finely dice the carrots"
+      "details": "Finely dice the carrots",
+      "subProduct": "sauce"
     },
     {
       "id": "dice-celery",
@@ -223,7 +225,8 @@
         "min": 120
       },
       "scalable": true,
-      "details": "Finely dice the celery stalks"
+      "details": "Finely dice the celery stalks",
+      "subProduct": "sauce"
     },
     {
       "id": "mince-garlic",
@@ -246,7 +249,8 @@
         "min": 120
       },
       "scalable": true,
-      "details": "Mince the garlic cloves"
+      "details": "Mince the garlic cloves",
+      "subProduct": "sauce"
     },
     {
       "id": "saute-soffritto",
@@ -278,7 +282,8 @@
         "max": 180,
         "unit": "C"
       },
-      "details": "Heat olive oil in pan. Add diced onion, carrot, and celery. Cook 8 minutes, stirring occasionally, until softened and lightly golden."
+      "details": "Heat olive oil in pan. Add diced onion, carrot, and celery. Cook 8 minutes, stirring occasionally, until softened and lightly golden.",
+      "subProduct": "sauce"
     },
     {
       "id": "add-garlic",
@@ -307,7 +312,8 @@
         "max": 180,
         "unit": "C"
       },
-      "details": "Add minced garlic and cook 1 minute until fragrant"
+      "details": "Add minced garlic and cook 1 minute until fragrant",
+      "subProduct": "sauce"
     },
     {
       "id": "brown-mince",
@@ -339,7 +345,8 @@
         "max": 200,
         "unit": "C"
       },
-      "details": "Add beef mince, break up with a wooden spoon. Cook until well browned with no pink remaining. Season with salt and pepper."
+      "details": "Add beef mince, break up with a wooden spoon. Cook until well browned with no pink remaining. Season with salt and pepper.",
+      "subProduct": "sauce"
     },
     {
       "id": "deglaze",
@@ -369,7 +376,8 @@
         "max": 200,
         "unit": "C"
       },
-      "details": "Pour in red wine, scrape up browned bits from the bottom. Let bubble until mostly evaporated."
+      "details": "Pour in red wine, scrape up browned bits from the bottom. Let bubble until mostly evaporated.",
+      "subProduct": "sauce"
     },
     {
       "id": "build-sauce",
@@ -402,7 +410,8 @@
         "max": 180,
         "unit": "C"
       },
-      "details": "Stir in crushed tomatoes, tomato paste, oregano, and bay leaves. Bring to a gentle simmer."
+      "details": "Stir in crushed tomatoes, tomato paste, oregano, and bay leaves. Bring to a gentle simmer.",
+      "subProduct": "sauce"
     },
     {
       "id": "simmer-sauce",
@@ -431,7 +440,8 @@
         "unit": "C"
       },
       "details": "Cover partially and simmer for 30 minutes, stirring every 10 minutes. Sauce should thicken and flavours meld. Remove bay leaves.",
-      "output": "sauce"
+      "output": "sauce",
+      "subProduct": "sauce"
     },
     {
       "id": "boil-pasta",
@@ -460,7 +470,8 @@
         "unit": "C"
       },
       "details": "Bring a large pot of well-salted water to a rolling boil. Cook spaghetti until al dente (8-10 minutes). Reserve 240 ml pasta water before draining.",
-      "output": "pasta"
+      "output": "pasta",
+      "subProduct": "pasta"
     },
     {
       "id": "grate-parmesan",

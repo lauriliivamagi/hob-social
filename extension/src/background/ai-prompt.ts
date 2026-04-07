@@ -33,7 +33,7 @@ ${JSON.stringify(tagsJson, null, 2)}
 5. **Equipment is a required array.** Each operation has \`equipment: [{use: "equipment-id", release: boolean}, ...]\`. Empty array \`[]\` if no equipment. Set \`release: false\` when the next operation continues in the same vessel.
 6. **\`scalable\` is required.** \`true\` for active work (prep time scales with quantity), \`false\` for passive operations (simmering, baking, resting).
 7. **Temperature replaces heat.** Use \`temperature: {min: number, max?: number, unit: "C" | "F"}\`. Medium heat → \`{min: 160, max: 180, unit: "C"}\`.
-8. **Identify sub-products.** When an operation produces a named intermediate result (sauce, dough, filling), give it an \`output\` field and add a \`subProducts\` entry.
+8. **Identify sub-products.** When a recipe has named intermediate results (sauce, dough, filling), add a \`subProducts\` entry. Set \`subProduct\` on **every** operation that contributes to that intermediate result (not just the final one). Set \`output\` only on the single operation that produces the finished sub-product.
 9. **Use \`rest\` for passive waiting without heat.** Resting meat, proofing dough, marinating, cooling, chilling.
 10. **Use \`assemble\` for terminal/combining actions.** Plating, tossing, garnishing, serving.
 
@@ -45,6 +45,7 @@ ${JSON.stringify(tagsJson, null, 2)}
 - Every \`operation.depends[]\` must reference an existing operation ID
 - Every \`operation.equipment[].use\` must reference an existing equipment ID
 - Every \`subProducts[].finalOp\` must reference an existing operation ID
+- Every \`operation.subProduct\` must reference an existing sub-product ID
 - \`activeTime\` must be \`<=\` \`time\` on every operation
 - No cycles in the operations DAG
 

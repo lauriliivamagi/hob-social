@@ -94,7 +94,8 @@
       },
       "scalable": true,
       "details": "Keeda al dente, tõsta osa keeduvett kõrvale.",
-      "output": "keedetud-makaronid"
+      "output": "keedetud-makaronid",
+      "subProduct": "keedetud-makaronid"
     },
     {
       "id": "valmista-kaste",
@@ -127,7 +128,8 @@
         "unit": "C"
       },
       "details": "Lisa toorjuust, koor ja lõhe, sega kuni kreemjas.",
-      "output": "valmis-pasta"
+      "output": "valmis-pasta",
+      "subProduct": "valmis-pasta"
     },
     {
       "id": "serveeri",

@@ -58,6 +58,7 @@ export function op(fields: {
   scalable?: boolean;
   temperature?: { min: number; max?: number; unit: 'C' | 'F' };
   details?: string;
+  subProduct?: string;
   output?: string;
 }): Operation {
   return {
@@ -72,6 +73,7 @@ export function op(fields: {
     scalable: fields.scalable ?? true,
     temperature: fields.temperature,
     details: fields.details,
+    subProduct: fields.subProduct ? spId(fields.subProduct) : undefined,
     output: fields.output ? spId(fields.output) : undefined,
   };
 }

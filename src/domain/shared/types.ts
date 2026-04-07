@@ -24,5 +24,6 @@ export interface SchedulableOperation {
   readonly activeTime: TimeRange;
   readonly scalable: boolean;
   readonly temperature?: { readonly min: number; readonly max?: number; readonly unit: 'C' | 'F' };
+  readonly subProduct?: string;
   readonly output?: string;
 }

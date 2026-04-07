@@ -362,6 +362,11 @@
             "description": "Additional instructions for this operation",
             "type": "string"
           },
+          "subProduct": {
+            "description": "Sub-product ID this operation contributes to",
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
           "output": {
             "description": "Sub-product ID this operation produces",
             "type": "string",

@@ -14,38 +14,55 @@ function mapOpsToSubProducts(
   const subProducts = recipe.subProducts || [];
   if (subProducts.length === 0) return map;
 
-  function chainDepth(opId: string, visited: Set<string>): number {
-    if (visited.has(opId)) return 0;
-    visited.add(opId);
-    const op = operationMap.get(opId);
-    if (!op) return 0;
-    let maxD = 0;
-    for (const ref of op.depends || []) {
-      if (operationMap.has(ref))
-        maxD = Math.max(maxD, chainDepth(ref, visited));
-    }
-    return maxD + 1;
+  // Build sub-product ID → name lookup
+  const spNameById = new Map<string, string>();
+  for (const sp of subProducts) {
+    spNameById.set(sp.id, sp.name);
   }
 
-  const sorted = [...subProducts].sort(
-    (a, b) =>
-      chainDepth(a.finalOp, new Set()) - chainDepth(b.finalOp, new Set()),
-  );
-
-  for (const sp of sorted) {
-    const visited = new Set<string>();
-    function walkBack(opId: string): void {
-      if (visited.has(opId)) return;
-      visited.add(opId);
-      if (map.has(opId)) return;
-      map.set(opId, sp.name);
-      const op = operationMap.get(opId);
-      if (!op) return;
-      for (const ref of op.depends || []) {
-        if (operationMap.has(ref)) walkBack(ref);
-      }
+  // Use explicit subProduct field when available
+  for (const op of recipe.operations) {
+    if (op.subProduct) {
+      const name = spNameById.get(op.subProduct);
+      if (name) map.set(op.id, name);
     }
-    walkBack(sp.finalOp);
+  }
+
+  // Fall back to reverse-walk for operations without explicit subProduct
+  if (map.size < recipe.operations.length) {
+    function chainDepth(opId: string, visited: Set<string>): number {
+      if (visited.has(opId)) return 0;
+      visited.add(opId);
+      const op = operationMap.get(opId);
+      if (!op) return 0;
+      let maxD = 0;
+      for (const ref of op.depends || []) {
+        if (operationMap.has(ref))
+          maxD = Math.max(maxD, chainDepth(ref, visited));
+      }
+      return maxD + 1;
+    }
+
+    const sorted = [...subProducts].sort(
+      (a, b) =>
+        chainDepth(a.finalOp, new Set()) - chainDepth(b.finalOp, new Set()),
+    );
+
+    for (const sp of sorted) {
+      const visited = new Set<string>();
+      function walkBack(opId: string): void {
+        if (visited.has(opId)) return;
+        visited.add(opId);
+        if (map.has(opId)) return;
+        map.set(opId, sp.name);
+        const op = operationMap.get(opId);
+        if (!op) return;
+        for (const ref of op.depends || []) {
+          if (operationMap.has(ref)) walkBack(ref);
+        }
+      }
+      walkBack(sp.finalOp);
+    }
   }
 
   return map;

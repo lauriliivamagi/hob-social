@@ -96,6 +96,7 @@ const operationSchema = z.object({
   scalable: z.boolean().describe('If false, time does not change when scaling servings'),
   temperature: temperatureSchema.optional().describe('Target temperature or range'),
   details: z.string().optional().describe('Additional instructions for this operation'),
+  subProduct: subProductIdSchema.optional().describe('Sub-product ID this operation contributes to'),
   output: subProductIdSchema.optional().describe('Sub-product ID this operation produces'),
 }).strict().refine(
   (op) => timeRangeMax(op.activeTime) <= timeRangeMax(op.time),
@@ -189,7 +190,19 @@ export function createRecipeSchema(config: RecipeSchemaConfig) {
         }
       });
 
-      // 3. operation.equipment[].use must resolve to an equipment ID
+      // 3. operation.subProduct must resolve to a sub-product ID
+      const subProductIds = new Set<string>(subProducts.map(sp => sp.id));
+      operations.forEach((op, i) => {
+        if (op.subProduct && !subProductIds.has(op.subProduct)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `Operation "${op.id}" references unknown subProduct "${op.subProduct}"`,
+            path: ['operations', i, 'subProduct'],
+          });
+        }
+      });
+
+      // 4. operation.equipment[].use must resolve to an equipment ID
       operations.forEach((op, i) => {
         op.equipment.forEach((eq, j) => {
           if (!equipmentIds.has(eq.use)) {
@@ -202,7 +215,7 @@ export function createRecipeSchema(config: RecipeSchemaConfig) {
         });
       });
 
-      // 4. operation.ingredients must resolve to ingredient IDs
+      // 5. operation.ingredients must resolve to ingredient IDs
       operations.forEach((op, i) => {
         op.ingredients.forEach((ref, j) => {
           if (!ingredientIds.has(ref)) {
@@ -215,7 +228,7 @@ export function createRecipeSchema(config: RecipeSchemaConfig) {
         });
       });
 
-      // 5. operation.depends must resolve to operation IDs
+      // 6. operation.depends must resolve to operation IDs
       operations.forEach((op, i) => {
         op.depends.forEach((ref, j) => {
           if (!operationIds.has(ref)) {

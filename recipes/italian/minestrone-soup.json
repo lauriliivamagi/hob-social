@@ -190,7 +190,8 @@
         "min": 180
       },
       "scalable": true,
-      "details": "Dice the yellow onion"
+      "details": "Dice the yellow onion",
+      "subProduct": "soup"
     },
     {
       "id": "chop-carrots",
@@ -213,7 +214,8 @@
         "min": 180
       },
       "scalable": true,
-      "details": "Chop the carrots"
+      "details": "Chop the carrots",
+      "subProduct": "soup"
     },
     {
       "id": "slice-celery",
@@ -236,7 +238,8 @@
         "min": 120
       },
       "scalable": true,
-      "details": "Thinly slice the celery ribs"
+      "details": "Thinly slice the celery ribs",
+      "subProduct": "soup"
     },
     {
       "id": "grate-garlic",
@@ -259,7 +262,8 @@
         "min": 120
       },
       "scalable": true,
-      "details": "Grate the garlic cloves"
+      "details": "Grate the garlic cloves",
+      "subProduct": "soup"
     },
     {
       "id": "chop-green-beans",
@@ -282,7 +286,8 @@
         "min": 120
       },
       "scalable": true,
-      "details": "Chop the green beans"
+      "details": "Chop the green beans",
+      "subProduct": "soup"
     },
     {
       "id": "chop-parsley",
@@ -339,7 +344,8 @@
         "max": 180,
         "unit": "C"
       },
-      "details": "Heat olive oil in the Dutch oven over medium heat. Add onion, carrots, celery, salt, and several grinds of black pepper. Cook, stirring occasionally, for 8 minutes until the vegetables begin to soften."
+      "details": "Heat olive oil in the Dutch oven over medium heat. Add onion, carrots, celery, salt, and several grinds of black pepper. Cook, stirring occasionally, for 8 minutes until the vegetables begin to soften.",
+      "subProduct": "soup"
     },
     {
       "id": "add-and-simmer",
@@ -376,7 +382,8 @@
         "max": 180,
         "unit": "C"
       },
-      "details": "Add garlic, tomatoes, white beans, green beans, broth, bay leaves, oregano, and thyme. Cover and simmer for 20 minutes."
+      "details": "Add garlic, tomatoes, white beans, green beans, broth, bay leaves, oregano, and thyme. Cover and simmer for 20 minutes.",
+      "subProduct": "soup"
     },
     {
       "id": "cook-pasta",
@@ -407,7 +414,8 @@
         "unit": "C"
       },
       "details": "Stir in the pasta and cook uncovered for 10 more minutes until the pasta is cooked through. Remove bay leaves.",
-      "output": "soup"
+      "output": "soup",
+      "subProduct": "soup"
     },
     {
       "id": "assemble-serve",

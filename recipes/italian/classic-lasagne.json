@@ -216,7 +216,8 @@
         "min": 180
       },
       "scalable": true,
-      "details": "Finely dice the onion"
+      "details": "Finely dice the onion",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "dice-carrot",
@@ -239,7 +240,8 @@
         "min": 180
       },
       "scalable": true,
-      "details": "Finely dice the carrots"
+      "details": "Finely dice the carrots",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "dice-celery",
@@ -262,7 +264,8 @@
         "min": 120
       },
       "scalable": true,
-      "details": "Finely dice the celery stalks"
+      "details": "Finely dice the celery stalks",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "mince-garlic",
@@ -285,7 +288,8 @@
         "min": 120
       },
       "scalable": true,
-      "details": "Mince the garlic cloves"
+      "details": "Mince the garlic cloves",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "grate-mozzarella",
@@ -308,7 +312,8 @@
         "min": 180
       },
       "scalable": true,
-      "details": "Coarsely grate the mozzarella"
+      "details": "Coarsely grate the mozzarella",
+      "subProduct": "lasagne"
     },
     {
       "id": "grate-parmesan",
@@ -352,7 +357,8 @@
         "min": 60
       },
       "scalable": true,
-      "details": "Preheat oven to 180°C (350°F)"
+      "details": "Preheat oven to 180°C (350°F)",
+      "subProduct": "lasagne"
     },
     {
       "id": "saute-soffritto",
@@ -384,7 +390,8 @@
         "max": 180,
         "unit": "C"
       },
-      "details": "Heat olive oil in pan. Add diced onion, carrot, and celery. Cook 8 minutes, stirring occasionally, until softened and lightly golden."
+      "details": "Heat olive oil in pan. Add diced onion, carrot, and celery. Cook 8 minutes, stirring occasionally, until softened and lightly golden.",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "add-garlic",
@@ -413,7 +420,8 @@
         "max": 180,
         "unit": "C"
       },
-      "details": "Add minced garlic and cook 1 minute until fragrant"
+      "details": "Add minced garlic and cook 1 minute until fragrant",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "brown-mince",
@@ -445,7 +453,8 @@
         "max": 200,
         "unit": "C"
       },
-      "details": "Add beef mince, break up with a wooden spoon. Cook until well browned with no pink remaining. Season with 5 g salt and pepper."
+      "details": "Add beef mince, break up with a wooden spoon. Cook until well browned with no pink remaining. Season with 5 g salt and pepper.",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "deglaze",
@@ -475,7 +484,8 @@
         "max": 200,
         "unit": "C"
       },
-      "details": "Pour in red wine, scrape up browned bits from the bottom. Let bubble until mostly evaporated."
+      "details": "Pour in red wine, scrape up browned bits from the bottom. Let bubble until mostly evaporated.",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "build-meat-sauce",
@@ -507,7 +517,8 @@
         "max": 180,
         "unit": "C"
       },
-      "details": "Stir in crushed tomatoes, tomato paste, and oregano. Bring to a gentle simmer."
+      "details": "Stir in crushed tomatoes, tomato paste, and oregano. Bring to a gentle simmer.",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "simmer-meat-sauce",
@@ -536,7 +547,8 @@
         "unit": "C"
       },
       "details": "Cover partially and simmer for 25 minutes, stirring occasionally. Sauce should thicken and flavours meld.",
-      "output": "meat-sauce"
+      "output": "meat-sauce",
+      "subProduct": "meat-sauce"
     },
     {
       "id": "melt-butter",
@@ -564,7 +576,8 @@
         "max": 160,
         "unit": "C"
       },
-      "details": "Melt butter in the saucepan over medium-low heat"
+      "details": "Melt butter in the saucepan over medium-low heat",
+      "subProduct": "bechamel"
     },
     {
       "id": "make-roux",
@@ -594,7 +607,8 @@
         "max": 180,
         "unit": "C"
       },
-      "details": "Add flour and whisk constantly for 2-3 minutes until the roux is pale golden and smells nutty"
+      "details": "Add flour and whisk constantly for 2-3 minutes until the roux is pale golden and smells nutty",
+      "subProduct": "bechamel"
     },
     {
       "id": "add-milk",
@@ -626,7 +640,8 @@
         "unit": "C"
       },
       "details": "Gradually add milk in splashes, whisking constantly to prevent lumps. Cook until thickened enough to coat the back of a spoon. Season with nutmeg and 2 g salt.",
-      "output": "bechamel"
+      "output": "bechamel",
+      "subProduct": "bechamel"
     },
     {
       "id": "assemble-lasagne",
@@ -653,7 +668,8 @@
         "min": 600
       },
       "scalable": true,
-      "details": "Spread a thin layer of meat sauce on the bottom of the baking dish. Alternate layers of lasagne sheets, meat sauce, béchamel, and mozzarella. Repeat for 3-4 layers. Finish with béchamel and remaining mozzarella on top."
+      "details": "Spread a thin layer of meat sauce on the bottom of the baking dish. Alternate layers of lasagne sheets, meat sauce, béchamel, and mozzarella. Repeat for 3-4 layers. Finish with béchamel and remaining mozzarella on top.",
+      "subProduct": "lasagne"
     },
     {
       "id": "bake-lasagne",
@@ -678,7 +694,8 @@
       },
       "scalable": false,
       "details": "Place dish in oven. Bake 25 minutes covered with foil, then remove foil and bake 10 more minutes until golden and bubbling.",
-      "output": "lasagne"
+      "output": "lasagne",
+      "subProduct": "lasagne"
     },
     {
       "id": "assemble-rest",

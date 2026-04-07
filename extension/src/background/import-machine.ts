@@ -197,6 +197,7 @@ function sanitizeIds(raw: Record<string, unknown>): void {
     // First pass: fix operation IDs
     for (const op of operations) {
       if (typeof op['id'] === 'string') op['id'] = fix(op['id']);
+      if (typeof op['subProduct'] === 'string') op['subProduct'] = fix(op['subProduct']);
       if (typeof op['output'] === 'string') op['output'] = fix(op['output']);
     }
     // Second pass: fix references

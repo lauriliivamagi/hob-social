@@ -83,6 +83,7 @@ export interface Operation {
   scalable: boolean;
   temperature?: Temperature;
   details?: string;
+  subProduct?: SubProductId;
   output?: SubProductId;
 }
 
