@@ -1,0 +1,165 @@
+description: Recipe parsing prompt evaluation
+
+prompts:
+  - file://prompt.mjs
+
+providers:
+  # Single-shot (baseline — no retries)
+  - id: google:gemini-2.5-flash
+    label: 'Gemini 2.5 Flash (single)'
+    config:
+      temperature: 0
+      maxOutputTokens: 16384
+      responseMimeType: application/json
+  - id: google:gemini-3-flash-preview
+    label: 'Gemini 3 Flash (single)'
+    config:
+      temperature: 0
+      maxOutputTokens: 8192
+  - id: google:gemini-3.1-flash-lite-preview
+    label: 'Gemini 3.1 Flash Lite (single)'
+    config:
+      temperature: 0
+      maxOutputTokens: 16384
+      responseMimeType: application/json
+
+  # Ollama Pro — commented out due to slow cloud inference (~18 tok/s)
+  # - id: ollama:chat:gemma4:31b-cloud
+  #   label: 'Gemma 4 31B (Ollama Pro, single)'
+  #   config:
+  #     temperature: 0
+  #     num_predict: 8192
+  #     think: false
+  #     passthrough:
+  #       format: json
+
+  # With retry loop (mirrors extension behavior — up to 3 attempts with error feedback)
+  - id: file://retry-provider.mjs
+    label: 'Gemini 2.5 Flash (3 retries)'
+    config:
+      provider: google:gemini-2.5-flash
+      providerConfig:
+        temperature: 0
+        maxOutputTokens: 16384
+        responseMimeType: application/json
+      maxRetries: 3
+  - id: file://retry-provider.mjs
+    label: 'Gemini 3 Flash (3 retries)'
+    config:
+      provider: google:gemini-3-flash-preview
+      maxRetries: 3
+  - id: file://retry-provider.mjs
+    label: 'Gemini 3.1 Flash Lite (3 retries)'
+    config:
+      provider: google:gemini-3.1-flash-lite-preview
+      providerConfig:
+        temperature: 0
+        maxOutputTokens: 16384
+        responseMimeType: application/json
+      maxRetries: 3
+  # - id: file://retry-provider.mjs
+  #   label: 'Gemma 4 31B Ollama Pro (3 retries)'
+  #   config:
+  #     provider: ollama:chat:gemma4:31b-cloud
+  #     providerConfig:
+  #       temperature: 0
+  #       num_predict: 8192
+  #       think: false
+  #       passthrough:
+  #         format: json
+  #     maxRetries: 3
+
+defaultTest:
+  assert:
+    - type: javascript
+      value: file://assertions/schema-valid.mjs
+    - type: javascript
+      value: file://assertions/content-completeness.mjs
+
+tests:
+  - description: 'Spaghetti Bolognese — complex DAG, 15 ingredients'
+    vars:
+      fixture: spaghetti-bolognese.json
+
+  - description: 'Classic Lasagne — multi-component, sub-products'
+    vars:
+      fixture: classic-lasagne.json
+    assert:
+      - type: javascript
+        value: file://assertions/sub-products-present.mjs
+
+  - description: 'Estonian pasta — language preservation, quantity ranges'
+    vars:
+      fixture: imelihtne-suitsulohepasta.json
+    assert:
+      - type: javascript
+        value: file://assertions/quantity-ranges.mjs
+      - type: javascript
+        value: file://assertions/language-preserved.mjs
+
+  - description: 'Minestrone Soup — many ingredients, simpler DAG'
+    vars:
+      fixture: minestrone-soup.json
+
+  # --- New fixtures from real recipe URLs ---
+
+  - description: 'Pardifileed — Estonian, duck, Asian-inspired'
+    vars:
+      fixture: pardifileed-kyliekwong.json
+    assert:
+      - type: javascript
+        value: file://assertions/schema-valid.mjs
+      - type: javascript
+        value: file://assertions/language-preserved.mjs
+
+  - description: 'Värske salat — Estonian, simple salad'
+    vars:
+      fixture: varske-salat.json
+    assert:
+      - type: javascript
+        value: file://assertions/schema-valid.mjs
+      - type: javascript
+        value: file://assertions/language-preserved.mjs
+
+  - description: 'Veisekael tumedas õlles — Estonian, beef in dark beer, Rimi'
+    vars:
+      fixture: veisekael-tumedas-olles.json
+    assert:
+      - type: javascript
+        value: file://assertions/schema-valid.mjs
+      - type: javascript
+        value: file://assertions/language-preserved.mjs
+
+  - description: 'Loomalihahautis — Estonian, beef stew with vegetables, Rimi'
+    vars:
+      fixture: loomalihahautis-koogiviljadega.json
+    assert:
+      - type: javascript
+        value: file://assertions/schema-valid.mjs
+      - type: javascript
+        value: file://assertions/language-preserved.mjs
+
+  - description: 'Hapukoorepannkoogid — Estonian, sour cream pancakes, blogspot'
+    vars:
+      fixture: hapukoorepannkoogid.json
+    assert:
+      - type: javascript
+        value: file://assertions/schema-valid.mjs
+      - type: javascript
+        value: file://assertions/language-preserved.mjs
+
+  - description: 'Pasta Fra Diavolo — English, Italian, spicy pasta'
+    vars:
+      fixture: pasta-fra-diavolo.json
+    assert:
+      - type: javascript
+        value: file://assertions/schema-valid.mjs
+
+  - description: 'Ricotta Gnocchi — English, Italian, step-by-step'
+    vars:
+      fixture: ricotta-gnocchi.json
+    assert:
+      - type: javascript
+        value: file://assertions/schema-valid.mjs
+      - type: javascript
+        value: file://assertions/sub-products-present.mjs

@@ -1,0 +1,141 @@
+{
+  "meta": {
+    "title": "Pardifileed tšillisoola ja sidruniga",
+    "slug": "pardifileed-kyliekwong",
+    "language": "et",
+    "source": "https://nami-nami.ee/retsept/27394/pardifileed_kyliekwong",
+    "originalText": "# Pardifileed tšillisoola ja sidruniga\n\nAustraalia koka Kylie Kwongi retsept (Chilli Salt Duck Breasts with Lemon).\n\nKogus: neljale\nValmistusviis: Praadimine\n\n## Koostisosad\n\n- 4 x 200 g pardi rinnafileed (nahaga, eemalda liigne rasv)\n- 2 sl nisujahu\n- 3 tl tšillipulbrit\n- 3 tl meresoola\n- frittimiseks õli\n- 2 sl Sichuani pipraga soola (vt allpool)\n- 1 suurem punane tšillikaun\n- 2 sl viilutatud talisibulat\n- 2 poolitatud sidrunit\n\n**Maitsesool:**\n- 0,5 sl Sichuani pipart\n- 1,5 sl soolahelbeid\n\n## Valmistamine\n\nAseta pardifileed bambusest aurutisse mahtuvale kuumakindlale taldrikule, nahk ülalpool. Pane pardifileed koos taldrikuga aurutisse, tõsta auruti kuuma vee kohale ja auruta kaane all umbes 12 minutit või kuni pardifileed on poolküpsed.\n\nSiis võta aurutist ettevaatlikult välja ja lase pardifileedel umbes 25 minutit jahtuda.\n\nSamal ajal sega kausis jahu, tšillipulber ja sool. Veereta jahtunud pardifileesid jahusegus. Liigne jahu raputa maha.\n\nKuumuta õli kuumas vokis kuni see kergelt võbeleb pinnal. Lisa pardifileed ja prae neid rohkes õlis umbes 2 minutit või kuni need on just küpsed ja pealt kergelt pruunistunud. Võta õlist välja, lase köögipaberil veidi taheneda.\n\nLõika pardifileed diagonaalselt 1 cm viiludeks, laota vaagnale. Kõrvale tõsta kausike Sichuani pipra ja soola seguga.\n\nKaunistuseks lisa viilutatud tšillit ja talisibulat. Serveeri kohe, kõrvale sidrunipoolikud.\n\n### Sichuani pipra soola jaoks:\n\nPane Sichuani pipra terad kuivale paksupõhjalisele pannile ja rösti keskmisel kuumusel, kuni pipraterad praksuma hakkavad. Siis tõsta pann tulelt, lase piprateradel jahtuda. Siis peenesta uhmris ja sega soolaga.",
+    "tags": ["asian", "dinner", "dairy-free"],
+    "servings": 4,
+    "totalTime": {
+      "relaxed": { "min": 3300 },
+      "optimized": { "min": 2700 }
+    },
+    "difficulty": "medium"
+  },
+  "ingredients": [
+    { "id": "pardi-rinnafileed", "name": "pardi rinnafileed", "quantity": { "min": 800, "unit": "g" }, "group": "meat" },
+    { "id": "nisujahu", "name": "nisujahu", "quantity": { "min": 2, "unit": "sl" }, "group": "dry" },
+    { "id": "tsillipulber", "name": "tšillipulber", "quantity": { "min": 3, "unit": "tl" }, "group": "spices" },
+    { "id": "meresool", "name": "meresool", "quantity": { "min": 3, "unit": "tl" }, "group": "spices" },
+    { "id": "oli", "name": "õli", "quantity": { "min": 200, "unit": "ml" }, "group": "pantry" },
+    { "id": "tsillikaun", "name": "punane tšillikaun", "quantity": { "min": 1, "unit": "whole" }, "group": "vegetables" },
+    { "id": "talisibul", "name": "talisibul", "quantity": { "min": 2, "unit": "sl" }, "group": "vegetables" },
+    { "id": "sidrun", "name": "sidrun", "quantity": { "min": 2, "unit": "whole" }, "group": "vegetables" },
+    { "id": "sichuani-pipar", "name": "Sichuani pipar", "quantity": { "min": 0.5, "unit": "sl" }, "group": "spices" },
+    { "id": "soolahelbed", "name": "soolahelbed", "quantity": { "min": 1.5, "unit": "sl" }, "group": "spices" }
+  ],
+  "equipment": [
+    { "id": "auruti", "name": "auruti", "count": 1 },
+    { "id": "vokk", "name": "vokk", "count": 1 },
+    { "id": "pann", "name": "paksupõhjaline pann", "count": 1 },
+    { "id": "uhmer", "name": "uhmer", "count": 1 },
+    { "id": "kauss", "name": "kauss", "count": 1 }
+  ],
+  "operations": [
+    {
+      "id": "rosti-sichuani-pipart",
+      "type": "cook",
+      "action": "rösti",
+      "ingredients": ["sichuani-pipar"],
+      "depends": [],
+      "equipment": [{ "use": "pann", "release": true }],
+      "time": { "min": 180 },
+      "activeTime": { "min": 120 },
+      "scalable": false,
+      "temperature": { "min": 160, "max": 180, "unit": "C" },
+      "details": "Pane Sichuani pipra terad kuivale paksupõhjalisele pannile ja rösti keskmisel kuumusel, kuni pipraterad praksuma hakkavad.",
+      "subProduct": "maitsesool"
+    },
+    {
+      "id": "peenesta-piprat",
+      "type": "prep",
+      "action": "peenesta",
+      "ingredients": ["soolahelbed"],
+      "depends": ["rosti-sichuani-pipart"],
+      "equipment": [{ "use": "uhmer", "release": true }],
+      "time": { "min": 180 },
+      "activeTime": { "min": 180 },
+      "scalable": true,
+      "details": "Lase piprateradel jahtuda. Peenesta uhmris ja sega soolaga.",
+      "subProduct": "maitsesool",
+      "output": "maitsesool"
+    },
+    {
+      "id": "auruta-pardifileed",
+      "type": "cook",
+      "action": "auruta",
+      "ingredients": ["pardi-rinnafileed"],
+      "depends": [],
+      "equipment": [{ "use": "auruti", "release": true }],
+      "time": { "min": 720 },
+      "activeTime": { "min": 60 },
+      "scalable": false,
+      "details": "Aseta pardifileed aurutisse, nahk ülalpool. Auruta kaane all umbes 12 minutit või kuni poolküpsed."
+    },
+    {
+      "id": "jahuta-pardifileed",
+      "type": "rest",
+      "action": "jahuta",
+      "ingredients": [],
+      "depends": ["auruta-pardifileed"],
+      "equipment": [],
+      "time": { "min": 1500 },
+      "activeTime": { "min": 0 },
+      "scalable": false,
+      "details": "Lase pardifileedel umbes 25 minutit jahtuda."
+    },
+    {
+      "id": "sega-jahusegu",
+      "type": "prep",
+      "action": "sega",
+      "ingredients": ["nisujahu", "tsillipulber", "meresool"],
+      "depends": [],
+      "equipment": [{ "use": "kauss", "release": true }],
+      "time": { "min": 60 },
+      "activeTime": { "min": 60 },
+      "scalable": true,
+      "details": "Sega kausis jahu, tšillipulber ja sool."
+    },
+    {
+      "id": "paneeri-pardifileed",
+      "type": "prep",
+      "action": "paneeri",
+      "ingredients": [],
+      "depends": ["jahuta-pardifileed", "sega-jahusegu"],
+      "equipment": [],
+      "time": { "min": 120 },
+      "activeTime": { "min": 120 },
+      "scalable": true,
+      "details": "Veereta jahtunud pardifileesid jahusegus. Liigne jahu raputa maha."
+    },
+    {
+      "id": "prae-pardifileed",
+      "type": "cook",
+      "action": "prae",
+      "ingredients": ["oli"],
+      "depends": ["paneeri-pardifileed"],
+      "equipment": [{ "use": "vokk", "release": true }],
+      "time": { "min": 120 },
+      "activeTime": { "min": 120 },
+      "scalable": false,
+      "temperature": { "min": 190, "max": 210, "unit": "C" },
+      "details": "Kuumuta õli kuumas vokis. Prae pardifileed rohkes õlis umbes 2 minutit kuni küpsed ja pruunistunud."
+    },
+    {
+      "id": "serveeri",
+      "type": "assemble",
+      "action": "serveeri",
+      "ingredients": ["tsillikaun", "talisibul", "sidrun"],
+      "depends": ["prae-pardifileed", "peenesta-piprat"],
+      "equipment": [],
+      "time": { "min": 180 },
+      "activeTime": { "min": 180 },
+      "scalable": true,
+      "details": "Lõika pardifileed diagonaalselt 1 cm viiludeks, laota vaagnale. Kaunista viilutatud tšilli ja talisibulaga. Serveeri kõrvale sidrunipoolikud ja Sichuani soola."
+    }
+  ],
+  "subProducts": [
+    { "id": "maitsesool", "name": "Sichuani pipra sool", "finalOp": "peenesta-piprat" }
+  ]
+}

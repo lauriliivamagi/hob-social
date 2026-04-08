@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "title": "Hapukoorepannkoogid",
+    "slug": "hapukoorepannkoogid",
+    "language": "et",
+    "source": "https://maguskook.blogspot.com/2011/08/pontsakad-hapukoorepannkoogid.html",
+    "originalText": "# Hapukoorepannkoogid\n\nKogus: 2 portsjonit\n\n## Koostisosad\n\n- 2 muna\n- 100 g hapukoort\n- 2 dl jahu\n- 4 sl suhkrut\n- 1 tl soola\n- 1 tl küpsetuspulbrit\n\n## Valmistamine\n\nKlopi munad suhkru ja soolaga. Lisa hapukoor, sega ühtlaseks. Lisa jahu koos küpsetuspulbriga, sega taignaks. Praadi väikeseid pannkooke väheses õlis. Serveeri meega ja marjadega.",
+    "tags": ["estonian", "breakfast", "quick", "vegetarian"],
+    "servings": 2,
+    "totalTime": {
+      "relaxed": { "min": 1500 },
+      "optimized": { "min": 1200 }
+    },
+    "difficulty": "easy"
+  },
+  "ingredients": [
+    { "id": "muna", "name": "muna", "quantity": { "min": 2, "unit": "whole" }, "group": "dairy" },
+    { "id": "hapukoor", "name": "hapukoor", "quantity": { "min": 100, "unit": "g" }, "group": "dairy" },
+    { "id": "jahu", "name": "jahu", "quantity": { "min": 200, "unit": "ml" }, "group": "pantry" },
+    { "id": "suhkur", "name": "suhkur", "quantity": { "min": 4, "unit": "sl" }, "group": "pantry" },
+    { "id": "sool", "name": "sool", "quantity": { "min": 1, "unit": "tl" }, "group": "spices" },
+    { "id": "kupsetuspulber", "name": "küpsetuspulber", "quantity": { "min": 1, "unit": "tl" }, "group": "pantry" },
+    { "id": "oli", "name": "õli", "quantity": { "min": 2, "unit": "sl" }, "group": "pantry" },
+    { "id": "mesi", "name": "mesi", "quantity": { "min": 2, "unit": "sl" }, "group": "pantry" },
+    { "id": "marjad", "name": "marjad", "quantity": { "min": 100, "unit": "g" }, "group": "fruit" }
+  ],
+  "equipment": [
+    { "id": "kauss", "name": "segamiskauss", "count": 1 },
+    { "id": "pann", "name": "pann", "count": 1 }
+  ],
+  "operations": [
+    {
+      "id": "klopi-munad",
+      "type": "prep",
+      "action": "klopi",
+      "ingredients": ["muna", "suhkur", "sool"],
+      "depends": [],
+      "equipment": [{ "use": "kauss", "release": false }],
+      "time": { "min": 120 },
+      "activeTime": { "min": 120 },
+      "scalable": true,
+      "details": "Klopi munad suhkru ja soolaga vahule."
+    },
+    {
+      "id": "lisa-hapukoor",
+      "type": "prep",
+      "action": "sega",
+      "ingredients": ["hapukoor"],
+      "depends": ["klopi-munad"],
+      "equipment": [{ "use": "kauss", "release": false }],
+      "time": { "min": 60 },
+      "activeTime": { "min": 60 },
+      "scalable": true,
+      "details": "Lisa hapukoor, sega ühtlaseks."
+    },
+    {
+      "id": "sega-tainas",
+      "type": "prep",
+      "action": "sega",
+      "ingredients": ["jahu", "kupsetuspulber"],
+      "depends": ["lisa-hapukoor"],
+      "equipment": [{ "use": "kauss", "release": true }],
+      "time": { "min": 120 },
+      "activeTime": { "min": 120 },
+      "scalable": true,
+      "details": "Lisa jahu koos küpsetuspulbriga, sega sileaks taignaks.",
+      "subProduct": "tainas",
+      "output": "tainas"
+    },
+    {
+      "id": "praadi-pannkoogid",
+      "type": "cook",
+      "action": "praadi",
+      "ingredients": ["oli"],
+      "depends": ["sega-tainas"],
+      "equipment": [{ "use": "pann", "release": true }],
+      "time": { "min": 900 },
+      "activeTime": { "min": 900 },
+      "scalable": true,
+      "details": "Praadi väikeseid pannkooke väheses õlis kuldpruuniks mõlemalt poolt."
+    },
+    {
+      "id": "serveeri",
+      "type": "assemble",
+      "action": "serveeri",
+      "ingredients": ["mesi", "marjad"],
+      "depends": ["praadi-pannkoogid"],
+      "equipment": [],
+      "time": { "min": 60 },
+      "activeTime": { "min": 60 },
+      "scalable": false,
+      "details": "Serveeri meega ja marjadega."
+    }
+  ],
+  "subProducts": [
+    { "id": "tainas", "name": "pannkoogitainas", "finalOp": "sega-tainas" }
+  ]
+}

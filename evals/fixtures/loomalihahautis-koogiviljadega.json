@@ -1,0 +1,79 @@
+{
+  "url": "https://www.rimi.ee/retseptid/loomalihahautis-koogiviljadega/11343",
+  "title": "Loomalihahautis köögiviljadega | Rimi - RIMI",
+  "contentMarkdown": "## Loomalihahautis köögiviljadega\n\n- Küpsetusaeg: 2h 40min\n- Keskmine\n\n![Loomalihahautis köögiviljadega](https://res.cloudinary.com/rimibaltic-web/image/upload/b_white,c_fill,f_auto,h_675,q_auto,w_1200/v2026040614/web-cms/4a0a45d27970db61bb26a3aa0b6c43b7505c2e34.jpg)\n\n## Koostisosad\n\n- Sink\n\t700 g\n- Viinamarjaseemneõli\n\t40 ml\n- Porgand\n\t3 tk\n- Varsseller\n\t4 tk\n- Lehtkapsas\n\t1 tk\n- Porrulauk\n\t1 tk\n- Küüslauk\n\t6 küüs (-nt)\n- Tüümian\n- Rosmariin\n- Pipar\n- Tšillipipar\n- Tomat\n\t500 g\n- Puljong\n\t600 ml\n\n## Juhised\n\n### Pane tähele!\n\nSee retsept on mõeldud 6 sööjale. Portsjonite arvu muutmine uuendab ka retsepti koostisosade hulka. Mõnel juhul võib muutuda ka toidu valmistamise aeg.\n\n### Valmista ette köögiviljad ja liha.\n\n### Koori köögiviljad ja lõika need suurteks tükkideks.\n\n### Lõika liha ühesuurusteks suurteks tükkideks.\n\n### Kuumuta õli potis, lisa küüslauk (kooritud, suurteks tükkideks lõigatud) ja köögiviljad ning küpseta, kuni need karamellistuvad.\n\n### Võta need korraks välja ja pane liha potti.\n\n### Küpseta kuni karamellistumiseni.\n\n### Lisa praetud köögiviljad, tükeldatud tomatid ja seejärel puljong.\n\n### Lisa ürdid ja peeneks hakitud tšilli.\n\n### Kohe kui pott hakkab keema, pane potile kaas peale ja vähenda temperatuuri vähem kui poole peale.\n\n### Hauta vähemalt kaks tundi, kuni liha ja köögiviljad on muutunud nii pehmeks, et need sulavad keelel.\n\n### Serveeri meelepärase lisandiga, näiteks kartulipüree või pastaga.\n\n## Sarnased retseptid\n\n### Kreemises sidrunikastmes gnocchi’d\n\n20min • Lihtne\n\n### Koorene pasta kanaga\n\n30min • Lihtne\n\n### Magushapu kanavokk aasiapärase roosa greibisalatiga\n\n30min • Keskmine\n\n### Hakkliha ja juustuga täidetud spagettkõrvits\n\n1h 50min • Keskmine\n\n### Spargel munaga\n\n20min • Lihtne\n\n### Ahjulõhe köögiviljadega\n\n35min • Lihtne",
+  "schemaOrgData": [
+    {
+      "@context": "https://schema.org/",
+      "@type": "Recipe",
+      "name": "Loomalihahautis köögiviljadega",
+      "author": {
+        "@type": "Organization",
+        "name": "Rimi"
+      },
+      "recipeCategory": "Õhtusöök, Liha, Pearoog, Parema elu nimel, Lõunasöök, Köögiviljad, Veiseliha, Elustiil",
+      "recipeCuisine": "Estonia",
+      "keywords": "Estonia",
+      "description": "Loomalihahautis köögiviljadega",
+      "image": [
+        "https://res.cloudinary.com/rimibaltic-web/image/upload/b_white,c_fill,f_auto,h_675,q_auto,w_1200/v2026040614/web-cms/4a0a45d27970db61bb26a3aa0b6c43b7505c2e34.jpg"
+      ],
+      "totalTime": "PT160M",
+      "recipeYield": 6,
+      "recipeIngredient": [
+        "700 g Sink",
+        "40 ml Viinamarjaseemneõli",
+        "3 tk Porgand",
+        "4 tk Varsseller",
+        "1 tk Lehtkapsas",
+        "1 tk Porrulauk",
+        "6 küüs (-nt) Küüslauk",
+        "Tüümian",
+        "Rosmariin",
+        "Pipar",
+        "Tšillipipar",
+        "500 g Tomat",
+        "600 ml Puljong"
+      ],
+      "recipeInstructions": [
+        "Valmista ette köögiviljad ja liha.",
+        "Koori köögiviljad ja lõika need suurteks tükkideks.",
+        "Lõika liha ühesuurusteks suurteks tükkideks.",
+        "Kuumuta õli potis, lisa küüslauk (kooritud, suurteks tükkideks lõigatud) ja köögiviljad ning küpseta, kuni need karamellistuvad.",
+        "Võta need korraks välja ja pane liha potti.",
+        "Küpseta kuni karamellistumiseni.",
+        "Lisa praetud köögiviljad, tükeldatud tomatid ja seejärel puljong.",
+        "Lisa ürdid ja peeneks hakitud tšilli.",
+        "Kohe kui pott hakkab keema, pane potile kaas peale ja vähenda temperatuuri vähem kui poole peale.",
+        "Hauta vähemalt kaks tundi, kuni liha ja köögiviljad on muutunud nii pehmeks, et need sulavad keelel.",
+        "Serveeri meelepärase lisandiga, näiteks kartulipüree või pastaga."
+      ],
+      "nutrition": []
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tark valik",
+          "item": "https://www.rimi.ee"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Retseptid",
+          "item": "https://www.rimi.ee/retseptid"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Loomalihahautis köögiviljadega",
+          "item": "https://www.rimi.ee/retseptid/loomalihahautis-koogiviljadega/11343"
+        }
+      ]
+    }
+  ],
+  "language": "et"
+}

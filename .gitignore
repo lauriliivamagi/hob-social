@@ -12,6 +12,7 @@ extension/node_modules/
 .env
 .env.local
 .env.*.local
+.infisical.json
 
 # IDE
 .idea/

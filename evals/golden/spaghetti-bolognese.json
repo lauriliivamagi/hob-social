@@ -1,0 +1,598 @@
+{
+  "meta": {
+    "title": "Spaghetti Bolognese",
+    "slug": "spaghetti-bolognese",
+    "language": "en",
+    "source": "https://example.com/spaghetti-bolognese",
+    "originalText": "# Spaghetti Bolognese\n\nA rich, slow-simmered meat sauce with spaghetti. Serves 4.\n\n## Ingredients\n\n### Vegetables\n- 1 large onion, finely diced\n- 2 medium carrots, finely diced\n- 2 stalks celery, finely diced\n- 4 cloves garlic, minced\n\n### Meat\n- 500 g beef mince (80/20)\n\n### Pantry\n- 400 g crushed tomatoes (one 400 g tin)\n- 70 g tomato paste (double concentrate)\n- 120 ml red wine (a dry Italian like Chianti)\n- 15 ml olive oil\n- 5 g salt\n- 2 g black pepper\n- 3 g dried oregano\n- 2 bay leaves\n\n### Pasta & Dairy\n- 400 g spaghetti\n- 50 g Parmesan, freshly grated\n\n## Equipment\n- Large heavy-bottomed pan or Dutch oven\n- Large pot for pasta\n- Cutting board and knife\n- Grater\n\n## Instructions\n\n1. **Prep the soffritto**: Finely dice the onion, carrots, and celery. Mince the garlic.\n2. **Build the base**: Heat olive oil in a large pan over medium heat. Add the diced onion, carrot, and celery. Cook for 8 minutes, stirring occasionally, until softened and lightly golden. Add the garlic and cook 1 minute more until fragrant.\n3. **Brown the meat**: Increase heat to medium-high. Add the beef mince, breaking it up with a wooden spoon. Cook for 6-8 minutes until well browned with no pink remaining. Season with salt and pepper.\n4. **Deglaze**: Pour in the red wine and scrape up any browned bits from the bottom. Let it bubble for 2 minutes until mostly evaporated.\n5. **Build the sauce**: Stir in the crushed tomatoes, tomato paste, oregano, and bay leaves. Bring to a gentle simmer.\n6. **Simmer**: Reduce heat to low, cover partially, and simmer for 30 minutes, stirring every 10 minutes. The sauce should thicken and the flavours meld together. Remove bay leaves.\n7. **Cook the pasta**: About 10 minutes before the sauce is done, bring a large pot of well-salted water to a rolling boil. Cook spaghetti according to package directions until al dente (usually 8-10 minutes). Reserve 240 ml of pasta water before draining.\n8. **Combine**: Add the drained pasta to the sauce. Toss vigorously, adding splashes of pasta water until the sauce coats the spaghetti evenly.\n9. **Serve**: Divide among warm bowls and top generously with freshly grated Parmesan. Serve immediately.\n\n## Notes\n\nFamily favourite. The soffritto (onion-carrot-celery) is the backbone — do not skip it. Kids prefer less garlic; use 2 cloves instead of 4. Leftovers keep well for 3 days in the fridge and freeze beautifully without the pasta.",
+    "tags": [
+      "italian",
+      "pasta",
+      "weeknight"
+    ],
+    "servings": 4,
+    "totalTime": {
+      "relaxed": {
+        "min": 4500
+      },
+      "optimized": {
+        "min": 3720
+      }
+    },
+    "difficulty": "easy",
+    "notes": "Family favourite. The soffritto is the backbone — do not skip it. Kids prefer less garlic (2 cloves instead of 4). Leftovers freeze well without the pasta."
+  },
+  "ingredients": [
+    {
+      "id": "onion",
+      "name": "Onion",
+      "quantity": {
+        "min": 1,
+        "unit": "whole"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "carrot",
+      "name": "Carrots",
+      "quantity": {
+        "min": 2,
+        "unit": "whole"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "celery",
+      "name": "Celery stalks",
+      "quantity": {
+        "min": 2,
+        "unit": "whole"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "garlic",
+      "name": "Garlic",
+      "quantity": {
+        "min": 4,
+        "unit": "cloves"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "mince",
+      "name": "Beef mince",
+      "quantity": {
+        "min": 500,
+        "unit": "g"
+      },
+      "group": "meat"
+    },
+    {
+      "id": "tomatoes",
+      "name": "Crushed tomatoes",
+      "quantity": {
+        "min": 400,
+        "unit": "g"
+      },
+      "group": "canned"
+    },
+    {
+      "id": "tomato-paste",
+      "name": "Tomato paste",
+      "quantity": {
+        "min": 70,
+        "unit": "g"
+      },
+      "group": "canned"
+    },
+    {
+      "id": "red-wine",
+      "name": "Red wine",
+      "quantity": {
+        "min": 120,
+        "unit": "ml"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "olive-oil",
+      "name": "Olive oil",
+      "quantity": {
+        "min": 15,
+        "unit": "ml"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "salt",
+      "name": "Salt",
+      "quantity": {
+        "min": 5,
+        "unit": "g"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "black-pepper",
+      "name": "Black pepper",
+      "quantity": {
+        "min": 2,
+        "unit": "g"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "oregano",
+      "name": "Dried oregano",
+      "quantity": {
+        "min": 3,
+        "unit": "g"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "bay-leaves",
+      "name": "Bay leaves",
+      "quantity": {
+        "min": 2,
+        "unit": "whole"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "spaghetti",
+      "name": "Spaghetti",
+      "quantity": {
+        "min": 400,
+        "unit": "g"
+      },
+      "group": "pasta"
+    },
+    {
+      "id": "parmesan",
+      "name": "Parmesan",
+      "quantity": {
+        "min": 50,
+        "unit": "g"
+      },
+      "group": "dairy"
+    }
+  ],
+  "equipment": [
+    {
+      "id": "large-pan",
+      "name": "Large heavy-bottomed pan",
+      "count": 1
+    },
+    {
+      "id": "large-pot",
+      "name": "Large pot",
+      "count": 1
+    },
+    {
+      "id": "cutting-board",
+      "name": "Cutting board",
+      "count": 1
+    },
+    {
+      "id": "knife",
+      "name": "Chef's knife",
+      "count": 1
+    },
+    {
+      "id": "grater",
+      "name": "Grater",
+      "count": 1
+    }
+  ],
+  "operations": [
+    {
+      "id": "dice-onion",
+      "type": "prep",
+      "action": "dice",
+      "ingredients": [
+        "onion"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 180
+      },
+      "activeTime": {
+        "min": 180
+      },
+      "scalable": true,
+      "details": "Finely dice the onion",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "dice-carrot",
+      "type": "prep",
+      "action": "dice",
+      "ingredients": [
+        "carrot"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 180
+      },
+      "activeTime": {
+        "min": 180
+      },
+      "scalable": true,
+      "details": "Finely dice the carrots",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "dice-celery",
+      "type": "prep",
+      "action": "dice",
+      "ingredients": [
+        "celery"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Finely dice the celery stalks",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "mince-garlic",
+      "type": "prep",
+      "action": "mince",
+      "ingredients": [
+        "garlic"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Mince the garlic cloves",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "saute-soffritto",
+      "type": "cook",
+      "action": "sauté",
+      "ingredients": [
+        "olive-oil"
+      ],
+      "depends": [
+        "dice-onion",
+        "dice-carrot",
+        "dice-celery"
+      ],
+      "equipment": [
+        {
+          "use": "large-pan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 480
+      },
+      "activeTime": {
+        "min": 240
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 160,
+        "max": 180,
+        "unit": "C"
+      },
+      "details": "Heat olive oil in pan. Add diced onion, carrot, and celery. Cook 8 minutes, stirring occasionally, until softened and lightly golden.",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "add-garlic",
+      "type": "cook",
+      "action": "sauté",
+      "ingredients": [],
+      "depends": [
+        "saute-soffritto",
+        "mince-garlic"
+      ],
+      "equipment": [
+        {
+          "use": "large-pan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 160,
+        "max": 180,
+        "unit": "C"
+      },
+      "details": "Add minced garlic and cook 1 minute until fragrant",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "brown-mince",
+      "type": "cook",
+      "action": "brown",
+      "ingredients": [
+        "mince",
+        "salt",
+        "black-pepper"
+      ],
+      "depends": [
+        "add-garlic"
+      ],
+      "equipment": [
+        {
+          "use": "large-pan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 420
+      },
+      "activeTime": {
+        "min": 420
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 180,
+        "max": 200,
+        "unit": "C"
+      },
+      "details": "Add beef mince, break up with a wooden spoon. Cook until well browned with no pink remaining. Season with salt and pepper.",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "deglaze",
+      "type": "cook",
+      "action": "deglaze",
+      "ingredients": [
+        "red-wine"
+      ],
+      "depends": [
+        "brown-mince"
+      ],
+      "equipment": [
+        {
+          "use": "large-pan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 180,
+        "max": 200,
+        "unit": "C"
+      },
+      "details": "Pour in red wine, scrape up browned bits from the bottom. Let bubble until mostly evaporated.",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "build-sauce",
+      "type": "cook",
+      "action": "stir",
+      "ingredients": [
+        "tomatoes",
+        "tomato-paste",
+        "oregano",
+        "bay-leaves"
+      ],
+      "depends": [
+        "deglaze"
+      ],
+      "equipment": [
+        {
+          "use": "large-pan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 160,
+        "max": 180,
+        "unit": "C"
+      },
+      "details": "Stir in crushed tomatoes, tomato paste, oregano, and bay leaves. Bring to a gentle simmer.",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "simmer-sauce",
+      "type": "cook",
+      "action": "simmer",
+      "ingredients": [],
+      "depends": [
+        "build-sauce"
+      ],
+      "equipment": [
+        {
+          "use": "large-pan",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 1800
+      },
+      "activeTime": {
+        "min": 180
+      },
+      "scalable": false,
+      "temperature": {
+        "min": 100,
+        "max": 140,
+        "unit": "C"
+      },
+      "details": "Cover partially and simmer for 30 minutes, stirring every 10 minutes. Sauce should thicken and flavours meld. Remove bay leaves.",
+      "output": "sauce",
+      "subProduct": "sauce"
+    },
+    {
+      "id": "boil-pasta",
+      "type": "cook",
+      "action": "boil",
+      "ingredients": [
+        "spaghetti"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "large-pot",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 600
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 100,
+        "unit": "C"
+      },
+      "details": "Bring a large pot of well-salted water to a rolling boil. Cook spaghetti until al dente (8-10 minutes). Reserve 240 ml pasta water before draining.",
+      "output": "pasta",
+      "subProduct": "pasta"
+    },
+    {
+      "id": "grate-parmesan",
+      "type": "prep",
+      "action": "grate",
+      "ingredients": [
+        "parmesan"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "grater",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Freshly grate the Parmesan"
+    },
+    {
+      "id": "assemble-drain",
+      "type": "assemble",
+      "action": "drain",
+      "ingredients": [],
+      "depends": [
+        "boil-pasta"
+      ],
+      "equipment": [],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Drain the spaghetti, reserving 240 ml of pasta water"
+    },
+    {
+      "id": "assemble-toss",
+      "type": "assemble",
+      "action": "toss",
+      "ingredients": [],
+      "depends": [
+        "simmer-sauce",
+        "boil-pasta"
+      ],
+      "equipment": [],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Add drained pasta to the sauce. Toss vigorously, adding splashes of pasta water until the sauce coats the spaghetti evenly."
+    },
+    {
+      "id": "assemble-serve",
+      "type": "assemble",
+      "action": "serve",
+      "ingredients": [],
+      "depends": [
+        "assemble-toss",
+        "grate-parmesan"
+      ],
+      "equipment": [],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Divide among warm bowls and top generously with freshly grated Parmesan. Serve immediately."
+    }
+  ],
+  "subProducts": [
+    {
+      "id": "sauce",
+      "name": "Bolognese Sauce",
+      "finalOp": "simmer-sauce"
+    },
+    {
+      "id": "pasta",
+      "name": "Cooked Spaghetti",
+      "finalOp": "boil-pasta"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "title": "Veisekael tumedas õlles",
+    "slug": "veisekael-tumedas-olles",
+    "language": "et",
+    "source": "https://www.rimi.ee/retseptid/veisekael-tumedas-olles/10319",
+    "originalText": "# Veisekael tumedas õlles\n\nKogus: 4 portsjonit\n\n## Koostisosad\n\n- 600 g veiseliha\n- 5 dl tumedat õlut\n- 200 g kaalikat\n- 50 g odrakruupe\n- 2 sibulat\n- sool maitse järgi\n- pipar maitse järgi\n- õli pruunistamiseks\n- jahu paneerimiseks\n- 2 loorberilehte\n\n## Valmistamine\n\nKuumuta ahi 180 °C-ni. Lõika liha 2–3 cm tükkideks. Koori ja haki sibul ja kaalikas. Maitsesta liha soola ja pipraga, pane jahu sisse. Pruunista liha potis õliga (~5 min), lisa kaalikas, sibul ja loorberilehed (~10 min). Lisa õlu, keeda üles, kata kaas peale ja hauta ahjus 2 tundi (või pliidil). Eemalda kaas 30 min enne lõppu. Eemalda loorberilehed enne serveerimist.",
+    "tags": ["estonian", "stew", "dinner", "comfort-food", "dairy-free"],
+    "servings": 4,
+    "totalTime": {
+      "relaxed": { "min": 9600 },
+      "optimized": { "min": 8400 }
+    },
+    "difficulty": "medium"
+  },
+  "ingredients": [
+    { "id": "veiseliha", "name": "veiseliha", "quantity": { "min": 600, "unit": "g" }, "group": "meat" },
+    { "id": "tume-olu", "name": "tume õlu", "quantity": { "min": 500, "unit": "ml" }, "group": "pantry" },
+    { "id": "kaalikas", "name": "kaalikas", "quantity": { "min": 200, "unit": "g" }, "group": "vegetables" },
+    { "id": "odrakruup", "name": "odrakruubid", "quantity": { "min": 50, "unit": "g" }, "group": "pantry" },
+    { "id": "sibul", "name": "sibul", "quantity": { "min": 2, "unit": "whole" }, "group": "vegetables" },
+    { "id": "sool", "name": "sool", "quantity": { "min": 1, "unit": "tl" }, "group": "spices" },
+    { "id": "pipar", "name": "pipar", "quantity": { "min": 0.5, "unit": "tl" }, "group": "spices" },
+    { "id": "oli", "name": "õli", "quantity": { "min": 2, "unit": "sl" }, "group": "pantry" },
+    { "id": "jahu", "name": "jahu", "quantity": { "min": 2, "unit": "sl" }, "group": "pantry" },
+    { "id": "loorberileht", "name": "loorberilehed", "quantity": { "min": 2, "unit": "whole" }, "group": "spices" }
+  ],
+  "equipment": [
+    { "id": "pott", "name": "ahjukindel pott", "count": 1 },
+    { "id": "ahi", "name": "ahi", "count": 1 }
+  ],
+  "operations": [
+    {
+      "id": "kuumuta-ahi",
+      "type": "prep",
+      "action": "kuumuta",
+      "ingredients": [],
+      "depends": [],
+      "equipment": [{ "use": "ahi", "release": false }],
+      "time": { "min": 600 },
+      "activeTime": { "min": 30 },
+      "scalable": false,
+      "temperature": { "min": 180, "unit": "C" },
+      "details": "Kuumuta ahi 180 °C-ni."
+    },
+    {
+      "id": "loika-liha",
+      "type": "prep",
+      "action": "lõika",
+      "ingredients": ["veiseliha"],
+      "depends": [],
+      "equipment": [],
+      "time": { "min": 300 },
+      "activeTime": { "min": 300 },
+      "scalable": true,
+      "details": "Lõika liha 2–3 cm tükkideks."
+    },
+    {
+      "id": "koori-juurvili",
+      "type": "prep",
+      "action": "koori ja haki",
+      "ingredients": ["kaalikas", "sibul"],
+      "depends": [],
+      "equipment": [],
+      "time": { "min": 300 },
+      "activeTime": { "min": 300 },
+      "scalable": true,
+      "details": "Koori ja haki sibul ja kaalikas."
+    },
+    {
+      "id": "maitsesta-paneeri",
+      "type": "prep",
+      "action": "maitsesta ja paneeri",
+      "ingredients": ["sool", "pipar", "jahu"],
+      "depends": ["loika-liha"],
+      "equipment": [],
+      "time": { "min": 120 },
+      "activeTime": { "min": 120 },
+      "scalable": true,
+      "details": "Maitsesta liha soola ja pipraga, pane jahu sisse."
+    },
+    {
+      "id": "pruunista-liha",
+      "type": "cook",
+      "action": "pruunista",
+      "ingredients": ["oli"],
+      "depends": ["maitsesta-paneeri"],
+      "equipment": [{ "use": "pott", "release": false }],
+      "time": { "min": 300 },
+      "activeTime": { "min": 300 },
+      "scalable": false,
+      "details": "Pruunista liha potis õliga ~5 minutit."
+    },
+    {
+      "id": "lisa-juurvili",
+      "type": "cook",
+      "action": "lisa ja hauta",
+      "ingredients": ["loorberileht", "odrakruup"],
+      "depends": ["pruunista-liha", "koori-juurvili"],
+      "equipment": [{ "use": "pott", "release": false }],
+      "time": { "min": 600 },
+      "activeTime": { "min": 120 },
+      "scalable": false,
+      "details": "Lisa kaalikas, sibul, odrakruubid ja loorberilehed, hauta ~10 min."
+    },
+    {
+      "id": "lisa-olu-hauta",
+      "type": "cook",
+      "action": "hauta ahjus",
+      "ingredients": ["tume-olu"],
+      "depends": ["lisa-juurvili", "kuumuta-ahi"],
+      "equipment": [{ "use": "pott", "release": false }, { "use": "ahi", "release": false }],
+      "time": { "min": 5400 },
+      "activeTime": { "min": 60 },
+      "scalable": false,
+      "temperature": { "min": 180, "unit": "C" },
+      "details": "Lisa õlu, keeda üles, kata kaas peale ja hauta ahjus 1,5 tundi."
+    },
+    {
+      "id": "eemalda-kaas",
+      "type": "cook",
+      "action": "eemalda kaas",
+      "ingredients": [],
+      "depends": ["lisa-olu-hauta"],
+      "equipment": [{ "use": "pott", "release": false }, { "use": "ahi", "release": true }],
+      "time": { "min": 1800 },
+      "activeTime": { "min": 30 },
+      "scalable": false,
+      "temperature": { "min": 180, "unit": "C" },
+      "details": "Eemalda kaas 30 min enne lõppu, lase hautuda lahtiselt."
+    },
+    {
+      "id": "serveeri",
+      "type": "assemble",
+      "action": "serveeri",
+      "ingredients": [],
+      "depends": ["eemalda-kaas"],
+      "equipment": [{ "use": "pott", "release": true }],
+      "time": { "min": 60 },
+      "activeTime": { "min": 60 },
+      "scalable": false,
+      "details": "Eemalda loorberilehed ja serveeri."
+    }
+  ],
+  "subProducts": []
+}

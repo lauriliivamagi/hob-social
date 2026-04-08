@@ -1,0 +1,494 @@
+{
+  "meta": {
+    "title": "Minestrone Soup",
+    "slug": "minestrone-soup",
+    "language": "en",
+    "source": "https://www.loveandlemons.com/minestrone-soup/",
+    "originalText": "# Minestrone Soup\n\nThis vegetarian minestrone soup recipe is my take on the classic Italian vegetable soup. It's hearty, fresh, and flavorful - just add crusty bread to make it a meal!\n\n## Ingredients\n\n- 2 tablespoons extra-virgin olive oil\n- 1 medium yellow onion, diced\n- 2 medium carrots, chopped\n- 2 celery ribs, thinly sliced\n- 1 teaspoon sea salt, plus more to taste\n- Freshly ground black pepper\n- 3 garlic cloves, grated\n- 1 (28-ounce) can diced tomatoes\n- 1½ cups cooked white beans or kidney beans, drained and rinsed\n- 1 cup chopped green beans\n- 4 cups vegetable broth\n- 2 bay leaves\n- 1 teaspoon dried oregano\n- 1 teaspoon dried thyme\n- ¾ cup small pasta, elbows, shells, orecchiette\n- ½ cup chopped fresh parsley\n- Red pepper flakes\n- Grated Parmesan cheese, optional, for serving\n\n## Equipment\n\n- Staub Dutch Oven\n\n## Instructions\n\n1. Heat the oil in a large pot over medium heat. Add the onion, carrots, celery, salt, and several grinds of black pepper, and cook, stirring occasionally, for 8 minutes, until the vegetables begin to soften.\n2. Add the garlic, tomatoes, beans, green beans, broth, bay leaves, oregano, and thyme. Cover and simmer for 20 minutes.\n3. Stir in the pasta and cook, uncovered, for 10 more minutes, until the pasta is cooked through.\n4. Season to taste and serve with parsley, red pepper flakes, and parmesan, if desired.\n\n## Notes\n\nPrep Time: 15 minutes. Cook Time: 30 minutes. Serves 4 to 6.",
+    "tags": [
+      "italian",
+      "soup",
+      "vegetarian",
+      "weeknight"
+    ],
+    "servings": 5,
+    "totalTime": {
+      "relaxed": {
+        "min": 3180
+      },
+      "optimized": {
+        "min": 2700
+      }
+    },
+    "difficulty": "easy",
+    "notes": "Best right after it's made, as the pasta absorbs the broth as it sits. Cook pasta separately if making ahead. Can substitute fennel for celery, zucchini for green beans, or farro for pasta."
+  },
+  "ingredients": [
+    {
+      "id": "olive-oil",
+      "name": "Extra-virgin olive oil",
+      "quantity": {
+        "min": 30,
+        "unit": "ml"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "onion",
+      "name": "Yellow onion",
+      "quantity": {
+        "min": 1,
+        "unit": "whole"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "carrots",
+      "name": "Carrots",
+      "quantity": {
+        "min": 2,
+        "unit": "whole"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "celery",
+      "name": "Celery ribs",
+      "quantity": {
+        "min": 2,
+        "unit": "whole"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "salt",
+      "name": "Sea salt",
+      "quantity": {
+        "min": 5,
+        "unit": "g"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "black-pepper",
+      "name": "Black pepper",
+      "quantity": {
+        "min": 2,
+        "unit": "g"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "garlic",
+      "name": "Garlic cloves",
+      "quantity": {
+        "min": 3,
+        "unit": "cloves"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "diced-tomatoes",
+      "name": "Canned diced tomatoes",
+      "quantity": {
+        "min": 794,
+        "unit": "g"
+      },
+      "group": "canned"
+    },
+    {
+      "id": "white-beans",
+      "name": "Cooked white beans",
+      "quantity": {
+        "min": 355,
+        "unit": "ml"
+      },
+      "group": "canned",
+      "alternatives": [
+        {
+          "id": "kidney-beans",
+          "name": "Kidney beans",
+          "quantity": {
+            "min": 355,
+            "unit": "ml"
+          },
+          "group": "canned"
+        }
+      ]
+    },
+    {
+      "id": "green-beans",
+      "name": "Green beans",
+      "quantity": {
+        "min": 240,
+        "unit": "ml"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "vegetable-broth",
+      "name": "Vegetable broth",
+      "quantity": {
+        "min": 960,
+        "unit": "ml"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "bay-leaves",
+      "name": "Bay leaves",
+      "quantity": {
+        "min": 2,
+        "unit": "whole"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "dried-oregano",
+      "name": "Dried oregano",
+      "quantity": {
+        "min": 5,
+        "unit": "ml"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "dried-thyme",
+      "name": "Dried thyme",
+      "quantity": {
+        "min": 5,
+        "unit": "ml"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "small-pasta",
+      "name": "Small pasta",
+      "quantity": {
+        "min": 180,
+        "unit": "ml"
+      },
+      "group": "pasta"
+    },
+    {
+      "id": "parsley",
+      "name": "Fresh parsley",
+      "quantity": {
+        "min": 120,
+        "unit": "ml"
+      },
+      "group": "herbs"
+    },
+    {
+      "id": "red-pepper-flakes",
+      "name": "Red pepper flakes",
+      "quantity": {
+        "min": 2,
+        "unit": "g"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "parmesan",
+      "name": "Parmesan cheese",
+      "quantity": {
+        "min": 30,
+        "unit": "g"
+      },
+      "group": "dairy"
+    }
+  ],
+  "equipment": [
+    {
+      "id": "dutch-oven",
+      "name": "Dutch oven",
+      "count": 1
+    },
+    {
+      "id": "cutting-board",
+      "name": "Cutting board",
+      "count": 1
+    },
+    {
+      "id": "knife",
+      "name": "Chef's knife",
+      "count": 1
+    }
+  ],
+  "operations": [
+    {
+      "id": "dice-onion",
+      "type": "prep",
+      "action": "dice",
+      "ingredients": [
+        "onion"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 180
+      },
+      "activeTime": {
+        "min": 180
+      },
+      "scalable": true,
+      "details": "Dice the yellow onion",
+      "subProduct": "soup"
+    },
+    {
+      "id": "chop-carrots",
+      "type": "prep",
+      "action": "chop",
+      "ingredients": [
+        "carrots"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 180
+      },
+      "activeTime": {
+        "min": 180
+      },
+      "scalable": true,
+      "details": "Chop the carrots",
+      "subProduct": "soup"
+    },
+    {
+      "id": "slice-celery",
+      "type": "prep",
+      "action": "slice",
+      "ingredients": [
+        "celery"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Thinly slice the celery ribs",
+      "subProduct": "soup"
+    },
+    {
+      "id": "grate-garlic",
+      "type": "prep",
+      "action": "grate",
+      "ingredients": [
+        "garlic"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Grate the garlic cloves",
+      "subProduct": "soup"
+    },
+    {
+      "id": "chop-green-beans",
+      "type": "prep",
+      "action": "chop",
+      "ingredients": [
+        "green-beans"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Chop the green beans",
+      "subProduct": "soup"
+    },
+    {
+      "id": "chop-parsley",
+      "type": "prep",
+      "action": "chop",
+      "ingredients": [
+        "parsley"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Chop the fresh parsley"
+    },
+    {
+      "id": "saute-vegetables",
+      "type": "cook",
+      "action": "sauté",
+      "ingredients": [
+        "olive-oil",
+        "salt",
+        "black-pepper"
+      ],
+      "depends": [
+        "dice-onion",
+        "chop-carrots",
+        "slice-celery"
+      ],
+      "equipment": [
+        {
+          "use": "dutch-oven",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 480
+      },
+      "activeTime": {
+        "min": 180
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 160,
+        "max": 180,
+        "unit": "C"
+      },
+      "details": "Heat olive oil in the Dutch oven over medium heat. Add onion, carrots, celery, salt, and several grinds of black pepper. Cook, stirring occasionally, for 8 minutes until the vegetables begin to soften.",
+      "subProduct": "soup"
+    },
+    {
+      "id": "add-and-simmer",
+      "type": "cook",
+      "action": "simmer",
+      "ingredients": [
+        "diced-tomatoes",
+        "white-beans",
+        "vegetable-broth",
+        "bay-leaves",
+        "dried-oregano",
+        "dried-thyme"
+      ],
+      "depends": [
+        "saute-vegetables",
+        "grate-garlic",
+        "chop-green-beans"
+      ],
+      "equipment": [
+        {
+          "use": "dutch-oven",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 1200
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": false,
+      "temperature": {
+        "min": 160,
+        "max": 180,
+        "unit": "C"
+      },
+      "details": "Add garlic, tomatoes, white beans, green beans, broth, bay leaves, oregano, and thyme. Cover and simmer for 20 minutes.",
+      "subProduct": "soup"
+    },
+    {
+      "id": "cook-pasta",
+      "type": "cook",
+      "action": "cook",
+      "ingredients": [
+        "small-pasta"
+      ],
+      "depends": [
+        "add-and-simmer"
+      ],
+      "equipment": [
+        {
+          "use": "dutch-oven",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 600
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": false,
+      "temperature": {
+        "min": 160,
+        "max": 180,
+        "unit": "C"
+      },
+      "details": "Stir in the pasta and cook uncovered for 10 more minutes until the pasta is cooked through. Remove bay leaves.",
+      "output": "soup",
+      "subProduct": "soup"
+    },
+    {
+      "id": "assemble-serve",
+      "type": "assemble",
+      "action": "serve",
+      "ingredients": [],
+      "depends": [
+        "cook-pasta",
+        "chop-parsley"
+      ],
+      "equipment": [],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Season to taste. Ladle into bowls and top with chopped parsley, red pepper flakes, and grated Parmesan cheese."
+    }
+  ],
+  "subProducts": [
+    {
+      "id": "soup",
+      "name": "Minestrone Soup",
+      "finalOp": "cook-pasta"
+    }
+  ]
+}

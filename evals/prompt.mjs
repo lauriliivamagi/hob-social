@@ -1,15 +1,21 @@
 /**
- * AI prompt for recipe parsing.
- * Adapted from .claude-plugin/skills/recipe-parse/SKILL.md.
- * Embeds the JSON Schema and valid tags inline so the prompt is self-contained.
+ * Prompt function for promptfoo.
+ * Mirrors buildSystemPrompt() and buildUserPrompt() from
+ * extension/src/background/ai-prompt.ts without TypeScript imports.
  */
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-import recipeSchemaJson from '../../../config/recipe-schema.json' with { type: 'json' };
-import tagsJson from '../../../config/tags.json' with { type: 'json' };
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const root = resolve(__dirname, '..');
 
-const MAX_CONTENT_LENGTH = 15_000;
+const recipeSchema = JSON.parse(readFileSync(resolve(root, 'config/recipe-schema.json'), 'utf-8'));
+const tags = JSON.parse(readFileSync(resolve(root, 'config/tags.json'), 'utf-8'));
 
-export function buildSystemPrompt(): string {
+// Mirrors buildSystemPrompt() from ai-prompt.ts — kept in sync manually.
+// If the prompt changes there, update here too.
+function buildSystemPrompt() {
   return `You are decomposing a recipe from natural-language text into a structured JSON representation.
 
 CRITICAL OUTPUT FORMAT: Your entire response must be a single JSON object. Start with { and end with }. Do NOT wrap in markdown code fences. Do NOT include any text before or after the JSON. Do NOT echo the recipe content back.
@@ -18,13 +24,13 @@ CRITICAL OUTPUT FORMAT: Your entire response must be a single JSON object. Start
 
 Your output must conform to this JSON Schema:
 
-${JSON.stringify(recipeSchemaJson, null, 2)}
+${JSON.stringify(recipeSchema, null, 2)}
 
 ## Valid Tags
 
 Tags must come from this set. Omit rather than invent:
 
-${JSON.stringify(tagsJson, null, 2)}
+${JSON.stringify(tags, null, 2)}
 
 ## Critical Rules
 
@@ -97,69 +103,33 @@ Schema.org does NOT give you: DAG edges, active vs passive time, equipment occup
 - Use short descriptive IDs (prefer \`dice-onion\` over \`dice-the-onion-into-small-pieces\`)`;
 }
 
-interface Extraction {
-  url: string;
-  title: string;
-  contentMarkdown: string;
-  schemaOrgData: unknown;
-  language: string;
-}
+const MAX_CONTENT_LENGTH = 15_000;
 
-export function buildUserPrompt(extraction: Extraction, previousErrors?: string, previousOutput?: string): string {
+function buildUserPrompt(extraction) {
   let prompt = '';
-
   prompt += `## Source URL\n${extraction.url}\n\n`;
   prompt += `## Language\n${extraction.language}\n\n`;
 
-  // Include schema.org data if present
   if (extraction.schemaOrgData) {
-    const recipeData = findRecipeSchema(extraction.schemaOrgData);
-    if (recipeData) {
-      prompt += `## schema.org/Recipe Data\n\`\`\`json\n${JSON.stringify(recipeData, null, 2)}\n\`\`\`\n\n`;
-    }
+    prompt += `## schema.org/Recipe Data\n\`\`\`json\n${JSON.stringify(extraction.schemaOrgData, null, 2)}\n\`\`\`\n\n`;
   }
 
-  // Truncate content to avoid token limits
   const content = extraction.contentMarkdown.length > MAX_CONTENT_LENGTH
     ? extraction.contentMarkdown.slice(0, MAX_CONTENT_LENGTH) + '\n\n[Content truncated]'
     : extraction.contentMarkdown;
 
   prompt += `## Recipe Content\n${content}\n`;
-
-  // On retry, include the failed output and validation errors
-  if (previousErrors) {
-    if (previousOutput) {
-      prompt += `\n## Your Previous Output (failed validation)\n\`\`\`json\n${previousOutput}\n\`\`\`\n`;
-    }
-    prompt += `\n## Validation Errors\nFix these errors in your next attempt:\n${previousErrors}\n`;
-  }
-
   return prompt;
 }
 
-/**
- * Walk schema.org data to find an object with @type "Recipe".
- * schemaOrgData may be an array, a single object, or nested @graph.
- */
-function findRecipeSchema(data: unknown): unknown | null {
-  if (!data || typeof data !== 'object') return null;
+/** promptfoo prompt function — receives {vars, provider}, returns messages array. */
+export default function ({ vars }) {
+  const fixture = JSON.parse(
+    readFileSync(resolve(__dirname, 'fixtures', vars.fixture), 'utf-8'),
+  );
 
-  if (Array.isArray(data)) {
-    for (const item of data) {
-      const found = findRecipeSchema(item);
-      if (found) return found;
-    }
-    return null;
-  }
-
-  const obj = data as Record<string, unknown>;
-
-  if (obj['@type'] === 'Recipe') return obj;
-
-  // Check @graph array
-  if (Array.isArray(obj['@graph'])) {
-    return findRecipeSchema(obj['@graph']);
-  }
-
-  return null;
+  return [
+    { role: 'system', content: buildSystemPrompt() },
+    { role: 'user', content: buildUserPrompt(fixture) },
+  ];
 }

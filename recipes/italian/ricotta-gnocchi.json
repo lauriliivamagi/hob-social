@@ -1,0 +1,317 @@
+{
+  "meta": {
+    "title": "Ricotta Gnocchi",
+    "slug": "ricotta-gnocchi",
+    "language": "en",
+    "source": "https://italianfoodforever.com/2011/10/how-to-make-ricotta-gnocchi/",
+    "originalText": "# Ricotta Gnocchi\n\nLight, pillowy homemade gnocchi made with ricotta cheese instead of potato. Serves 4.\n\n## Ingredients\n\n### Dough\n- 1 lb (454 g) full fat ricotta\n- 1.5 cups (190 g) all-purpose flour\n- 1/3 cup (33 g) grated parmesan cheese\n- 1 large egg\n\n## Equipment\n- Fine mesh sieve\n- Mixing bowl\n- Large pot\n- Cutting board and knife\n- Fork\n\n## Instructions\n\n1. Drain ricotta in a fine mesh sieve set over a bowl in the fridge for at least 1 hour.\n2. Add grated parmesan cheese and egg to the drained ricotta. Stir with a fork until blended.\n3. Add 1 cup of the flour and mix until just blended.\n4. Dump dough onto a floured surface and gently work into a soft ball, adding flour as needed.\n5. Break off baseball-sized pieces and roll into tubes about 1/2 to 1 inch thick.\n6. Cut tubes into 1 inch pieces and toss with flour to prevent sticking.\n7. Bring a large pot of salted water to a rolling boil.\n8. Drop gnocchi into the boiling water and remove them when they float to the surface (less than 5 minutes).\n9. Drain and toss with your desired sauce.\n\n## Notes\n\nDo not overwork the dough or the gnocchi will be tough. The ricotta must be well-drained for the right texture.",
+    "tags": [
+      "italian",
+      "pasta",
+      "dinner",
+      "vegetarian",
+      "weekend"
+    ],
+    "servings": 4,
+    "totalTime": {
+      "relaxed": {
+        "min": 5400
+      },
+      "optimized": {
+        "min": 4800
+      }
+    },
+    "difficulty": "medium",
+    "notes": "Do not overwork the dough or the gnocchi will be tough. The ricotta must be well-drained for the right texture."
+  },
+  "ingredients": [
+    {
+      "id": "ricotta",
+      "name": "Full fat ricotta",
+      "quantity": {
+        "min": 454,
+        "unit": "g"
+      },
+      "group": "dairy"
+    },
+    {
+      "id": "flour",
+      "name": "All-purpose flour",
+      "quantity": {
+        "min": 190,
+        "unit": "g"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "parmesan",
+      "name": "Grated parmesan cheese",
+      "quantity": {
+        "min": 33,
+        "unit": "g"
+      },
+      "group": "dairy"
+    },
+    {
+      "id": "egg",
+      "name": "Large egg",
+      "quantity": {
+        "min": 1,
+        "unit": "whole"
+      },
+      "group": "dairy"
+    }
+  ],
+  "equipment": [
+    {
+      "id": "sieve",
+      "name": "Fine mesh sieve",
+      "count": 1
+    },
+    {
+      "id": "mixing-bowl",
+      "name": "Mixing bowl",
+      "count": 1
+    },
+    {
+      "id": "large-pot",
+      "name": "Large pot",
+      "count": 1
+    },
+    {
+      "id": "cutting-board",
+      "name": "Cutting board",
+      "count": 1
+    },
+    {
+      "id": "knife",
+      "name": "Chef's knife",
+      "count": 1
+    },
+    {
+      "id": "fork",
+      "name": "Fork",
+      "count": 1
+    }
+  ],
+  "operations": [
+    {
+      "id": "drain-ricotta",
+      "type": "rest",
+      "action": "drain",
+      "ingredients": [
+        "ricotta"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "sieve",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 3600
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": false,
+      "details": "Place ricotta in a fine mesh sieve set over a bowl. Refrigerate for at least 1 hour to drain excess moisture.",
+      "subProduct": "gnocchi-dough"
+    },
+    {
+      "id": "mix-wet-ingredients",
+      "type": "prep",
+      "action": "stir",
+      "ingredients": [
+        "parmesan",
+        "egg"
+      ],
+      "depends": [
+        "drain-ricotta"
+      ],
+      "equipment": [
+        {
+          "use": "mixing-bowl",
+          "release": false
+        },
+        {
+          "use": "fork",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Add grated parmesan and egg to the drained ricotta. Stir with a fork until well blended.",
+      "subProduct": "gnocchi-dough"
+    },
+    {
+      "id": "add-flour",
+      "type": "prep",
+      "action": "mix",
+      "ingredients": [
+        "flour"
+      ],
+      "depends": [
+        "mix-wet-ingredients"
+      ],
+      "equipment": [
+        {
+          "use": "mixing-bowl",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Add 1 cup of flour and mix until just blended. Do not overmix.",
+      "subProduct": "gnocchi-dough"
+    },
+    {
+      "id": "knead-dough",
+      "type": "prep",
+      "action": "knead",
+      "ingredients": [],
+      "depends": [
+        "add-flour"
+      ],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Dump dough onto a floured surface and gently work into a soft ball, adding flour as needed. Do not overwork.",
+      "subProduct": "gnocchi-dough"
+    },
+    {
+      "id": "shape-gnocchi",
+      "type": "prep",
+      "action": "shape",
+      "ingredients": [],
+      "depends": [
+        "knead-dough"
+      ],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": false
+        },
+        {
+          "use": "knife",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 600
+      },
+      "activeTime": {
+        "min": 600
+      },
+      "scalable": true,
+      "details": "Break off baseball-sized pieces and roll into tubes about 1/2 to 1 inch thick. Cut into 1 inch pieces and toss with flour.",
+      "output": "gnocchi-dough",
+      "subProduct": "gnocchi-dough"
+    },
+    {
+      "id": "boil-water",
+      "type": "cook",
+      "action": "boil",
+      "ingredients": [],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "large-pot",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 600
+      },
+      "activeTime": {
+        "min": 30
+      },
+      "scalable": false,
+      "temperature": {
+        "min": 100,
+        "unit": "C"
+      },
+      "details": "Bring a large pot of salted water to a rolling boil"
+    },
+    {
+      "id": "cook-gnocchi",
+      "type": "cook",
+      "action": "boil",
+      "ingredients": [],
+      "depends": [
+        "shape-gnocchi",
+        "boil-water"
+      ],
+      "equipment": [
+        {
+          "use": "large-pot",
+          "release": true
+        },
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 180,
+        "max": 300
+      },
+      "activeTime": {
+        "min": 180,
+        "max": 300
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 100,
+        "unit": "C"
+      },
+      "details": "Drop gnocchi into the boiling water. Remove them when they float to the surface, less than 5 minutes."
+    },
+    {
+      "id": "drain-and-serve",
+      "type": "assemble",
+      "action": "drain",
+      "ingredients": [],
+      "depends": [
+        "cook-gnocchi"
+      ],
+      "equipment": [],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Drain gnocchi and toss with your desired sauce. Serve immediately."
+    }
+  ],
+  "subProducts": [
+    {
+      "id": "gnocchi-dough",
+      "name": "Gnocchi Dough",
+      "finalOp": "shape-gnocchi"
+    }
+  ]
+}

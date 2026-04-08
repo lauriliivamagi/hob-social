@@ -100,6 +100,7 @@ const parseAndStoreActor = fromPromise<ParseOutput, ParseInput>(async ({ input }
     system: buildSystemPrompt(),
     prompt: buildUserPrompt(input.extraction, input.lastError ?? undefined, input.lastRawOutput ?? undefined),
     temperature: 0,
+    maxTokens: 20000,
   });
 
   const cleaned = text.replace(/^```(?:json)?\s*\n?/m, '').replace(/\n?```\s*$/m, '');

@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "title": "Värske salat hapukoore ja sibulaga",
+    "slug": "varske-salat",
+    "language": "et",
+    "source": "https://nami-nami.ee/retsept/27425/varske_salat_hapukoore_ja_sibulaga",
+    "originalText": "# Värske salat hapukoore ja sibulaga\n\nKogus: neljale\nValmistusviis: Segamine\nKäik: Eelroog/kerge eine\n\n## Koostisosad\n\n- 150 g crème fraîche'i või hapukoort\n- väike punt murulauku hakituna\n- 1 dl riivitud parmesani juustu\n- 2 sl sidrunimahla\n- 2 tl vedelat mett\n- 2 tl sibulapulbrit\n- 1 tl küüslaugupulbrit\n- 1 tl Dijoni sinepit\n- 0,5 tl purustatud musta pipart\n- 0,25 tl soola\n\n**Lisaks:**\n- 200 g väikest rooma salatit (cos/gem)\n\n## Valmistamine\n\nPane kõik kastme komponendid kaussi, sega ühtlaseks.\n\nRebi salatilehed tükkideks, loputa ja siis nõruta-kuivata hoolega. Sega kastme hulka.\n\nServeeri liha või kala kõrvale.",
+    "tags": ["estonian", "salad", "quick", "vegetarian"],
+    "servings": 4,
+    "totalTime": {
+      "relaxed": { "min": 600 },
+      "optimized": { "min": 600 }
+    },
+    "difficulty": "easy"
+  },
+  "ingredients": [
+    {
+      "id": "creme-fraiche",
+      "name": "crème fraîche",
+      "quantity": { "min": 150, "unit": "g" },
+      "group": "dairy",
+      "alternatives": [
+        { "id": "hapukoor", "name": "hapukoor", "quantity": { "min": 150, "unit": "g" }, "group": "dairy" }
+      ]
+    },
+    { "id": "murulauk", "name": "murulauk", "quantity": { "min": 1, "unit": "punt" }, "group": "vegetables" },
+    { "id": "parmesan", "name": "parmesani juust", "quantity": { "min": 1, "unit": "dl" }, "group": "dairy" },
+    { "id": "sidrunimahl", "name": "sidrunimahl", "quantity": { "min": 2, "unit": "sl" }, "group": "pantry" },
+    { "id": "mesi", "name": "vedel mesi", "quantity": { "min": 2, "unit": "tl" }, "group": "pantry" },
+    { "id": "sibulapulber", "name": "sibulapulber", "quantity": { "min": 2, "unit": "tl" }, "group": "spices" },
+    { "id": "kuuslaugupulber", "name": "küüslaugupulber", "quantity": { "min": 1, "unit": "tl" }, "group": "spices" },
+    { "id": "dijoni-sinep", "name": "Dijoni sinep", "quantity": { "min": 1, "unit": "tl" }, "group": "pantry" },
+    { "id": "must-pipar", "name": "must pipar", "quantity": { "min": 0.5, "unit": "tl" }, "group": "spices" },
+    { "id": "sool", "name": "sool", "quantity": { "min": 0.25, "unit": "tl" }, "group": "spices" },
+    { "id": "rooma-salat", "name": "rooma salat", "quantity": { "min": 200, "unit": "g" }, "group": "vegetables" }
+  ],
+  "equipment": [
+    { "id": "kauss", "name": "kauss", "count": 1 }
+  ],
+  "operations": [
+    {
+      "id": "sega-kaste",
+      "type": "prep",
+      "action": "sega",
+      "ingredients": ["creme-fraiche", "murulauk", "parmesan", "sidrunimahl", "mesi", "sibulapulber", "kuuslaugupulber", "dijoni-sinep", "must-pipar", "sool"],
+      "depends": [],
+      "equipment": [{ "use": "kauss", "release": false }],
+      "time": { "min": 180 },
+      "activeTime": { "min": 180 },
+      "scalable": true,
+      "details": "Pane kõik kastme komponendid kaussi, sega ühtlaseks."
+    },
+    {
+      "id": "valmista-salat",
+      "type": "prep",
+      "action": "rebi",
+      "ingredients": ["rooma-salat"],
+      "depends": [],
+      "equipment": [],
+      "time": { "min": 180 },
+      "activeTime": { "min": 180 },
+      "scalable": true,
+      "details": "Rebi salatilehed tükkideks, loputa ja siis nõruta-kuivata hoolega."
+    },
+    {
+      "id": "serveeri",
+      "type": "assemble",
+      "action": "sega kokku",
+      "ingredients": [],
+      "depends": ["sega-kaste", "valmista-salat"],
+      "equipment": [],
+      "time": { "min": 60 },
+      "activeTime": { "min": 60 },
+      "scalable": true,
+      "details": "Sega salat kastme hulka. Serveeri liha või kala kõrvale."
+    }
+  ],
+  "subProducts": []
+}

@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "title": "Imelihtne suitsulohepasta",
+    "slug": "imelihtne-suitsulohepasta",
+    "language": "et",
+    "source": "https://nami-nami.ee/retsept/10927/imelihtne_suitsulohepasta",
+    "originalText": "# Imelihtne suitsulohepasta\n\n## Koostisosad\n- 250 g makarone\n- 100-150 g toasooja toorjuustu\n- sörts 35% rõõska koort\n- 100 g hakitud külmsuitsulõhet\n- musta pipart\n\n## Valmistamine\n1. Keeda makaronid või spagetid vastavalt pakendi juhistele al dente. Tõsta paar kulbitäit pastakeeduvett kõrvale, nõruta makaronid ja pane potti tagasi.\n2. Pane pott uuesti tasasele tulele. Lisa toasoe toorjuust, pastakeeduvesi ning sorts rõõska koort. Sega juurde peeneks hakitud külmsuitsulõhe. Sega, kuni toorjuust on sulanud ja potis mõnusalt kreemjas pastaroog.\n3. Jaota taldrikutesse, jahvata pipraveskist veidi pipart peale ja serveeri kohe.",
+    "tags": [
+      "dinner",
+      "pasta",
+      "quick",
+      "weeknight"
+    ],
+    "servings": 3,
+    "totalTime": {
+      "relaxed": {
+        "min": 900
+      },
+      "optimized": {
+        "min": 900
+      }
+    },
+    "difficulty": "easy"
+  },
+  "ingredients": [
+    {
+      "id": "makaronid",
+      "name": "makaronid",
+      "quantity": {
+        "min": 250,
+        "unit": "g"
+      },
+      "group": "dry"
+    },
+    {
+      "id": "toorjuust",
+      "name": "toorjuust",
+      "quantity": {
+        "min": 100,
+        "max": 150,
+        "unit": "g"
+      },
+      "group": "dairy"
+    },
+    {
+      "id": "roos-koor",
+      "name": "35% rõõsk koor",
+      "quantity": {
+        "min": 50,
+        "unit": "ml"
+      },
+      "group": "dairy"
+    },
+    {
+      "id": "suitsulohe",
+      "name": "külmsuitsulõhe",
+      "quantity": {
+        "min": 100,
+        "unit": "g"
+      },
+      "group": "fish"
+    },
+    {
+      "id": "must-pipar",
+      "name": "must pipar",
+      "quantity": {
+        "min": 1,
+        "unit": "tl"
+      },
+      "group": "spices"
+    }
+  ],
+  "equipment": [
+    {
+      "id": "pott",
+      "name": "pott",
+      "count": 1,
+      "capacity": {
+        "min": 3,
+        "unit": "L"
+      }
+    }
+  ],
+  "operations": [
+    {
+      "id": "keeda-makaronid",
+      "type": "cook",
+      "action": "keeda",
+      "ingredients": [
+        "makaronid"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "pott",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 600
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Keeda al dente, tõsta osa keeduvett kõrvale.",
+      "output": "keedetud-makaronid",
+      "subProduct": "keedetud-makaronid"
+    },
+    {
+      "id": "valmista-kaste",
+      "type": "cook",
+      "action": "sega",
+      "ingredients": [
+        "toorjuust",
+        "roos-koor",
+        "suitsulohe"
+      ],
+      "depends": [
+        "keeda-makaronid"
+      ],
+      "equipment": [
+        {
+          "use": "pott",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 180
+      },
+      "activeTime": {
+        "min": 180
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 60,
+        "max": 80,
+        "unit": "C"
+      },
+      "details": "Lisa toorjuust, koor ja lõhe, sega kuni kreemjas.",
+      "output": "valmis-pasta",
+      "subProduct": "valmis-pasta"
+    },
+    {
+      "id": "serveeri",
+      "type": "assemble",
+      "action": "serveeri",
+      "ingredients": [
+        "must-pipar"
+      ],
+      "depends": [
+        "valmista-kaste"
+      ],
+      "equipment": [],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Jaota taldrikutesse, lisa pipar."
+    }
+  ],
+  "subProducts": [
+    {
+      "id": "keedetud-makaronid",
+      "name": "keedetud makaronid",
+      "finalOp": "keeda-makaronid"
+    },
+    {
+      "id": "valmis-pasta",
+      "name": "valmis suitsulohepasta",
+      "finalOp": "valmista-kaste"
+    }
+  ]
+}

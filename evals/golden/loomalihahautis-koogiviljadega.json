@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "title": "Loomalihahautis köögiviljadega",
+    "slug": "loomalihahautis-koogiviljadega",
+    "language": "et",
+    "source": "https://www.rimi.ee/retseptid/loomalihahautis-koogiviljadega/11343",
+    "originalText": "# Loomalihahautis köögiviljadega\n\nKogus: 6 portsjonit\n\n## Koostisosad\n\n- 700 g sinki (veise sääreosa)\n- 40 ml viinamarjaseemneõli\n- 3 porgandit\n- 4 varsselleri varrt\n- 1 lehtkapsas\n- 1 porrulauk\n- 6 küüslaugu küünt\n- tüümian\n- rosmariin\n- pipar\n- tšillipipar\n- 500 g tomatit\n- 600 ml puljongit\n\n## Valmistamine\n\nValmista köögiviljad ette (koori, lõika suurteks tükkideks). Lõika liha ühtlasteks suurteks tükkideks. Kuumuta õli, praadi küüslauk ja köögiviljad karamellseks. Eemalda, pruunista liha. Tagasta köögiviljad, lisa hakitud tomatid ja puljong. Lisa ürdid ja hakitud tšilli. Keeda üles, kata kaas peale, vähenda kuumust, hauta vähemalt 2 tundi. Serveeri kartulipüree või pastaga.",
+    "tags": ["estonian", "stew", "dinner", "comfort-food"],
+    "servings": 6,
+    "totalTime": {
+      "relaxed": { "min": 9600 },
+      "optimized": { "min": 8400 }
+    },
+    "difficulty": "medium"
+  },
+  "ingredients": [
+    { "id": "veise-saareosa", "name": "veise sääreosa (sink)", "quantity": { "min": 700, "unit": "g" }, "group": "meat" },
+    { "id": "viinamarjaseemneoli", "name": "viinamarjaseemneõli", "quantity": { "min": 40, "unit": "ml" }, "group": "pantry" },
+    { "id": "porgand", "name": "porgand", "quantity": { "min": 3, "unit": "whole" }, "group": "vegetables" },
+    { "id": "varsseller", "name": "varsseller", "quantity": { "min": 4, "unit": "whole" }, "group": "vegetables" },
+    { "id": "lehtkapsas", "name": "lehtkapsas", "quantity": { "min": 1, "unit": "whole" }, "group": "vegetables" },
+    { "id": "porrulauk", "name": "porrulauk", "quantity": { "min": 1, "unit": "whole" }, "group": "vegetables" },
+    { "id": "kuuslauk", "name": "küüslaugu küüned", "quantity": { "min": 6, "unit": "cloves" }, "group": "vegetables" },
+    { "id": "tuumian", "name": "tüümian", "quantity": { "min": 1, "unit": "tl" }, "group": "spices" },
+    { "id": "rosmariin", "name": "rosmariin", "quantity": { "min": 1, "unit": "tl" }, "group": "spices" },
+    { "id": "pipar", "name": "pipar", "quantity": { "min": 0.5, "unit": "tl" }, "group": "spices" },
+    { "id": "tsillipipar", "name": "tšillipipar", "quantity": { "min": 1, "unit": "whole" }, "group": "spices" },
+    { "id": "tomat", "name": "tomatid", "quantity": { "min": 500, "unit": "g" }, "group": "vegetables" },
+    { "id": "puljong", "name": "puljong", "quantity": { "min": 600, "unit": "ml" }, "group": "pantry" }
+  ],
+  "equipment": [
+    { "id": "pott", "name": "suur pott", "count": 1 }
+  ],
+  "operations": [
+    {
+      "id": "valmista-koogiviljad",
+      "type": "prep",
+      "action": "koori ja lõika",
+      "ingredients": ["porgand", "varsseller", "lehtkapsas", "porrulauk", "kuuslauk"],
+      "depends": [],
+      "equipment": [],
+      "time": { "min": 600 },
+      "activeTime": { "min": 600 },
+      "scalable": true,
+      "details": "Koori ja lõika köögiviljad suurteks tükkideks. Haki küüslauk."
+    },
+    {
+      "id": "loika-liha",
+      "type": "prep",
+      "action": "lõika",
+      "ingredients": ["veise-saareosa"],
+      "depends": [],
+      "equipment": [],
+      "time": { "min": 300 },
+      "activeTime": { "min": 300 },
+      "scalable": true,
+      "details": "Lõika liha ühtlasteks suurteks tükkideks."
+    },
+    {
+      "id": "praadi-koogiviljad",
+      "type": "cook",
+      "action": "praadi",
+      "ingredients": ["viinamarjaseemneoli"],
+      "depends": ["valmista-koogiviljad"],
+      "equipment": [{ "use": "pott", "release": false }],
+      "time": { "min": 600 },
+      "activeTime": { "min": 600 },
+      "scalable": false,
+      "details": "Kuumuta õli potis, praadi küüslauk ja köögiviljad karamellseks."
+    },
+    {
+      "id": "pruunista-liha",
+      "type": "cook",
+      "action": "pruunista",
+      "ingredients": [],
+      "depends": ["loika-liha", "praadi-koogiviljad"],
+      "equipment": [{ "use": "pott", "release": false }],
+      "time": { "min": 480 },
+      "activeTime": { "min": 480 },
+      "scalable": false,
+      "details": "Eemalda köögiviljad, pruunista liha potis igast küljest."
+    },
+    {
+      "id": "hauta",
+      "type": "cook",
+      "action": "hauta",
+      "ingredients": ["tomat", "puljong", "tuumian", "rosmariin", "pipar", "tsillipipar"],
+      "depends": ["pruunista-liha"],
+      "equipment": [{ "use": "pott", "release": false }],
+      "time": { "min": 7200 },
+      "activeTime": { "min": 120 },
+      "scalable": false,
+      "details": "Pane liha ja köögiviljad potti, lisa hakitud tomatid, puljong, ürdid ja hakitud tšilli. Keeda üles, kata kaas peale, vähenda kuumust ja hauta vähemalt 2 tundi."
+    },
+    {
+      "id": "serveeri",
+      "type": "assemble",
+      "action": "serveeri",
+      "ingredients": [],
+      "depends": ["hauta"],
+      "equipment": [{ "use": "pott", "release": true }],
+      "time": { "min": 60 },
+      "activeTime": { "min": 60 },
+      "scalable": false,
+      "details": "Serveeri kartulipüree või pastaga."
+    }
+  ],
+  "subProducts": []
+}

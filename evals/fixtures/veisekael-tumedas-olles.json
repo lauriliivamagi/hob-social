@@ -1,0 +1,70 @@
+{
+  "url": "https://www.rimi.ee/retseptid/veisekael-tumedas-olles/10319",
+  "title": "Veisekael tumedas õlles - RIMI",
+  "contentMarkdown": "## Veisekael tumedas õlles\n\n- Küpsetusaeg: 2h 15min\n- Keskmine\n\n![Veisekael tumedas õlles](https://res.cloudinary.com/rimibaltic-web/image/upload/b_white,c_fill,f_auto,h_675,q_auto,w_1200/v2026040104/web-cms/d4251c0e1f40da735ee512cfbe1dbbf8d37cb034.jpg)\n\n## Koostisosad\n\n- Veiseliha\n\t600 g\n- Tume õlu\n\t5 dl\n- Kaalikas\n\t200 g\n- Odrakruup\n\t50 g\n- Sibulad\n\t2 tk\n- Sool\n\tmaitse järgi\n- Pipar\n\tmaitse järgi\n- Õli\n\tpruunistamiseks\n- Jahu\n\tpaneerimiseks\n- Looberileht\n\t2 tk\n\n## Juhised\n\n### Pane tähele!\n\nSee retsept on mõeldud 4 sööjale. Portsjonite arvu muutmine uuendab ka retsepti koostisosade hulka. Mõnel juhul võib muutuda ka toidu valmistamise aeg.\n\nRoog, mis kindlasti pakub söögilauas kõneainet. Selle valmistamine võtab küll aega, kuid maitseelamus on seda väärt. Tea, et roog on valmis alles siis, kui liha on pehme ja maitsev!\n\n### Kui kasutad ahju, siis lülita see 180 ºC peale soojenema.\n\n### Lõika liha 2-3 cm kuubikuteks. Koori, tükelda sibul ja kaalikas. Maitsesta veiselihakuubikud soola ja pipraga ning paneeri jahus (eelista täistera jahu).\n\n### Pane paksupõhjaline haudepott keskmisele kuumusele. Lisa oliiviõli, pruunista liha. 5 minuti pärast lisa kaalikad ja sibul ning loorberilehed. Prae umbes 10 minutit.\n\n### Kalla potti õlu, sega korralikult läbi. Kuumuta keemiseni, kata pott kaanega ning hauta tasakesi pliidi peal või ahjus umbes 2 tundi. Umbes pool tundi enne hautamise lõppu võta potilt kaas.\n\n### Roog on valmis, kui liha on pehme ja maitsev. Enne serveerimist eemalda loorberilehed, vajadusel lisa veel soola-pipart.\n\n#### Tähelepanu! Tegemist on alkoholiga.\n\nAlkohol võib kahjustada teie tervist.",
+  "schemaOrgData": [
+    {
+      "@context": "https://schema.org/",
+      "@type": "Recipe",
+      "name": "Veisekael tumedas õlles",
+      "author": {
+        "@type": "Organization",
+        "name": "Rimi"
+      },
+      "recipeCategory": "Õhtusöök, Lõunasöök, Liha, Veiseliha, Pearoog",
+      "recipeCuisine": "Estonia",
+      "keywords": "Estonia",
+      "description": "Veisekael tumedas õlles",
+      "image": [
+        "https://res.cloudinary.com/rimibaltic-web/image/upload/b_white,c_fill,f_auto,h_675,q_auto,w_1200/v2026040104/web-cms/d4251c0e1f40da735ee512cfbe1dbbf8d37cb034.jpg"
+      ],
+      "totalTime": "PT135M",
+      "recipeYield": 4,
+      "recipeIngredient": [
+        "600 g Veiseliha",
+        "5 dl Tume õlu",
+        "200 g Kaalikas",
+        "50 g Odrakruup",
+        "2 tk Sibulad",
+        "maitse järgi Sool",
+        "maitse järgi Pipar",
+        "pruunistamiseks Õli",
+        "paneerimiseks Jahu",
+        "2 tk Looberileht"
+      ],
+      "recipeInstructions": [
+        "Kui kasutad ahju, siis lülita see 180 ºC peale soojenema.",
+        "Lõika liha 2-3 cm kuubikuteks.  Koori, tükelda sibul ja kaalikas. Maitsesta veiselihakuubikud soola ja pipraga ning paneeri jahus (eelista täistera jahu).",
+        "Pane paksupõhjaline haudepott keskmisele kuumusele. Lisa oliiviõli, pruunista liha. 5 minuti pärast lisa kaalikad ja sibul ning loorberilehed. Prae umbes 10 minutit.",
+        "Kalla potti õlu, sega korralikult läbi. Kuumuta keemiseni, kata pott kaanega ning hauta tasakesi pliidi peal või ahjus umbes 2 tundi. Umbes pool tundi enne hautamise lõppu võta potilt kaas.",
+        "Roog on valmis, kui liha on pehme ja maitsev. Enne serveerimist eemalda loorberilehed, vajadusel lisa veel soola-pipart."
+      ],
+      "nutrition": []
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Tark valik",
+          "item": "https://www.rimi.ee"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Retseptid",
+          "item": "https://www.rimi.ee/retseptid"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Veisekael tumedas õlles",
+          "item": "https://www.rimi.ee/retseptid/veisekael-tumedas-olles/10319"
+        }
+      ]
+    }
+  ],
+  "language": "et"
+}

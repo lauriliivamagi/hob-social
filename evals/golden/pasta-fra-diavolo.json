@@ -1,0 +1,540 @@
+{
+  "meta": {
+    "title": "Pasta Fra Diavolo",
+    "slug": "pasta-fra-diavolo",
+    "language": "en",
+    "source": "https://www.cookingwithnonna.com/italian-cuisine/perfect-pasta-fra-diavolo.html",
+    "originalText": "# Pasta Fra Diavolo\n\nA fiery, garlic-laden tomato sauce tossed with spaghetti. Serves 4.\n\n## Ingredients\n\n### Pasta\n- 1 lb spaghetti\n- 1 tbsp salt (for pasta water)\n\n### Sauce\n- 1/4 cup extra virgin olive oil\n- 6 cloves garlic, minced\n- 1 tsp red pepper flakes\n- 1/2 sweet fresh onion\n- 14 oz crushed tomatoes\n- 14 oz whole canned tomatoes\n- 1/2 tsp salt\n- 1/4 tsp black pepper\n- 4 tbsp sugar\n\n### Finishing\n- 1/4 cup freshly grated parmesan\n- 1/2 cup chopped fresh herbs (parsley, basil, oregano)\n- Fresh basil for garnish\n\n## Equipment\n- Large pot for pasta\n- Large saucepan\n- Food processor\n- Cutting board and knife\n\n## Instructions\n\n1. Cook spaghetti in salted boiling water until al dente. Drain and keep warm.\n2. Heat olive oil in a large saucepan over medium heat.\n3. Add minced garlic and red pepper flakes, cook for 1 minute until fragrant.\n4. Puree the onion in a food processor, add to the pot, and cook for 4 minutes until softened.\n5. Add crushed tomatoes and stir well.\n6. Squish whole tomatoes by hand and add them with their juices.\n7. Add salt, pepper, and sugar. Stir to combine.\n8. Reduce heat to low, cover with lid, and cook for 20 minutes.\n9. Remove lid, stir in fresh herbs and parmesan cheese.\n10. Combine drained pasta with the sauce and toss to coat.\n11. Serve topped with fresh basil leaves and extra parmesan.\n\n## Notes\n\nThe sugar balances the acidity of the tomatoes. Adjust red pepper flakes to taste for more or less heat.",
+    "tags": [
+      "italian",
+      "pasta",
+      "dinner",
+      "weeknight"
+    ],
+    "servings": 4,
+    "totalTime": {
+      "relaxed": {
+        "min": 3000
+      },
+      "optimized": {
+        "min": 2400
+      }
+    },
+    "difficulty": "medium",
+    "notes": "The sugar balances the acidity of the tomatoes. Adjust red pepper flakes to taste for more or less heat."
+  },
+  "ingredients": [
+    {
+      "id": "spaghetti",
+      "name": "Spaghetti",
+      "quantity": {
+        "min": 454,
+        "unit": "g"
+      },
+      "group": "pasta"
+    },
+    {
+      "id": "pasta-salt",
+      "name": "Salt (for pasta water)",
+      "quantity": {
+        "min": 1,
+        "unit": "tbsp"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "olive-oil",
+      "name": "Extra virgin olive oil",
+      "quantity": {
+        "min": 60,
+        "unit": "ml"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "garlic",
+      "name": "Garlic",
+      "quantity": {
+        "min": 6,
+        "unit": "cloves"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "red-pepper-flakes",
+      "name": "Red pepper flakes",
+      "quantity": {
+        "min": 1,
+        "unit": "tsp"
+      },
+      "group": "spices"
+    },
+    {
+      "id": "onion",
+      "name": "Sweet fresh onion",
+      "quantity": {
+        "min": 0.5,
+        "unit": "whole"
+      },
+      "group": "vegetables"
+    },
+    {
+      "id": "crushed-tomatoes",
+      "name": "Crushed tomatoes",
+      "quantity": {
+        "min": 400,
+        "unit": "g"
+      },
+      "group": "canned"
+    },
+    {
+      "id": "whole-tomatoes",
+      "name": "Whole canned tomatoes",
+      "quantity": {
+        "min": 400,
+        "unit": "g"
+      },
+      "group": "canned"
+    },
+    {
+      "id": "salt",
+      "name": "Salt",
+      "quantity": {
+        "min": 0.5,
+        "unit": "tsp"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "black-pepper",
+      "name": "Black pepper",
+      "quantity": {
+        "min": 0.25,
+        "unit": "tsp"
+      },
+      "group": "spices"
+    },
+    {
+      "id": "sugar",
+      "name": "Sugar",
+      "quantity": {
+        "min": 4,
+        "unit": "tbsp"
+      },
+      "group": "pantry"
+    },
+    {
+      "id": "parmesan",
+      "name": "Freshly grated parmesan",
+      "quantity": {
+        "min": 60,
+        "unit": "ml"
+      },
+      "group": "dairy"
+    },
+    {
+      "id": "fresh-herbs",
+      "name": "Chopped fresh herbs (parsley, basil, oregano)",
+      "quantity": {
+        "min": 120,
+        "unit": "ml"
+      },
+      "group": "herbs"
+    },
+    {
+      "id": "fresh-basil",
+      "name": "Fresh basil",
+      "quantity": {
+        "min": 4,
+        "unit": "leaves"
+      },
+      "group": "herbs"
+    }
+  ],
+  "equipment": [
+    {
+      "id": "large-pot",
+      "name": "Large pot",
+      "count": 1
+    },
+    {
+      "id": "saucepan",
+      "name": "Large saucepan",
+      "count": 1
+    },
+    {
+      "id": "food-processor",
+      "name": "Food processor",
+      "count": 1
+    },
+    {
+      "id": "cutting-board",
+      "name": "Cutting board",
+      "count": 1
+    },
+    {
+      "id": "knife",
+      "name": "Chef's knife",
+      "count": 1
+    }
+  ],
+  "operations": [
+    {
+      "id": "mince-garlic",
+      "type": "prep",
+      "action": "mince",
+      "ingredients": [
+        "garlic"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "cutting-board",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "details": "Mince the 6 cloves of garlic",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "puree-onion",
+      "type": "prep",
+      "action": "puree",
+      "ingredients": [
+        "onion"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "food-processor",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Puree the onion in a food processor until smooth",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "boil-pasta",
+      "type": "cook",
+      "action": "boil",
+      "ingredients": [
+        "spaghetti",
+        "pasta-salt"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "large-pot",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 600
+      },
+      "activeTime": {
+        "min": 120
+      },
+      "scalable": true,
+      "temperature": {
+        "min": 100,
+        "unit": "C"
+      },
+      "details": "Bring a large pot of salted water to a boil. Cook spaghetti until al dente. Drain and keep warm.",
+      "output": "cooked-pasta",
+      "subProduct": "cooked-pasta"
+    },
+    {
+      "id": "heat-oil",
+      "type": "cook",
+      "action": "heat",
+      "ingredients": [
+        "olive-oil"
+      ],
+      "depends": [],
+      "equipment": [
+        {
+          "use": "saucepan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 120
+      },
+      "activeTime": {
+        "min": 30
+      },
+      "scalable": false,
+      "temperature": {
+        "min": 150,
+        "max": 170,
+        "unit": "C"
+      },
+      "details": "Heat olive oil in a large saucepan over medium heat",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "cook-garlic-pepper",
+      "type": "cook",
+      "action": "saute",
+      "ingredients": [
+        "red-pepper-flakes"
+      ],
+      "depends": [
+        "heat-oil",
+        "mince-garlic"
+      ],
+      "equipment": [
+        {
+          "use": "saucepan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": false,
+      "temperature": {
+        "min": 150,
+        "max": 170,
+        "unit": "C"
+      },
+      "details": "Add minced garlic and red pepper flakes, cook for 1 minute until fragrant",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "cook-onion",
+      "type": "cook",
+      "action": "saute",
+      "ingredients": [],
+      "depends": [
+        "cook-garlic-pepper",
+        "puree-onion"
+      ],
+      "equipment": [
+        {
+          "use": "saucepan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 240
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": false,
+      "temperature": {
+        "min": 150,
+        "max": 170,
+        "unit": "C"
+      },
+      "details": "Add pureed onion to the pot, cook for 4 minutes until softened",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "add-crushed-tomatoes",
+      "type": "cook",
+      "action": "stir",
+      "ingredients": [
+        "crushed-tomatoes"
+      ],
+      "depends": [
+        "cook-onion"
+      ],
+      "equipment": [
+        {
+          "use": "saucepan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Add crushed tomatoes and stir well",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "add-whole-tomatoes",
+      "type": "cook",
+      "action": "stir",
+      "ingredients": [
+        "whole-tomatoes"
+      ],
+      "depends": [
+        "add-crushed-tomatoes"
+      ],
+      "equipment": [
+        {
+          "use": "saucepan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Squish whole tomatoes by hand and add them with their juices",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "season-sauce",
+      "type": "cook",
+      "action": "stir",
+      "ingredients": [
+        "salt",
+        "black-pepper",
+        "sugar"
+      ],
+      "depends": [
+        "add-whole-tomatoes"
+      ],
+      "equipment": [
+        {
+          "use": "saucepan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 30
+      },
+      "activeTime": {
+        "min": 30
+      },
+      "scalable": true,
+      "details": "Add salt, pepper, and sugar. Stir to combine.",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "simmer-sauce",
+      "type": "cook",
+      "action": "simmer",
+      "ingredients": [],
+      "depends": [
+        "season-sauce"
+      ],
+      "equipment": [
+        {
+          "use": "saucepan",
+          "release": false
+        }
+      ],
+      "time": {
+        "min": 1200
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": false,
+      "temperature": {
+        "min": 90,
+        "max": 100,
+        "unit": "C"
+      },
+      "details": "Reduce heat to low, cover with lid, and simmer for 20 minutes",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "finish-sauce",
+      "type": "cook",
+      "action": "stir",
+      "ingredients": [
+        "fresh-herbs",
+        "parmesan"
+      ],
+      "depends": [
+        "simmer-sauce"
+      ],
+      "equipment": [
+        {
+          "use": "saucepan",
+          "release": true
+        }
+      ],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Remove lid, stir in fresh herbs and parmesan cheese",
+      "output": "fra-diavolo-sauce",
+      "subProduct": "fra-diavolo-sauce"
+    },
+    {
+      "id": "combine-pasta-sauce",
+      "type": "assemble",
+      "action": "toss",
+      "ingredients": [],
+      "depends": [
+        "finish-sauce",
+        "boil-pasta"
+      ],
+      "equipment": [],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Combine drained pasta with the sauce and toss to coat evenly"
+    },
+    {
+      "id": "serve",
+      "type": "assemble",
+      "action": "serve",
+      "ingredients": [
+        "fresh-basil"
+      ],
+      "depends": [
+        "combine-pasta-sauce"
+      ],
+      "equipment": [],
+      "time": {
+        "min": 60
+      },
+      "activeTime": {
+        "min": 60
+      },
+      "scalable": true,
+      "details": "Serve topped with fresh basil leaves and extra parmesan"
+    }
+  ],
+  "subProducts": [
+    {
+      "id": "fra-diavolo-sauce",
+      "name": "Fra Diavolo Sauce",
+      "finalOp": "finish-sauce"
+    },
+    {
+      "id": "cooked-pasta",
+      "name": "Cooked Spaghetti",
+      "finalOp": "boil-pasta"
+    }
+  ]
+}
