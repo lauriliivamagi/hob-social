@@ -60,3 +60,4 @@ docs/vendors/
 docs/wireframes/
 
 .claude
+packages/extension/dist
