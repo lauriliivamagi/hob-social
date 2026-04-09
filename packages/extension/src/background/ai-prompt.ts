@@ -31,17 +31,26 @@ ${JSON.stringify(tagsJson, null, 2)}
 1. **Preserve the source language.** All text fields (title, action descriptions, details, notes, ingredient names) stay in the recipe's original language. Do NOT translate.
 2. **Extract quantities in their original units.** Do not convert units — output exactly what the recipe says. If the recipe says "2 cups flour", output \`"quantity": {"min": 2, "unit": "cup"}\`. For ranges like "100-150 g", output \`"quantity": {"min": 100, "max": 150, "unit": "g"}\`. For ingredients with alternatives (e.g., "cream or water"), use the \`alternatives\` array.
 3. **Build a proper DAG.** Each operation has \`ingredients\` (array of ingredient IDs consumed) and \`depends\` (array of operation IDs that must complete first). There must be no cycles. Leaf operations have \`depends: []\`.
-4. **Times are in seconds with optional ranges.** \`time\` and \`activeTime\` are \`{min: number, max?: number}\` in seconds. Simmering, baking, resting, marinating are passive (\`activeTime: {min: 0}\`). Use ranges for variable-time operations.
+4. **Times are in seconds with optional ranges.** \`time\` and \`activeTime\` are \`{min: number, max?: number}\` in seconds. Simmering, baking, resting, marinating are passive (\`activeTime: {min: 0}\`). Use ranges for variable-time operations. Post-processing validates your arithmetic, so focus on identifying the correct durations from the text.
 5. **Equipment is a required array.** Each operation has \`equipment: [{use: "equipment-id", release: boolean}, ...]\`. Empty array \`[]\` if no equipment. Set \`release: false\` when the next operation continues in the same vessel.
 6. **\`scalable\` is required.** \`true\` for active work (prep time scales with quantity), \`false\` for passive operations (simmering, baking, resting).
-7. **Temperature replaces heat.** Use \`temperature: {min: number, max?: number, unit: "C" | "F"}\`. Medium heat → \`{min: 160, max: 180, unit: "C"}\`.
+7. **Temperature replaces heat.** Use \`temperature: {min: number, max?: number, unit: "C" | "F"}\` when a specific temperature is given. For stovetop heat descriptions (medium heat, high heat), you may omit — post-processing will inject a fallback.
 8. **Identify sub-products.** When a recipe has named intermediate results (sauce, dough, filling), add a \`subProducts\` entry. Set \`subProduct\` on **every** operation that contributes to that intermediate result (not just the final one). Set \`output\` only on the single operation that produces the finished sub-product.
 9. **Use \`rest\` for passive waiting without heat.** Resting meat, proofing dough, marinating, cooling, chilling.
 10. **Use \`assemble\` for terminal/combining actions.** Plating, tossing, garnishing, serving.
 
+## Auto-derived fields (do NOT generate these — post-processing handles them)
+
+- \`meta.originalText\` — injected from the source page content
+- \`meta.slug\` — derived from your \`meta.title\` (still provide a good title)
+- \`meta.language\` — set from the page's language attribute
+- \`meta.source\` — set from the source URL
+- \`meta.totalTime\` — computed from the operations DAG critical path
+- \`meta.energyTier\` — derived from DAG active time and complexity
+
 ## Validation Rules (your output will be checked)
 
-- All IDs must match \`^[a-z0-9]+(-[a-z0-9]+)*$\` — **ASCII only**, no accented or diacritical characters. Transliterate: ä→a, ö→o, ü→u, õ→o, é→e, ñ→n, ß→ss. Valid: \`olive-oil\`, \`dice-onion\`, \`saute-base\`, \`sour-cream\`. Invalid: \`sauté-base\` (accent), \`küpsetuspulber\` (ü), \`sõel\` (õ), \`olive_oil\`, \`Dice Onion\`
+- All IDs must match \`^[a-z0-9]+(-[a-z0-9]+)*$\` — **ASCII only**, no accented or diacritical characters. Transliterate: ä→a, ö→o, ü→u, õ→o, é→e, ñ→n, ß→ss. Valid: \`olive-oil\`, \`dice-onion\`, \`saute-base\`, \`sour-cream\`. Invalid: \`sauté-base\` (accent), \`küpsetuspulber\` (ü), \`sõel\` (õ), \`olive_oil\`, \`Dice Onion\`. Post-processing sanitizes IDs, but generating clean IDs reduces fixes needed.
 - All IDs must be unique within their entity type
 - Every \`operation.ingredients[]\` must reference an existing ingredient ID
 - Every \`operation.depends[]\` must reference an existing operation ID
@@ -84,7 +93,7 @@ Schema.org does NOT give you: DAG edges, active vs passive time, equipment occup
 
 ### Timing
 - All times in seconds: 5 min → \`{min: 300}\`, 20-30 min → \`{min: 1200, max: 1800}\`
-- Estimate \`totalTime.relaxed\` (all prep front-loaded) and \`totalTime.optimized\` (prep in idle windows)
+- Do NOT estimate \`totalTime\` — it is auto-computed from the DAG
 
 ### Difficulty
 - \`easy\`: few ingredients, simple techniques, forgiving timing

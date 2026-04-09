@@ -31,7 +31,7 @@
         "energyTier": { "type": "string" },
         "notes": { "type": "string" }
       },
-      "required": ["title", "slug", "language", "originalText", "tags", "servings", "totalTime", "difficulty"]
+      "required": ["title", "slug", "tags", "servings", "difficulty"]
     },
     "ingredients": {
       "type": "array",

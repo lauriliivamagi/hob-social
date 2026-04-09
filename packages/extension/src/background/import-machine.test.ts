@@ -1,15 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import { cleanLlmJson, toKebabId, sanitizeIds, postProcessRaw, ParseError } from './import-machine.js';
+import { cleanLlmJson, toKebabId, sanitizeIds, postProcessRaw, parseTimeFromText, ParseError } from './import-machine.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-function makeExtraction(overrides: Partial<{ url: string; language: string; schemaOrgData: unknown }> = {}) {
+function makeExtraction(overrides: Partial<{ url: string; language: string; schemaOrgData: unknown; contentMarkdown: string }> = {}) {
   return {
     url: overrides.url ?? 'https://example.com/recipe',
     language: overrides.language ?? 'et',
     schemaOrgData: overrides.schemaOrgData ?? null,
+    contentMarkdown: overrides.contentMarkdown ?? '# Test Recipe\n\nSome content here.',
   };
 }
 
@@ -595,5 +596,388 @@ describe('postProcessRaw', () => {
       postProcessRaw(raw, makeExtraction());
       expect((raw['meta'] as Record<string, unknown>)['difficulty']).toBe('medium');
     });
+  });
+
+  // --- Fix 15: Inject originalText from extraction ---
+  describe('originalText injection', () => {
+    it('injects contentMarkdown as originalText', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Test', slug: 'test' } });
+      postProcessRaw(raw, makeExtraction({ contentMarkdown: '# My Recipe\n\nGreat stuff.' }));
+      expect((raw['meta'] as Record<string, unknown>)['originalText']).toBe('# My Recipe\n\nGreat stuff.');
+    });
+
+    it('overwrites any LLM-generated originalText', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Test', slug: 'test', originalText: 'LLM garbage' } });
+      postProcessRaw(raw, makeExtraction({ contentMarkdown: '# Real content' }));
+      expect((raw['meta'] as Record<string, unknown>)['originalText']).toBe('# Real content');
+    });
+  });
+
+  // --- Fix 16: Derive slug from title ---
+  describe('slug from title', () => {
+    it('derives slug from title', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Classic Beef Lasagne', slug: 'wrong-slug' } });
+      postProcessRaw(raw, makeExtraction());
+      expect((raw['meta'] as Record<string, unknown>)['slug']).toBe('classic-beef-lasagne');
+    });
+
+    it('handles non-ASCII titles (strips accents)', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Küpsetatud Kõrvits', slug: 'bad' } });
+      postProcessRaw(raw, makeExtraction());
+      expect((raw['meta'] as Record<string, unknown>)['slug']).toBe('kpsetatud-krvits');
+    });
+
+    it('handles titles with special characters', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Pasta à la Crème!', slug: 'x' } });
+      postProcessRaw(raw, makeExtraction());
+      // à and è are stripped, multiple hyphens collapsed
+      expect((raw['meta'] as Record<string, unknown>)['slug']).toBe('pasta-la-crme');
+    });
+  });
+
+  // --- Fix 17: Tag filtering and schema.org merge ---
+  describe('tag filtering', () => {
+    it('removes invalid tags', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Test', slug: 'test', tags: ['italian', 'invented-tag', 'pasta'] } });
+      postProcessRaw(raw, makeExtraction());
+      expect((raw['meta'] as Record<string, unknown>)['tags']).toEqual(['italian', 'pasta']);
+    });
+
+    it('keeps all valid tags', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Test', slug: 'test', tags: ['italian', 'dinner', 'quick'] } });
+      postProcessRaw(raw, makeExtraction());
+      expect((raw['meta'] as Record<string, unknown>)['tags']).toEqual(['italian', 'dinner', 'quick']);
+    });
+
+    it('handles missing tags gracefully', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Test', slug: 'test' } });
+      postProcessRaw(raw, makeExtraction());
+      expect((raw['meta'] as Record<string, unknown>)['tags']).toEqual([]);
+    });
+
+    it('merges tags from schema.org recipeCuisine', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Test', slug: 'test', tags: ['pasta'] } });
+      postProcessRaw(raw, makeExtraction({
+        schemaOrgData: { '@type': 'Recipe', recipeCuisine: 'Italian' },
+      }));
+      const tags = (raw['meta'] as Record<string, unknown>)['tags'] as string[];
+      expect(tags).toContain('pasta');
+      expect(tags).toContain('italian');
+    });
+
+    it('merges tags from schema.org recipeCategory', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Test', slug: 'test', tags: [] } });
+      postProcessRaw(raw, makeExtraction({
+        schemaOrgData: { '@type': 'Recipe', recipeCategory: 'Dessert' },
+      }));
+      const tags = (raw['meta'] as Record<string, unknown>)['tags'] as string[];
+      expect(tags).toContain('dessert');
+    });
+
+    it('merges tags from schema.org keywords string', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Test', slug: 'test', tags: [] } });
+      postProcessRaw(raw, makeExtraction({
+        schemaOrgData: { '@type': 'Recipe', keywords: 'vegetarian, quick, delicious' },
+      }));
+      const tags = (raw['meta'] as Record<string, unknown>)['tags'] as string[];
+      expect(tags).toContain('vegetarian');
+      expect(tags).toContain('quick');
+      expect(tags).not.toContain('delicious'); // not in valid tag set
+    });
+
+    it('deduplicates merged tags', () => {
+      const raw = makeRawRecipe({ meta: { title: 'Test', slug: 'test', tags: ['italian'] } });
+      postProcessRaw(raw, makeExtraction({
+        schemaOrgData: { '@type': 'Recipe', recipeCuisine: 'Italian' },
+      }));
+      const tags = (raw['meta'] as Record<string, unknown>)['tags'] as string[];
+      expect(tags.filter((t) => t === 'italian')).toHaveLength(1);
+    });
+  });
+
+  // --- Fix 18: energyTier derivation ---
+  describe('energyTier derivation', () => {
+    it('assigns zombie for low active time and simple DAG', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'mix', type: 'prep', action: 'Mix', ingredients: ['flour'], depends: [], equipment: [{ use: 'bowl', release: true }], time: { min: 300 }, activeTime: { min: 300 }, scalable: true },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      expect((raw['meta'] as Record<string, unknown>)['energyTier']).toBe('zombie');
+    });
+
+    it('assigns project for high active time', () => {
+      const ops = [];
+      for (let i = 0; i < 5; i++) {
+        ops.push({
+          id: `step-${i}`, type: 'cook', action: 'Cook',
+          ingredients: i === 0 ? ['flour'] : [], depends: i > 0 ? [`step-${i - 1}`] : [],
+          equipment: [{ use: 'bowl', release: i === 4 }],
+          time: { min: 600 }, activeTime: { min: 600 }, scalable: true,
+        });
+      }
+      const raw = makeRawRecipe({ operations: ops });
+      postProcessRaw(raw, makeExtraction());
+      expect((raw['meta'] as Record<string, unknown>)['energyTier']).toBe('project');
+    });
+
+    it('assigns project for complex DAG with many fork points', () => {
+      // 3 different fork points (each depended on by 2+ ops) → forkPoints >= 3
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'base', type: 'prep', action: 'Prep', ingredients: ['flour'], depends: [], equipment: [], time: { min: 60 }, activeTime: { min: 60 }, scalable: true },
+          { id: 'a', type: 'cook', action: 'A', ingredients: [], depends: ['base'], equipment: [], time: { min: 300 }, activeTime: { min: 300 }, scalable: true },
+          { id: 'b', type: 'cook', action: 'B', ingredients: [], depends: ['base'], equipment: [], time: { min: 300 }, activeTime: { min: 300 }, scalable: true },
+          { id: 'merge1', type: 'cook', action: 'M1', ingredients: [], depends: ['a', 'b'], equipment: [], time: { min: 60 }, activeTime: { min: 60 }, scalable: true },
+          { id: 'c', type: 'cook', action: 'C', ingredients: [], depends: ['merge1'], equipment: [], time: { min: 300 }, activeTime: { min: 300 }, scalable: true },
+          { id: 'd', type: 'cook', action: 'D', ingredients: [], depends: ['merge1'], equipment: [], time: { min: 300 }, activeTime: { min: 300 }, scalable: true },
+          { id: 'merge2', type: 'cook', action: 'M2', ingredients: [], depends: ['c', 'd'], equipment: [], time: { min: 60 }, activeTime: { min: 60 }, scalable: true },
+          { id: 'e', type: 'cook', action: 'E', ingredients: [], depends: ['merge2'], equipment: [], time: { min: 300 }, activeTime: { min: 300 }, scalable: true },
+          { id: 'f', type: 'cook', action: 'F', ingredients: [], depends: ['merge2'], equipment: [], time: { min: 300 }, activeTime: { min: 300 }, scalable: true },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      // base, merge1, merge2 each depended on by 2+ → forkPoints = 3
+      expect((raw['meta'] as Record<string, unknown>)['energyTier']).toBe('project');
+    });
+
+    it('assigns moderate for medium complexity', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'prep', type: 'prep', action: 'Prep', ingredients: ['flour'], depends: [], equipment: [], time: { min: 300 }, activeTime: { min: 300 }, scalable: true },
+          { id: 'cook', type: 'cook', action: 'Cook', ingredients: [], depends: ['prep'], equipment: [{ use: 'bowl', release: true }], time: { min: 900 }, activeTime: { min: 600 }, scalable: true },
+          { id: 'serve', type: 'assemble', action: 'Serve', ingredients: [], depends: ['cook'], equipment: [], time: { min: 60 }, activeTime: { min: 60 }, scalable: true },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      expect((raw['meta'] as Record<string, unknown>)['energyTier']).toBe('moderate');
+    });
+  });
+
+  // --- Fix 19: Unit normalization ---
+  describe('unit normalization', () => {
+    it('normalizes tablespoons to tbsp', () => {
+      const raw = makeRawRecipe({
+        ingredients: [
+          { id: 'oil', name: 'Oil', quantity: { min: 2, unit: 'tablespoons' }, group: 'pantry' },
+        ],
+        operations: [
+          { id: 'mix', type: 'prep', action: 'Mix', ingredients: ['oil'], depends: [], equipment: [], time: { min: 60 }, activeTime: { min: 60 }, scalable: true },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const ing = (raw['ingredients'] as Array<Record<string, unknown>>)[0]!;
+      expect((ing['quantity'] as { unit: string }).unit).toBe('tbsp');
+    });
+
+    it('normalizes cups to cup', () => {
+      const raw = makeRawRecipe({
+        ingredients: [
+          { id: 'flour', name: 'Flour', quantity: { min: 2, unit: 'cups' }, group: 'pantry' },
+        ],
+        operations: [
+          { id: 'mix', type: 'prep', action: 'Mix', ingredients: ['flour'], depends: [], equipment: [], time: { min: 60 }, activeTime: { min: 60 }, scalable: true },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const ing = (raw['ingredients'] as Array<Record<string, unknown>>)[0]!;
+      expect((ing['quantity'] as { unit: string }).unit).toBe('cup');
+    });
+
+    it('normalizes alternative ingredient units', () => {
+      const raw = makeRawRecipe({
+        ingredients: [
+          {
+            id: 'fat', name: 'Cream', quantity: { min: 200, unit: 'milliliters' }, group: 'dairy',
+            alternatives: [{ id: 'fat-alt', name: 'Water', quantity: { min: 200, unit: 'ounces' }, group: 'pantry' }],
+          },
+        ],
+        operations: [
+          { id: 'mix', type: 'prep', action: 'Mix', ingredients: ['fat'], depends: [], equipment: [], time: { min: 60 }, activeTime: { min: 60 }, scalable: true },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const ing = (raw['ingredients'] as Array<Record<string, unknown>>)[0]!;
+      expect((ing['quantity'] as { unit: string }).unit).toBe('ml');
+      const alts = ing['alternatives'] as Array<Record<string, unknown>>;
+      expect((alts[0]!['quantity'] as { unit: string }).unit).toBe('oz');
+    });
+
+    it('leaves already-canonical units unchanged', () => {
+      const raw = makeRawRecipe({
+        ingredients: [
+          { id: 'flour', name: 'Flour', quantity: { min: 200, unit: 'g' }, group: 'pantry' },
+        ],
+        operations: [
+          { id: 'mix', type: 'prep', action: 'Mix', ingredients: ['flour'], depends: [], equipment: [], time: { min: 60 }, activeTime: { min: 60 }, scalable: true },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const ing = (raw['ingredients'] as Array<Record<string, unknown>>)[0]!;
+      expect((ing['quantity'] as { unit: string }).unit).toBe('g');
+    });
+  });
+
+  // --- Fix 20: Time validation from details ---
+  describe('time validation from details', () => {
+    it('corrects wildly wrong time when details say otherwise', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'simmer', type: 'cook', action: 'Simmer', ingredients: [], depends: [], equipment: [],
+            time: { min: 100 }, activeTime: { min: 0 }, scalable: false,
+            details: 'Simmer for 25 minutes' },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const op = (raw['operations'] as Array<Record<string, unknown>>)[0]!;
+      expect((op['time'] as { min: number }).min).toBe(1500); // 25 * 60
+    });
+
+    it('leaves correct time unchanged', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'cook', type: 'cook', action: 'Cook', ingredients: [], depends: [], equipment: [],
+            time: { min: 480 }, activeTime: { min: 240 }, scalable: true,
+            details: 'Cook for 8 minutes, stirring occasionally' },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const op = (raw['operations'] as Array<Record<string, unknown>>)[0]!;
+      expect((op['time'] as { min: number }).min).toBe(480); // correct: 8 * 60
+    });
+
+    it('adds missing max from range in details', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'rest', type: 'rest', action: 'Rest', ingredients: [], depends: [], equipment: [],
+            time: { min: 600 }, activeTime: { min: 0 }, scalable: false,
+            details: 'Let stand 10-15 minutes before cutting' },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const op = (raw['operations'] as Array<Record<string, unknown>>)[0]!;
+      expect((op['time'] as { min: number; max?: number }).max).toBe(900); // 15 * 60
+    });
+  });
+
+  // --- Fix 21: Heat-to-temperature fallback ---
+  describe('heat-to-temperature fallback', () => {
+    it('injects temperature for "medium heat" in details', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'saute', type: 'cook', action: 'Sauté', ingredients: ['flour'], depends: [], equipment: [{ use: 'bowl', release: true }],
+            time: { min: 480 }, activeTime: { min: 240 }, scalable: true,
+            details: 'Heat oil in pan over medium heat' },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const op = (raw['operations'] as Array<Record<string, unknown>>)[0]!;
+      const temp = op['temperature'] as { min: number; max: number; unit: string };
+      expect(temp.min).toBe(160);
+      expect(temp.max).toBe(180);
+      expect(temp.unit).toBe('C');
+    });
+
+    it('injects temperature for "high heat"', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'sear', type: 'cook', action: 'Sear', ingredients: ['flour'], depends: [], equipment: [],
+            time: { min: 120 }, activeTime: { min: 120 }, scalable: true,
+            details: 'Sear over high heat until browned' },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const op = (raw['operations'] as Array<Record<string, unknown>>)[0]!;
+      const temp = op['temperature'] as { min: number; max: number; unit: string };
+      expect(temp.min).toBe(230);
+      expect(temp.max).toBe(260);
+    });
+
+    it('does not overwrite existing temperature', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'bake', type: 'cook', action: 'Bake', ingredients: [], depends: [], equipment: [],
+            time: { min: 1800 }, activeTime: { min: 0 }, scalable: false,
+            temperature: { min: 180, unit: 'C' },
+            details: 'Bake over medium heat' },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const op = (raw['operations'] as Array<Record<string, unknown>>)[0]!;
+      expect((op['temperature'] as { min: number }).min).toBe(180);
+    });
+
+    it('does not inject temperature for non-cook operations', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'prep', type: 'prep', action: 'Dice', ingredients: ['flour'], depends: [], equipment: [],
+            time: { min: 300 }, activeTime: { min: 300 }, scalable: true,
+            details: 'Dice onion on medium heat cutting board' },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const op = (raw['operations'] as Array<Record<string, unknown>>)[0]!;
+      expect(op['temperature']).toBeUndefined();
+    });
+
+    it('matches "over medium" without "heat" suffix', () => {
+      const raw = makeRawRecipe({
+        operations: [
+          { id: 'cook', type: 'cook', action: 'Cook', ingredients: ['flour'], depends: [], equipment: [],
+            time: { min: 480 }, activeTime: { min: 240 }, scalable: true,
+            details: 'Cook over medium until softened' },
+        ],
+      });
+      postProcessRaw(raw, makeExtraction());
+      const op = (raw['operations'] as Array<Record<string, unknown>>)[0]!;
+      const temp = op['temperature'] as { min: number; max: number; unit: string };
+      expect(temp.min).toBe(160);
+      expect(temp.max).toBe(180);
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// parseTimeFromText
+// ---------------------------------------------------------------------------
+
+describe('parseTimeFromText', () => {
+  it('parses simple minutes', () => {
+    expect(parseTimeFromText('Cook for 8 minutes')).toEqual({ min: 480 });
+  });
+
+  it('parses simple hours', () => {
+    expect(parseTimeFromText('Bake for 2 hours')).toEqual({ min: 7200 });
+  });
+
+  it('parses compound hours and minutes', () => {
+    expect(parseTimeFromText('Simmer for 1 hour 45 minutes')).toEqual({ min: 6300 });
+  });
+
+  it('parses ranges', () => {
+    expect(parseTimeFromText('Let stand 10-15 minutes')).toEqual({ min: 600, max: 900 });
+  });
+
+  it('parses "min" abbreviation', () => {
+    expect(parseTimeFromText('Cook 5 min')).toEqual({ min: 300 });
+  });
+
+  it('parses seconds', () => {
+    expect(parseTimeFromText('Microwave for 30 seconds')).toEqual({ min: 30 });
+  });
+
+  it('returns null when no time expression found', () => {
+    expect(parseTimeFromText('Dice the onion finely')).toBeNull();
+  });
+
+  it('parses range with dash', () => {
+    expect(parseTimeFromText('Cook 6-7 minutes until browned')).toEqual({ min: 360, max: 420 });
+  });
+
+  it('handles multiple time fragments', () => {
+    // "Bake 25 minutes covered, then 10 minutes uncovered"
+    const result = parseTimeFromText('Bake 25 minutes covered, then 10 minutes uncovered');
+    expect(result?.min).toBe(2100); // 25*60 + 10*60
   });
 });
