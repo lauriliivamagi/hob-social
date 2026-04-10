@@ -32,5 +32,5 @@
   ],
   "additionalProperties": false,
   "description": "Always-stocked pantry items excluded from shopping list generation",
-  "$id": "https://github.com/lauriliivamagi/recipes/blob/master/config/staples-schema.json"
+  "$id": "https://github.com/lauriliivamagi/hob-social/blob/master/config/staples-schema.json"
 }

@@ -40,5 +40,5 @@
   ],
   "additionalProperties": false,
   "description": "Theme night configuration — cuisine per weekday to reduce decision fatigue",
-  "$id": "https://github.com/lauriliivamagi/recipes/blob/master/config/themes-schema.json"
+  "$id": "https://github.com/lauriliivamagi/hob-social/blob/master/config/themes-schema.json"
 }

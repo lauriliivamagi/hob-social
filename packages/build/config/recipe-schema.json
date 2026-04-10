@@ -495,5 +495,5 @@
   ],
   "additionalProperties": false,
   "description": "Structured recipe data model for Hob",
-  "$id": "https://github.com/lauriliivamagi/recipes/blob/master/config/recipe-schema.json"
+  "$id": "https://github.com/lauriliivamagi/hob-social/blob/master/config/recipe-schema.json"
 }

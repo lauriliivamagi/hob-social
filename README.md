@@ -1,6 +1,6 @@
 # Hob
 
-![Build](https://github.com/lauriliivamagi/recipes/actions/workflows/deploy.yml/badge.svg)
+![Build](https://github.com/lauriliivamagi/hob-social/actions/workflows/deploy.yml/badge.svg)
 ![Node](https://img.shields.io/badge/node-22%2B-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue)
 ![Lit](https://img.shields.io/badge/Lit-v3-blue)
@@ -73,7 +73,7 @@ The app has two modes. Relaxed mode puts all prep first, then cooks sequentially
 ## Quick start
 
 ```bash
-git clone https://github.com/lauriliivamagi/recipes.git
+git clone https://github.com/lauriliivamagi/hob-social.git
 cd recipes
 npm install
 npm run dev      # dev server with hot reload

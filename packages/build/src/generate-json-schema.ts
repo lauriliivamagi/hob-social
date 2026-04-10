@@ -35,7 +35,7 @@ function generateSchema(
   console.log(`Generated ${outPath}`);
 }
 
-const baseUrl = 'https://github.com/lauriliivamagi/recipes/blob/master/config';
+const baseUrl = 'https://github.com/lauriliivamagi/hob-social/blob/master/config';
 
 generateSchema(
   recipeSchema,
