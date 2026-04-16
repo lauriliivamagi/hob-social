@@ -9,7 +9,7 @@
 import { createActor } from 'xstate';
 import { importMachine, type ImportContext, type ImportPhase } from './import-machine.js';
 import { getSettings, saveSettings } from './settings.js';
-import { getAllRecipes, getRecipe, deleteRecipe } from './recipe-store.js';
+import { getAllRecipes, getRecipe, deleteRecipe, saveAtprotoRkey } from './recipe-store.js';
 import type { ServiceWorkerMessage, ImportStatus } from '../shared/messages.js';
 
 // ---------------------------------------------------------------------------
@@ -75,6 +75,9 @@ async function handleMessage(message: ServiceWorkerMessage): Promise<unknown> {
       return { type: 'SETTINGS_RESULT', settings: await getSettings() };
     case 'SAVE_SETTINGS':
       await saveSettings(message.settings);
+      return { success: true };
+    case 'SAVE_ATPROTO_RKEY':
+      await saveAtprotoRkey(message.slug, message.rkey);
       return { success: true };
     case 'GET_LAST_STATUS': {
       const snapshot = importActor.getSnapshot();

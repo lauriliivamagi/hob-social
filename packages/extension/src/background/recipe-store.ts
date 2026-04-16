@@ -1,6 +1,12 @@
 /**
  * IndexedDB recipe storage via idb.
  * Stores validated recipe JSON with metadata for listing and dedup.
+ *
+ * Invariant: the object store is keyed by `slug` (see `keyPath` below).
+ * IndexedDB does not allow in-place updates of a record's key, so any future
+ * rename feature MUST copy `atprotoRkey` across the delete-old + put-new pair
+ * within a single transaction — otherwise the renamed recipe will republish
+ * as a fresh TID and orphan the original PDS record.
  */
 
 import { openDB, type IDBPDatabase } from 'idb';
@@ -50,6 +56,17 @@ export async function getRecipe(slug: string): Promise<StoredRecipe | undefined>
 export async function deleteRecipe(slug: string): Promise<void> {
   const db = await getDB();
   await db.delete('recipes', slug);
+}
+
+export async function saveAtprotoRkey(slug: string, rkey: string): Promise<void> {
+  const db = await getDB();
+  const tx = db.transaction('recipes', 'readwrite');
+  const recipe = await tx.store.get(slug);
+  if (recipe) {
+    recipe.atprotoRkey = rkey;
+    await tx.store.put(recipe);
+  }
+  await tx.done;
 }
 
 /** @knipignore */

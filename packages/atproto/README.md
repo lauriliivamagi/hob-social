@@ -14,7 +14,7 @@ See the strategy doc for the big picture:
 - **`src/adapter/`** — pure `Recipe` ↔ Lexicon record conversion. Handles
   decimal encoding (AT Protocol forbids floats; see below).
 - **`src/auth/`** — `BrowserOAuthClient` factory + session loader.
-- **`src/publish/`** — `publishRecipe(agent, recipe)` → `com.atproto.repo.putRecord`.
+- **`src/publish/`** — `publishRecipe(agent, recipe, { rkey? })` → `com.atproto.repo.putRecord`.
 
 ## Decimal encoding
 
@@ -83,16 +83,18 @@ doesn't re-debug:
 
 ## Publish path
 
-1. `publishRecipe(agent, recipe)` asserts the recipe slug is a valid AT rkey
-   (`[a-zA-Z0-9._~:-]{1,512}`). Our domain `slugPattern` is a strict subset, so
-   this is a defensive guard — throws `InvalidSlugError` on violation.
+1. `publishRecipe(agent, recipe, { rkey? })` — if `rkey` is provided, that
+   record is overwritten; otherwise a fresh TID (`TID.nextStr()` from
+   `@atproto/common-web`) is generated.
 2. Recipe goes through the adapter → Lexicon record shape.
-3. `agent.com.atproto.repo.putRecord` with `rkey = slug` — republishing the
-   same recipe overwrites the record rather than creating a duplicate.
+3. `agent.com.atproto.repo.putRecord` with the TID-based rkey.
+4. Returns `{ uri, cid, rkey }`. Callers persist the rkey (e.g. the viewer
+   component stores it in localStorage keyed by DID + slug) so subsequent
+   republishes update the same record and the `at://` permalink stays stable.
 
-**Known limitation:** renaming a recipe changes the slug, which creates a new
-PDS record. The old record persists until we add explicit delete-then-put
-logic (deferred).
+The rkey is deliberately decoupled from `meta.slug`: renaming a recipe changes
+the slug but the rkey (and therefore the AT-URI) stays stable. See the lexicon
+description for the full rationale.
 
 ## Deferred
 

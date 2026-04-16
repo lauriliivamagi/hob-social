@@ -26,4 +26,10 @@ export interface StoredRecipe {
   title: string;
   /** Raw LLM output (post-sanitization) for debugging/iteration */
   rawLlmOutput?: string;
+  /**
+   * ATproto record key assigned on first publish. Reused on republish so the
+   * at:// permalink remains stable even if slug/title change. Absent until
+   * the recipe has been published at least once.
+   */
+  atprotoRkey?: string;
 }

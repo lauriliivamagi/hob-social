@@ -5,7 +5,7 @@
   "defs": {
     "main": {
       "type": "record",
-      "description": "A single recipe published to the author's PDS. One rkey per recipe slug, so republishing overwrites rather than duplicating.",
+      "description": "A single recipe published to the author's PDS. The rkey is an opaque TID assigned on first publish and reused for subsequent updates, so the at:// permalink stays stable across edits. The `meta.slug` field is a display-layer identifier and may change independently.",
       "key": "any",
       "record": {
         "type": "object",
@@ -61,7 +61,7 @@
         "title": { "type": "string", "minLength": 1, "maxLength": 256 },
         "slug": {
           "type": "string",
-          "description": "URL-safe identifier. Matches the record rkey.",
+          "description": "URL-safe display identifier (kebab-case). Used for app-level routing; independent of the record rkey, which is an immutable TID.",
           "maxLength": 512
         },
         "language": {

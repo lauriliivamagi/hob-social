@@ -50,6 +50,12 @@ export interface SaveSettingsRequest {
   settings: AISettings;
 }
 
+export interface SaveAtprotoRkeyRequest {
+  type: 'SAVE_ATPROTO_RKEY';
+  slug: string;
+  rkey: string;
+}
+
 // --- Service worker → Popup responses ---
 
 export type ImportStatus =
@@ -80,6 +86,7 @@ export type ServiceWorkerMessage =
   | ExportRecipeRequest
   | GetSettingsRequest
   | SaveSettingsRequest
-  | GetLastStatusRequest;
+  | GetLastStatusRequest
+  | SaveAtprotoRkeyRequest;
 
 export type ContentScriptMessage = ExtractRequest;

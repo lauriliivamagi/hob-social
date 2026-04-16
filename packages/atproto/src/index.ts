@@ -16,6 +16,7 @@ export type {
 export { loadSession, subscribeToSessionEvents } from './auth/session.js';
 export type { SessionState, SessionEvent } from './auth/session.js';
 
-export { publishRecipe, InvalidSlugError } from './publish/recipe.js';
+export { publishRecipe } from './publish/recipe.js';
+export type { PublishedRecipe, PublishRecipeOptions } from './publish/recipe.js';
 
 export { SOCIAL_HOB_TEMP_RECIPE_NSID } from './constants.js';
