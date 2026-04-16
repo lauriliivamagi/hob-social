@@ -49,14 +49,37 @@ bound to the origin.
 
 - **Dev (loopback)** — `BrowserOAuthClient` uses
   `buildAtprotoLoopbackClientMetadata()`. Redirects to
-  `http://127.0.0.1:<port>/auth/callback`.
+  `http://127.0.0.1:<port>/auth/callback/`.
 - **Prod** — fetches
   [`/oauth-client-metadata.json`](../../public/oauth-client-metadata.json) at
   `https://hob.social/oauth-client-metadata.json`. Redirects to
-  `https://hob.social/auth/callback`.
+  `https://hob.social/auth/callback/`.
 
-The `hob.social` domain + GitHub Pages hosting must be live before prod OAuth
-works. Until then the loopback flow is sufficient for local testing.
+Prod is live on `hob.social` (GitHub Pages + Cloudflare DNS, Let's
+Encrypt cert). Verified end-to-end with a successful recipe publish on
+2026-04-16.
+
+### Gotchas learned during prod rollout
+
+Both were invisible in dev (Vite dev server handles routing differently)
+and only surface on GitHub Pages. Documented here so a future reader
+doesn't re-debug:
+
+1. **Trailing-slash redirect URI.** `BrowserOAuthClient.findRedirectUrl()`
+   does an exact string match on `location.pathname` against registered
+   `redirect_uris`. GitHub Pages serves the callback HTML at
+   `site/auth/callback/index.html`, reachable at `/auth/callback/` (with
+   trailing slash — `/auth/callback` gets 301'd). The registered URI
+   must include the trailing slash, or `init()` silently skips the
+   callback and the user lands on "No session found".
+2. **Service worker `navigateFallback` hijacks the callback.** Workbox's
+   `NavigationRoute` with `navigateFallback: 'offline.html'` serves
+   `offline.html` for any URL not explicitly precached. `/auth/callback`
+   (without the trailing slash) doesn't match because directory-index
+   mapping only fires for trailing-slash paths. Add
+   `navigateFallbackDenylist: [/^\/auth\/callback/]` to let the SW pass
+   through to network; GitHub's 301 preserves the OAuth fragment; the
+   SW then serves the precached index from `/auth/callback/`.
 
 ## Publish path
 

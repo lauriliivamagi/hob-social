@@ -9,7 +9,7 @@
 
 **Recipes are graphs, not lists.** This app models each recipe as a directed acyclic graph, finds tasks that can run in parallel, and fills idle time so dinner is ready sooner.
 
-[Live demo](https://lauriliivamagi.github.io/recipes/)
+[Live demo](https://hob.social/)
 
 ![Recipe overview with phase cards, servings adjuster, and mode toggle](docs/screenshot-hero.png)
 
