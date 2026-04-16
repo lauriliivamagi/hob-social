@@ -27,7 +27,7 @@ async function buildClient(): Promise<CreatedOAuthClient> {
   if (isLoopback) {
     return createOAuthClient({
       mode: 'development',
-      loopbackRedirect: `${origin}/auth/callback`,
+      loopbackRedirect: `${origin}/auth/callback/`,
     });
   }
 

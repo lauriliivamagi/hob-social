@@ -5,7 +5,7 @@
   "logo_uri": "https://hob.social/icon-512.png",
   "tos_uri": "https://hob.social",
   "policy_uri": "https://hob.social",
-  "redirect_uris": ["https://hob.social/auth/callback"],
+  "redirect_uris": ["https://hob.social/auth/callback/"],
   "scope": "atproto transition:generic",
   "grant_types": ["authorization_code", "refresh_token"],
   "response_types": ["code"],
