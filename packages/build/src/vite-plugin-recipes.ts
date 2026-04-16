@@ -166,6 +166,15 @@ export function recipesPlugin(): Plugin {
     });
   }
 
+  function renderAuthCallback(entryScript: string, depth: number): string {
+    const template = readFileSync(join(templatesDir, 'auth-callback.html'), 'utf8');
+    const prefix = depth === 0 ? './' : '../'.repeat(depth);
+    return applyTemplate(template, {
+      FAVICON_PATH: `${prefix}icon.svg`,
+      ENTRY_SCRIPT: entryScript,
+    });
+  }
+
   function renderRecipe(data: RecipeData, depth: number, entryScript: string): string {
     const template = readFileSync(join(templatesDir, 'recipe.html'), 'utf8');
     const prefix = depth === 0 ? './' : '../'.repeat(depth);
@@ -195,6 +204,7 @@ export function recipesPlugin(): Plugin {
             input: {
               catalog: resolve('packages/ui/entries/catalog.ts'),
               recipe: resolve('packages/ui/entries/recipe.ts'),
+              'auth-callback': resolve('packages/ui/entries/auth-callback.ts'),
             },
           },
         },
@@ -292,6 +302,19 @@ export function recipesPlugin(): Plugin {
             return;
           }
 
+          // Serve OAuth callback page
+          if (stripped === 'auth/callback' || stripped === 'auth/callback/' || stripped === 'auth/callback/index.html') {
+            const entryScript = '<script type="module" src="/packages/ui/entries/auth-callback.ts"></script>';
+            const html = renderAuthCallback(entryScript, 2);
+            server
+              .transformIndexHtml(reqUrl, html)
+              .then((transformed) => {
+                res.setHeader('Content-Type', 'text/html');
+                res.end(transformed);
+              });
+            return;
+          }
+
           next();
         },
       );
@@ -301,10 +324,12 @@ export function recipesPlugin(): Plugin {
       // Find the bundled entry point file names
       let catalogJs = '';
       let recipeJs = '';
+      let authCallbackJs = '';
       for (const [fileName, chunk] of Object.entries(bundle)) {
         if (chunk.type === 'chunk' && chunk.isEntry) {
           if (chunk.name === 'catalog') catalogJs = fileName;
           if (chunk.name === 'recipe') recipeJs = fileName;
+          if (chunk.name === 'auth-callback') authCallbackJs = fileName;
         }
       }
 
@@ -327,6 +352,17 @@ export function recipesPlugin(): Plugin {
           type: 'asset',
           fileName: url,
           source: html,
+        });
+      }
+
+      // Generate OAuth callback page
+      if (authCallbackJs) {
+        const authScript = `<script type="module" src="../../${authCallbackJs}"></script>`;
+        const authHtml = renderAuthCallback(authScript, 2);
+        this.emitFile({
+          type: 'asset',
+          fileName: 'auth/callback/index.html',
+          source: authHtml,
         });
       }
     },

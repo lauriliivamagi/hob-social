@@ -10,6 +10,7 @@
     "test": "pnpm -r test",
     "test:e2e": "pnpm --filter @recipe/ui test:e2e",
     "typecheck": "pnpm -r typecheck",
+    "lex:gen": "pnpm --filter @recipe/atproto run lex:gen",
     "eval": "pnpm --filter @recipe/extension eval",
     "knip": "knip",
     "deps-lint": "syncpack lint",

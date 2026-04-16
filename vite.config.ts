@@ -11,6 +11,7 @@ export default defineConfig({
       '@recipe/domain': resolve(__dirname, 'packages/domain/src'),
       '@recipe/ui': resolve(__dirname, 'packages/ui/src'),
       '@recipe/build': resolve(__dirname, 'packages/build/src'),
+      '@recipe/atproto': resolve(__dirname, 'packages/atproto/src'),
     },
   },
   build: {

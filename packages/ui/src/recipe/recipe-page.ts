@@ -18,6 +18,7 @@ import './servings-adjuster.js';
 import './view-tabs.js';
 import '../overview/overview-view.js';
 import '../cooking/cooking-view.js';
+import '../auth/hob-atproto-publish.js';
 
 interface WindowGlobals {
   RECIPE: Recipe;
@@ -204,6 +205,10 @@ export class RecipePage extends LitElement {
         .label=${this._i18n.servings ?? 'Servings'}
         @adjust-servings=${this._onAdjustServings}
       ></servings-adjuster>
+
+      <div style="text-align: center; padding: 0 var(--space-md);">
+        <hob-atproto-publish .recipe=${ctx.recipe}></hob-atproto-publish>
+      </div>
 
       <view-tabs
         .activeView=${activeView}

@@ -11,6 +11,7 @@ import type { CatalogRecipe } from '@recipe/domain/catalog/types.js';
 import './search-bar.js';
 import './tag-filters.js';
 import './recipe-card.js';
+import '../auth/hob-atproto-login.js';
 
 interface I18NLabels {
   allRecipes?: string;
@@ -142,6 +143,9 @@ export class CatalogPage extends LitElement {
         <header>
           <h1>${this._labels.allRecipes ?? 'All Recipes'}</h1>
           <div class="recipe-count">${countLabel}</div>
+          <div style="margin-top: 1rem;">
+            <hob-atproto-login></hob-atproto-login>
+          </div>
         </header>
 
         <search-bar

@@ -61,6 +61,7 @@ docs/scenarios/
 docs/strategy/
 docs/vendors/
 docs/wireframes/
+docs/atproto/
 
 .claude
 packages/extension/dist

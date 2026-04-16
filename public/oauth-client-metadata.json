@@ -1,0 +1,15 @@
+{
+  "client_id": "https://hob.social/oauth-client-metadata.json",
+  "client_name": "Hob",
+  "client_uri": "https://hob.social",
+  "logo_uri": "https://hob.social/icon-512.png",
+  "tos_uri": "https://hob.social",
+  "policy_uri": "https://hob.social",
+  "redirect_uris": ["https://hob.social/auth/callback"],
+  "scope": "atproto transition:generic",
+  "grant_types": ["authorization_code", "refresh_token"],
+  "response_types": ["code"],
+  "application_type": "web",
+  "token_endpoint_auth_method": "none",
+  "dpop_bound_access_tokens": true
+}
